@@ -1,69 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.kkk.drawword.MainActivity">
-    <LinearLayout
+    android:orientation="vertical">
+
+
+
+
+<!--    <fragment android:name="com.example.kkk.drawword.MainActivity$Login_fragment"
+        android:id="@+id/Login_fr"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <fragment android:name="com.example.kkk.drawword.MainActivity$Join_fragment"
+        android:id="@+id/Join_fr"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />-->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_weight="4"
-        android:weightSum="8">
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/fragmentloginorjoin" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:inputType="textPersonName"
-            android:paddingLeft="20dp"
-            android:hint="ID"
-            android:ems="10"
-            android:id="@+id/id" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e92020" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:inputType="textPassword"
-            android:paddingLeft="20dp"
-            android:hint="PASSWORD"
-            android:id="@+id/password" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e92020" />
+    <Button
+        android:text="Button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/other_frag"
+        android:layout_weight="2" />
 
-        <Button
-            android:text="로그인"
-            android:textColor="#ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/login" />
-
-
-        <Button
-            android:text="로그인"
-            android:textColor="#ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/join" />
-    </LinearLayout>
 </LinearLayout>

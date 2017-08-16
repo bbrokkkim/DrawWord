@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,57 +22,52 @@ import java.net.URLEncoder;
  */
 
 public class Model_login {
-/*
     String id;
     String pwd;
-    Model_login(String id,String pwd){
+    String info;
+    Boolean check = false;
+
+    Connect_login connect_login1 = new Connect_login();
+    Model_login(String info){
         this.id = id;
         this.pwd = pwd;
+        this.info = info;
     }
-*/
-    Boolean check;
-    Boolean Connect_http(String id,String pwd){
+
+
+
+
+ /*   Boolean Connect_http(String id,String pwd){
         Connect_login connect_login = new Connect_login();
         connect_login.execute(id,pwd);
 
         int sec = 0;
-        while(true){
-            if (connect_login.getStatus() == AsyncTask.Status.FINISHED){
-                return check;
-            }
-            else if (sec == 10){
-                return check;
-            }
-            else {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                sec = sec + 1;
-                continue;
-            }
-        }
 
-    }
+        return check;
+    }*/
 
 
-    class Connect_login extends AsyncTask<String ,String ,String >{
-        String output;
+    class Connect_login extends AsyncTask<String ,String ,String  >{
+        String output="as";
+        String str;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(output.equals("correct")){
-                check = true;
-            }
-            else if (output.equals("uncorrect")){
-                check = false;
-            }
+
         }
+
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if(output.equals("correct")){
+                check = true;
+                info = "correct";
+            }
+            else if (output.equals("uncorrect")){
+                check = false;
+                info = "uncorrect";
+            }
         }
 
         @Override
@@ -79,7 +75,7 @@ public class Model_login {
             String id = params[0];
             String pwd = params[1];
             try {
-                URL url = new URL("");
+                URL url = new URL("http://13.124.60.238/2nd.php");
                 String parameter =
                           String.format("id=%s", URLEncoder.encode(id, "UTF-8"))
                         + String.format("pwd=%s", URLEncoder.encode(pwd, "UTF-8"));
@@ -99,6 +95,12 @@ public class Model_login {
                 InputStreamReader inputStream = new InputStreamReader(conn.getInputStream(), "UTF-8");
                 BufferedReader reader = new BufferedReader(inputStream);
                 StringBuffer buffer = new StringBuffer();
+                while ((str = reader.readLine()) != null){
+                    buffer.append(str);
+                }
+                output = buffer.toString();
+                return output;
+
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
