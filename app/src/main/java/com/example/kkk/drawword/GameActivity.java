@@ -166,7 +166,7 @@ public class GameActivity extends Activity {
             Log.d("stream","asdd11123123");
             try {
                 Log.d("stream","asdd123");
-                socket = new Socket("172.31.15.81", 400);
+                socket = new Socket("172.31.15.81", 8000);
                 boolean result = socket.isConnected();
                 if(result) Log.d("stream","서버에 연결됨");
                 else Log.d("stream","서버에 연결안됨");
