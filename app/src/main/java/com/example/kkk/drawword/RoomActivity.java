@@ -17,7 +17,7 @@ public class RoomActivity extends Activity {
     ListView listView;
     ArrayList<String> arrayList = new ArrayList();
 
-    EditText text;
+    EditText text,port_num;
     Button submit;
 
     @Override
