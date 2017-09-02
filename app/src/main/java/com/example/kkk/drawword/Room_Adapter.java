@@ -43,13 +43,13 @@ public class Room_Adapter extends BaseAdapter {
         Context context = parent.getContext();
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.game_row, null);
+            convertView = inflater.inflate(R.layout.room_row, null);
         }
 
         ChatData chatData = item.get(pos);
 
-        TextView name = (TextView) convertView.findViewById(R.id.user_name);
-        TextView ment = (TextView) convertView.findViewById(R.id.ment);
+        TextView name = (TextView) convertView.findViewById(R.id.chat_name);
+        TextView ment = (TextView) convertView.findViewById(R.id.chat_ment);
 
         name.setText(item.get(pos).getUser_name());
         ment.setText(item.get(pos).getMent());

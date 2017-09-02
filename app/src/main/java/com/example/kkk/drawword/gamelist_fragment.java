@@ -1,12 +1,14 @@
 package com.example.kkk.drawword;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -33,6 +35,14 @@ public class gamelist_fragment extends Fragment {
         gamelist_adapter = new Gamelist_Adapter(inflater,item);
         item.add(new Gamelist_Data("1","테스트방입니다","2/4"));
         listView.setAdapter(gamelist_adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(),RoomActivity.class);
+                startActivity(intent);
+            }
+        });
 
         create_room.setOnClickListener(new View.OnClickListener() {
             @Override

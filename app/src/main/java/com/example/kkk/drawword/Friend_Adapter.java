@@ -27,6 +27,8 @@ public class Friend_Adapter extends BaseAdapter {
         this.item = item;
     }
 
+
+
     @Override
     public int getCount() {
         return item.size();

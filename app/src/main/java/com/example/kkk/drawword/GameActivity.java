@@ -54,8 +54,8 @@ public class GameActivity extends Activity {
         mHandler = new Handler();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentfriendorgame, new friendlist_fragment());
-        fragmentTransaction.replace(R.id.fragmentfriendorgame, new friendlist_fragment());
+        fragmentTransaction.add(R.id.fragmentfriendorgame, new gamelist_fragment());
+        fragmentTransaction.replace(R.id.fragmentfriendorgame, new gamelist_fragment());
         fragmentTransaction.commit();
         friend_btn.setOnClickListener(new View.OnClickListener() {
             @Override

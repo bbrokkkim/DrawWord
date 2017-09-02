@@ -19,9 +19,7 @@ public class friendlist_fragment extends Fragment{
     ListView listView;
     Friend_Adapter friend_adapter;
     ArrayList<Friend_Data> item = new ArrayList<Friend_Data>();
-    public friendlist_fragment(){
 
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);
