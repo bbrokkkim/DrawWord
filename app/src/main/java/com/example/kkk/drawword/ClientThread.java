@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import android.os.Bundle;
@@ -35,15 +36,18 @@ public class ClientThread extends Thread {
     //보내기
     public void send(String data){
         System.out.println("전송");
-        try {
+//        try {
 
             System.out.println("data : "+data);
-            bufferW.write(data+"\n");
-            bufferW.flush();
-        } catch (IOException e) {
+            /*bufferW.write(data+"\n");
+            bufferW.flush();*/
+            PrintWriter user_writer = new PrintWriter(bufferW, true);
+            user_writer.println(data);
+
+        /*} catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        }*/
     }
     //받기
     public String listen(){

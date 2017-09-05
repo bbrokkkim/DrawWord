@@ -68,9 +68,10 @@ public class RoomActivity extends Activity {
         //read_thread = new Read_thread();
         tcp_connect = new Tcp_Connect();
         String num = "8001";
-
-//        tcp_connect.execute(num);
-        connect();
+        item.add(new ChatData("asd","hi~"));
+        tcp_connect.execute(num);
+//        connect();
+        checkUpdate.start();
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -87,9 +88,12 @@ public class RoomActivity extends Activity {
             public void onClick(View v) {
                 String port = port_num.getText().toString();
                 String chat_content = text.getText().toString();
-                /*tcp_chat = new Tcp_chat();
-                tcp_chat.execute(port,chat_content);*/
-                clientThread.send(chat_content);
+                tcp_chat = new Tcp_chat();
+                tcp_chat.execute("asdf",chat_content);
+                /*ClientThread clientThread1;
+                clientThread1 = new ClientThread(client, handler2);
+                clientThread1.start();
+                */
             }
         });
 
@@ -125,9 +129,11 @@ public class RoomActivity extends Activity {
                 super.run();
                 try {
                     client = new Socket(ip, port);
-
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+                    bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     clientThread = new ClientThread(client, handler2);
                     clientThread.start();
+
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -136,12 +142,11 @@ public class RoomActivity extends Activity {
 
             }
         };
-
         thread.start();
     }
 
 
-   private Thread checkUpdate = new Thread() {
+   /*private Thread checkUpdate = new Thread() {
         public void run() {
             try {
                 Log.w("ChattingStart", "Start Thread");
@@ -172,7 +177,7 @@ public class RoomActivity extends Activity {
         }
    };
 
-
+*/
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -231,6 +236,37 @@ public class RoomActivity extends Activity {
         }
     };*/
 
+    private Thread checkUpdate = new Thread() {
+
+        public void run() {
+            try {
+                String line;
+                Log.w("ChattingStart", "Start Thread");
+                while (true) {
+                    Log.w("Chatting is running", "chatting is running");
+                    line = bufferedReader.readLine();
+                    ment = line;
+                    mHandler.post(showUpdate);
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    };
+
+    private Runnable showUpdate = new Runnable() {
+
+        public void run() {
+            Log.d("test","chat123");
+            Toast.makeText(RoomActivity.this, ment, Toast.LENGTH_SHORT).show();
+            Log.d("test","chat456");
+            item.add(new ChatData("asd","hi~"));
+            
+
+        }
+
+    };
+
     public class Tcp_refresh extends AsyncTask<String ,String ,String> {
         String user,ment;
         @Override
@@ -259,19 +295,25 @@ public class RoomActivity extends Activity {
     }
 
     public class Tcp_chat extends AsyncTask<String ,String ,String> {
-        String user,ment;
+        String user,ment,ment1;
         @Override
         protected String doInBackground(String... params) {
             Log.d("stream","asdd11123123");
             user = params[0];
             ment = params[1];
 
-            PrintWriter user_writer = new PrintWriter(bufferedWriter, true);
-            user_writer.println(user);
+            /*PrintWriter user_writer = new PrintWriter(bufferedWriter, true);
+            user_writer.println(user);*/
             PrintWriter ment_writer = new PrintWriter(bufferedWriter, true);
             ment_writer.println(ment);
+            try {
+                Log.d("input",ment);
+                ment1 = bufferedReader.readLine();
+                Log.d("output",ment);
 
-            Log.d("send",user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Log.d("send",ment);
             return null;
         }
@@ -281,6 +323,10 @@ public class RoomActivity extends Activity {
             super.onPostExecute(s);
             Log.d("stream","asdd");
             Toast.makeText(RoomActivity.this, "전송됨", Toast.LENGTH_SHORT).show();
+
+
+                Toast.makeText(RoomActivity.this, ment, Toast.LENGTH_SHORT).show();
+
 
         }
     }
