@@ -12,6 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends Activity {
     Button join;
@@ -30,8 +35,8 @@ public class MainActivity extends Activity {
         Fragment fr = new Login_fragment();*/
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
+        fragmentTransaction.add(R.id.fragmentloginorjoin,new Join_fragment());
+        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Join_fragment());
         fragmentTransaction.commit();
 
         join.setOnClickListener(new View.OnClickListener() {
@@ -92,9 +97,12 @@ public class MainActivity extends Activity {
         join = (Button) findViewById(R.id.other_frag);
     }
 
+
+    //로그인 프레그먼트
     public static class Login_fragment extends Fragment {
         EditText id,pwd;
         Button login;
+
         public Login_fragment(){
 
         }
@@ -127,16 +135,49 @@ public class MainActivity extends Activity {
         }
     }
 
+    //가입 프레그먼트
+    public static class Join_fragment extends Fragment implements View.OnClickListener{
+        @BindView(R.id.id) EditText user_id;
+        @BindView(R.id.password1) EditText user_pwd1;
+        @BindView(R.id.password2) EditText user_pwd2;
+        @BindView(R.id.name) EditText user_name;
+        @BindView(R.id.phone) EditText user_phone;
+        @BindView(R.id.write_certification) EditText user_cer;
+        @BindView(R.id.check_certification) Button certi_bin;
+        @BindView(R.id.joinbutton) Button submit;
 
-    public static class Join_fragment extends Fragment {
+
         public Join_fragment(){
 
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.join_fragment, container, false);
+            View view = inflater.inflate(R.layout.join_fragment,container,false);
+
+            ButterKnife.bind(this,view);
+
+            submit.setOnClickListener(this);
+
+
+
+            return view;
+        }
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.joinbutton :
+
+                    break;
+
+
+            }
         }
     }
 }

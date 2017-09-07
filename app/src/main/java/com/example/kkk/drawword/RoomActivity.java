@@ -211,15 +211,8 @@ public class RoomActivity extends Activity {
             user_writer.println(user);*/
 
             PrintWriter ment_writer = new PrintWriter(bufferedWriter, true);
-            ment_writer.println(ment);/*
-            try {
-                Log.d("input",ment);
-                ment1 = bufferedReader.readLine();
-                Log.d("output",ment);
+            ment_writer.println("asdf");
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             Log.d("send",ment);
             return null;
         }
