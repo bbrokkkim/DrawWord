@@ -12,21 +12,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends Activity {
-    Button join;
+public class MainActivity extends Activity implements View.OnClickListener{
+    @BindView(R.id.back_btn) ImageButton back;
+    @BindView(R.id.other_frag) Button join;
     boolean where = false;
+    boolean active = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        layout();
-        join.setText("로그인으로");
+        ButterKnife.bind(this);
+        join.setText("회원가입으로");
 //        Presenter_login presenter_login = new Presenter_login(user_id,user_pwd);
         final String check_login_info = "uncorrect";
         final Model_login model_login = new Model_login(check_login_info);
@@ -35,17 +39,12 @@ public class MainActivity extends Activity {
         Fragment fr = new Login_fragment();*/
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,new Join_fragment());
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Join_fragment());
+        fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
+        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
         fragmentTransaction.commit();
 
-        join.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchfragment();
-                Log.d("con",String.valueOf(where));
-            }
-        });
+        join.setOnClickListener(this);
+        back.setOnClickListener(this);
 
         /*login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,13 +77,9 @@ public class MainActivity extends Activity {
 
         if (where == true){
             fr = new Login_fragment();
-            join.setText("회원가입하러");
-            where = false;
         }
         else {
             fr = new Join_fragment();
-            join.setText("로그인하러");
-            where = true;
         }
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -93,33 +88,59 @@ public class MainActivity extends Activity {
         fragmentTransaction.commit();
     }
 
-    void layout(){
-        join = (Button) findViewById(R.id.other_frag);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.back_btn:
+                if (where == true){
+                    switchfragment();
+                    join.setVisibility(View.VISIBLE);
+                    where = false;
+                }
+                else if (where == false && active == false){
+                    Toast.makeText(this, "한번 더 누르면 앱이 종료 됩니다.", Toast.LENGTH_SHORT).show();
+                    active = true;
+                }
+                else if (active == true){
+                    finish();
+                }
+                break;
+            case R.id.other_frag :
+                switchfragment();
+                join.setVisibility(View.GONE);
+                where = true;
+                active = false;
+                break;
+        }
     }
 
 
     //로그인 프레그먼트
-    public static class Login_fragment extends Fragment {
-        EditText id,pwd;
-        Button login;
+    public class Login_fragment extends Fragment {
+        @BindView(R.id.login) Button login;
+        @BindView(R.id.ed_id) EditText id;
+        @BindView(R.id.ed_password) EditText pwd;
 
-        public Login_fragment(){
-
-        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
             View view = inflater.inflate(R.layout.login_fragment,container,false);
-            Login_layout(view);
+            ButterKnife.bind(this,view);
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent= new Intent(getActivity(),GameActivity.class);
-                    startActivity(intent);
+                    String id_btn = id.getText().toString();
+                    String pwd_btn = pwd.getText().toString();
+
+                    UserInfoAsync userInfoAsync = new UserInfoAsync(MainActivity.this);
+                    userInfoAsync.execute("6",id_btn,pwd_btn);
                 }
             });
+
+
+
             return view;
         }
 
@@ -128,15 +149,10 @@ public class MainActivity extends Activity {
             super.onActivityCreated(savedInstanceState);
 
         }
-        void Login_layout(View v){
-            id = (EditText)v.findViewById(R.id.id);
-            pwd = (EditText)v.findViewById(R.id.password);
-            login = (Button)v.findViewById(R.id.login);
-        }
     }
 
     //가입 프레그먼트
-    public static class Join_fragment extends Fragment implements View.OnClickListener{
+    public class Join_fragment extends Fragment implements View.OnClickListener{
         @BindView(R.id.id) EditText user_id;
         @BindView(R.id.password1) EditText user_pwd1;
         @BindView(R.id.password2) EditText user_pwd2;
@@ -145,7 +161,7 @@ public class MainActivity extends Activity {
         @BindView(R.id.write_certification) EditText user_cer;
         @BindView(R.id.check_certification) Button certi_bin;
         @BindView(R.id.joinbutton) Button submit;
-
+        String id, pwd1,pwd2 ,name;
 
         public Join_fragment(){
 
@@ -157,7 +173,10 @@ public class MainActivity extends Activity {
             View view = inflater.inflate(R.layout.join_fragment,container,false);
 
             ButterKnife.bind(this,view);
-
+            id = user_id.getText().toString();
+            pwd1 = user_pwd1.getText().toString();
+            pwd2 = user_pwd2.getText().toString();
+            name = user_name.getText().toString();
             submit.setOnClickListener(this);
 
 
@@ -173,6 +192,19 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.joinbutton :
+
+                    if (name.equals("") || pwd1.equals("") || id.equals("")){
+                        Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (!pwd1.equals(pwd2)){
+                        Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        UserInfoAsync create = new UserInfoAsync(MainActivity.this);
+                        create.execute("5",id,pwd1,name,"12","12","12");
+                    }
+                    UserInfoAsync create = new UserInfoAsync(MainActivity.this);
+                    create.execute("5",id,pwd1,name,"12","12","12");
 
                     break;
 

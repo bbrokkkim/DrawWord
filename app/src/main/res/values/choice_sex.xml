@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string-array name="sex"
+    layout_width="wrap_content">
+    <item>선택</item>
+    <item>male</item>
+    <item>female</item>
+</string-array>
+
+<string-array name="cinema"
+    layout_width="wrap_content">
+    <item>choice</item>
+    <item>CGV</item>
+    <item>Lotte</item>
+    <item>Megabox</item>
+</string-array>
+
+</resources>

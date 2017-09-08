@@ -72,13 +72,29 @@ public class Model_login {
 
         @Override
         protected String doInBackground(String... params) {
-            String id = params[0];
-            String pwd = params[1];
+            String id = (String) params[1];
+            String pwd = (String) params[2];
+            String name = (String) params[3];
+            String email = (String) params[4];
+            String write_certi = (String) params[5];
+            String sex = (String) params[6];
+            String ch = (String) params[7];
+
+
             try {
-                URL url = new URL("http://13.124.60.238/2nd.php");
+                URL url = new URL("http://13.124.229.116/join.php?"
+                        + "/create_user_id.php?"
+                        + "choice=" + ch
+                        + String.format("&id=%s", URLEncoder.encode(id,"UTF-8"))
+                        + "&pwd=" + pwd
+                        + String.format("&name=%s", URLEncoder.encode(name,"UTF-8"))
+                        + "&phone=" + email
+                        + "&sex=" + sex);
                 String parameter =
                           String.format("id=%s", URLEncoder.encode(id, "UTF-8"))
                         + String.format("pwd=%s", URLEncoder.encode(pwd, "UTF-8"));
+
+
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

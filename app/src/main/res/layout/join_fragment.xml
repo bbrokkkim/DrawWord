@@ -88,14 +88,14 @@
                         android:layout_weight="6"
                         android:layout_marginRight="5dp"/>
 
-<!--                    <Spinner
+
+                    <Spinner
                         android:id="@+id/choice_sex"
                         android:gravity="center"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:entries="@array/sex"/>-->
-
+                        android:entries="@array/sex"/>
 
                 </LinearLayout>
 
