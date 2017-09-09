@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -25,23 +27,34 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.other_frag) Button join;
     boolean where = false;
     boolean active = false;
+    Database database;
+    IntentClass intentClass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         ButterKnife.bind(this);
+        database = new Database(getApplicationContext(), "user_db", null,2);
+
         join.setText("회원가입으로");
-//        Presenter_login presenter_login = new Presenter_login(user_id,user_pwd);
         final String check_login_info = "uncorrect";
         final Model_login model_login = new Model_login(check_login_info);
-/*
-        Login_fragment login_fragment = new Login_fragment();
-        Fragment fr = new Login_fragment();*/
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
         fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
         fragmentTransaction.commit();
+
+        intentClass = new IntentClass(MainActivity.this);
+
+        Toast.makeText(this, "asdf", Toast.LENGTH_SHORT).show();
+        int count = intentClass.UserCount(database);
+        Log.d("count11",String.valueOf(count));
+        if (count != 0){
+            Intent intent = new Intent(MainActivity.this,GameActivity.class);
+            intentClass.PushUserInfo(intent,database);
+        }
 
         join.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -134,8 +147,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     String id_btn = id.getText().toString();
                     String pwd_btn = pwd.getText().toString();
 
-                    UserInfoAsync userInfoAsync = new UserInfoAsync(MainActivity.this);
-                    userInfoAsync.execute("6",id_btn,pwd_btn);
+                    UserInfoAsync userInfoAsync = new UserInfoAsync(MainActivity.this,database);
+                    userInfoAsync.execute("2",id_btn,pwd_btn);
                 }
             });
 
@@ -161,7 +174,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.write_certification) EditText user_cer;
         @BindView(R.id.check_certification) Button certi_bin;
         @BindView(R.id.joinbutton) Button submit;
-        String id, pwd1,pwd2 ,name;
+        @BindView(R.id.choice_sex) Spinner sex_spinner;
+        @BindView(R.id.join_photo) ImageView photo;
+        @BindView(R.id.join_photo_select) Button photo_select;
+        String id, pwd1,pwd2 ,name,sex;
 
         public Join_fragment(){
 
@@ -173,14 +189,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
             View view = inflater.inflate(R.layout.join_fragment,container,false);
 
             ButterKnife.bind(this,view);
-            id = user_id.getText().toString();
-            pwd1 = user_pwd1.getText().toString();
-            pwd2 = user_pwd2.getText().toString();
-            name = user_name.getText().toString();
             submit.setOnClickListener(this);
-
-
-
+            photo_select.setOnClickListener(this);
             return view;
         }
         @Override
@@ -192,21 +202,25 @@ public class MainActivity extends Activity implements View.OnClickListener{
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.joinbutton :
+                    id = user_id.getText().toString();
+                    pwd1 = user_pwd1.getText().toString();
+                    pwd2 = user_pwd2.getText().toString();
+                    name = user_name.getText().toString();
+                    sex = (String) sex_spinner.getSelectedItem();
+                    if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")){
 
-                    if (name.equals("") || pwd1.equals("") || id.equals("")){
                         Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     }
                     else if (!pwd1.equals(pwd2)){
                         Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        UserInfoAsync create = new UserInfoAsync(MainActivity.this);
-                        create.execute("5",id,pwd1,name,"12","12","12");
+                        UserInfoAsync create = new UserInfoAsync(MainActivity.this,database);
+                        create.execute("1",id,pwd1,name,"01012341234","12",sex);
                     }
-                    UserInfoAsync create = new UserInfoAsync(MainActivity.this);
-                    create.execute("5",id,pwd1,name,"12","12","12");
-
                     break;
+                case R.id.join_photo_select :
+
 
 
             }
