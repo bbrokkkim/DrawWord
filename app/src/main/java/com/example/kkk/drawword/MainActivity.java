@@ -1,11 +1,19 @@
 package com.example.kkk.drawword;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.app.Fragment;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +26,14 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends Activity implements View.OnClickListener{
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
     @BindView(R.id.other_frag) Button join;
     boolean where = false;
@@ -178,6 +189,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.join_photo) ImageView photo;
         @BindView(R.id.join_photo_select) Button photo_select;
         String id, pwd1,pwd2 ,name,sex;
+        IntentClass intentClass;
 
         public Join_fragment(){
 
@@ -200,30 +212,137 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.joinbutton :
+            switch (v.getId()) {
+                case R.id.joinbutton:
                     id = user_id.getText().toString();
                     pwd1 = user_pwd1.getText().toString();
                     pwd2 = user_pwd2.getText().toString();
                     name = user_name.getText().toString();
                     sex = (String) sex_spinner.getSelectedItem();
-                    if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")){
+                    if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")) {
 
                         Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (!pwd1.equals(pwd2)){
+                    } else if (!pwd1.equals(pwd2)) {
                         Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        UserInfoAsync create = new UserInfoAsync(MainActivity.this,database);
-                        create.execute("1",id,pwd1,name,"01012341234","12",sex);
+                    } else {
+                        UserInfoAsync create = new UserInfoAsync(MainActivity.this, database);
+                        create.execute("1", id, pwd1, name, "01012341234", "12", sex);
                     }
                     break;
-                case R.id.join_photo_select :
+                case R.id.join_photo_select:
+                    intentClass = new IntentClass(MainActivity.this);
+                    Bitmap bitmap = intentClass.GetPhoto();
+                    photo.setImageBitmap(bitmap);
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        context.startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivity(intent);
+//                    Bitmap bitmap = null;
 
+                    if (PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        Toast.makeText(MainActivity.this, "권한있음", Toast.LENGTH_SHORT).show();
+                        PermissionGet();
+                    } else {
+                        PermissionGet();
+                        Toast.makeText(MainActivity.this, "권한 없음", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+/*
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), intent.getData());
+        } catch (IOException e) {
+            Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+*/
 
 
             }
         }
+
+}
+
+    Boolean PermissionStatus(String permission){
+        int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, permission);
+
+        if(permissionCheck== PackageManager.PERMISSION_DENIED){
+            // 권한 없음
+
+            Log.d("as","1");
+            return true;
+        }else{
+            // 권한 있음
+            Log.d("as","1");
+            return false;
+        }
+
+    }
+
+    void PermissionGet(){
+        // Activity에서 실행하는경우
+        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+            // 이 권한을 필요한 이유를 설명해야하는가?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
+                // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+                alt_bld.setTitle("권한");
+                alt_bld.setMessage("갤러리에 대한 접근을 승낙하시겠습니까");
+                alt_bld.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(MainActivity.this, "승낙", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alt_bld.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(MainActivity.this, "못써 새꺄", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Toast.makeText(MainActivity.this, "승낙!!", Toast.LENGTH_SHORT).show();
+
+
+            } else {
+                Toast.makeText(this, "승낙?", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
+
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
+                    Log.d("aa","1111");
+                    // 권한 허가
+// 해당 권한을 사용해서 작업을 진행할 수 있습니다
+                } else {
+                    Toast.makeText(this, "2222", Toast.LENGTH_SHORT).show();
+                    Log.d("aa","2222");
+                    // 권한 거부
+// 사용자가 해당권한을 거부했을때 해주어야 할 동작을 수행합니다
+                }
+                return;
+        }
     }
 }
+
+
+
+
+
