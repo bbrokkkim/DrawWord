@@ -10,6 +10,10 @@ import android.content.Intent;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.IOException;
 
@@ -188,9 +195,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.choice_sex) Spinner sex_spinner;
         @BindView(R.id.join_photo) ImageView photo;
         @BindView(R.id.join_photo_select) Button photo_select;
+        @BindView(R.id.test_photo) ImageView test;
         String id, pwd1,pwd2 ,name,sex;
+        int a = 1;
         IntentClass intentClass;
-
+        int REQ_CODE_SELECT_IMAGE = 1;
+        Uri uri;
         public Join_fragment(){
 
         }
@@ -230,41 +240,69 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     }
                     break;
                 case R.id.join_photo_select:
-                    intentClass = new IntentClass(MainActivity.this);
-                    Bitmap bitmap = intentClass.GetPhoto();
-                    photo.setImageBitmap(bitmap);
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        context.startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
-//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivity(intent);
-//                    Bitmap bitmap = null;
+                    Drawable drawable = null;
+                    Bitmap bitmap = null;
+                    if (a == 1) {
+                        /*Picasso.with(MainActivity.this).load("http://i.imgur.com/DvpvklR.png").into(photo);
 
-                    if (PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        Toast.makeText(MainActivity.this, "권한있음", Toast.LENGTH_SHORT).show();
-                        PermissionGet();
-                    } else {
-                        PermissionGet();
-                        Toast.makeText(MainActivity.this, "권한 없음", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
+                        a = 2;*/
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        context.startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+                        startActivityForResult(intent,REQ_CODE_SELECT_IMAGE);
+
+                        if(PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                            PermissionGet();
+                        }
+                        else {
+                            PermissionGet();
+                        }
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), intent.getData());
+                            Uri uri = intent.getData();
+                            Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                            photo.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        a = 2;
+
+                    }
+                    else if (a == 2){
+                        Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                        drawable = photo.getDrawable();
+                        bitmap = ((BitmapDrawable)drawable).getBitmap();
+                        test.setImageBitmap(bitmap);
+                        Toast.makeText(MainActivity.this, "2", Toast.LENGTH_SHORT).show();
+                        UserInfoAsync test = new UserInfoAsync(MainActivity.this, database);
+                        test.execute("3",bitmap );
                     }
 
 
 
-/*
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), intent.getData());
-        } catch (IOException e) {
-            Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-*/
 
 
             }
         }
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+
+            Toast.makeText(getBaseContext(), "resultCode : "+resultCode,Toast.LENGTH_SHORT).show();
+
+            if(requestCode == REQ_CODE_SELECT_IMAGE)
+            {
+                if(resultCode == Activity.RESULT_OK){
+                    photo.setImageURI(data.getData());
+                    uri = data.getData();
+                    Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
 }
+
 
     Boolean PermissionStatus(String permission){
         int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, permission);
@@ -291,9 +329,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                 // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
                 // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
-                AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+                /*AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
                 alt_bld.setTitle("권한");
-                alt_bld.setMessage("갤러리에 대한 접근을 승낙하시겠습니까");
+                alt_bld.setMessage("갤러리에 대한 접근을 승낙하시겠습니까");*//**//*
                 alt_bld.setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -307,7 +345,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     }
                 });
                 Toast.makeText(MainActivity.this, "승낙!!", Toast.LENGTH_SHORT).show();
-
+*/
 
             } else {
                 Toast.makeText(this, "승낙?", Toast.LENGTH_SHORT).show();

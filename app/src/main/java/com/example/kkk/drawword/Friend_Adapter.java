@@ -62,6 +62,7 @@ public class Friend_Adapter extends BaseAdapter {
 
         user_name.setText(item.get(pos).getUser_name());
         user_ment.setText(item.get(pos).getUser_ment());
+        photo.setImageBitmap(item.get(pos).getUser_photo());
 //        photo.setImageDrawable(item.get(pos).getUser_photo());
 
         return convertView;

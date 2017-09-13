@@ -1,17 +1,19 @@
 package com.example.kkk.drawword;
 
 import android.app.Fragment;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.ArrayList;
 
@@ -43,10 +45,14 @@ public class friendlist_fragment extends Fragment{
         myname.setText(name);
         myment.setText(ment);
         friend_adapter = new Friend_Adapter(inflater,item);
-        item.add(new Friend_Data("김경관","안녕!!!!!!!!!!1"));
+//        item.add(new Friend_Data("김경관","안녕!!!!!!!!!!1"));
         listView.setAdapter(friend_adapter);
 
-
+        Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").into(myphoto);
+        RequestCreator as = Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png");
+        Drawable d = myphoto.getDrawable();
+        Bitmap b = ((BitmapDrawable) d).getBitmap();
+        item.add(new Friend_Data("as","as",b));
 //        return inflater.inflate(R.layout.friendlist_fragment, container, false);
         return view;
     }

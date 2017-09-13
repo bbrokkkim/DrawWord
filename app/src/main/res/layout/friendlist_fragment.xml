@@ -3,11 +3,19 @@
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
-
+    <TextView
+        android:text="나의 정보"
+        android:textSize="15dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/textView" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
+
+
 
         <ImageView
             android:layout_width="0dp"
@@ -42,9 +50,16 @@
 
     </LinearLayout>
 
+    <TextView
+        android:text="친구목록"
+        android:textSize="15dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/textView1"/>
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="9"
         android:id="@+id/friend_list"/>
 </LinearLayout>
