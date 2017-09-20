@@ -2,17 +2,12 @@ package com.example.kkk.drawword;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,18 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class MainActivity extends Activity implements View.OnClickListener{
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
@@ -52,7 +40,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         ButterKnife.bind(this);
-        database = new Database(getApplicationContext(), "user_db", null,2);
+        database = new Database(getApplicationContext(), "user_db", null,1);
 
         join.setText("회원가입으로");
         final String check_login_info = "uncorrect";
@@ -60,8 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
+        fragmentTransaction.add(R.id.fragmentloginorjoin,new Join_fragment());
+        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Join_fragment());
         fragmentTransaction.commit();
 
         intentClass = new IntentClass(MainActivity.this);
@@ -71,7 +59,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         Log.d("count11",String.valueOf(count));
         if (count != 0){
             Intent intent = new Intent(MainActivity.this,GameActivity.class);
-            intentClass.PushUserInfo(intent,database);
+            intentClass.PushUserInfo(intent);
         }
 
         join.setOnClickListener(this);
@@ -164,9 +152,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 public void onClick(View v) {
                     String id_btn = id.getText().toString();
                     String pwd_btn = pwd.getText().toString();
-
-                    UserInfoAsync userInfoAsync = new UserInfoAsync(MainActivity.this,database);
-                    userInfoAsync.execute("2",id_btn,pwd_btn);
+                    OkhttpUser okhttpUser = new OkhttpUser(MainActivity.this,database);
+                    okhttpUser.execute("2",id_btn,pwd_btn);
                 }
             });
 
@@ -192,15 +179,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.write_certification) EditText user_cer;
         @BindView(R.id.check_certification) Button certi_bin;
         @BindView(R.id.joinbutton) Button submit;
+        @BindView(R.id.back_photo) Button back_button;
         @BindView(R.id.choice_sex) Spinner sex_spinner;
         @BindView(R.id.join_photo) ImageView photo;
         @BindView(R.id.join_photo_select) Button photo_select;
-        @BindView(R.id.test_photo) ImageView test;
         String id, pwd1,pwd2 ,name,sex;
         int a = 1;
         IntentClass intentClass;
         int REQ_CODE_SELECT_IMAGE = 1;
         Uri uri;
+        String real_uri;
         public Join_fragment(){
 
         }
@@ -213,6 +201,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
             ButterKnife.bind(this,view);
             submit.setOnClickListener(this);
             photo_select.setOnClickListener(this);
+            back_button.setOnClickListener(this);
+
             return view;
         }
         @Override
@@ -229,79 +219,67 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     pwd2 = user_pwd2.getText().toString();
                     name = user_name.getText().toString();
                     sex = (String) sex_spinner.getSelectedItem();
-                    if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")) {
-
-                        Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    } else if (!pwd1.equals(pwd2)) {
-                        Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        UserInfoAsync create = new UserInfoAsync(MainActivity.this, database);
-                        create.execute("1", id, pwd1, name, "01012341234", "12", sex);
-                    }
+                    JoinMent(id,pwd1,pwd2,name,sex);
                     break;
                 case R.id.join_photo_select:
-                    Drawable drawable = null;
-                    Bitmap bitmap = null;
-                    if (a == 1) {
-                        /*Picasso.with(MainActivity.this).load("http://i.imgur.com/DvpvklR.png").into(photo);
 
-                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
-                        a = 2;*/
                         Intent intent = new Intent(Intent.ACTION_PICK);
-                        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        context.startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
-                        startActivityForResult(intent,REQ_CODE_SELECT_IMAGE);
+                    intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent,REQ_CODE_SELECT_IMAGE);
 
-                        if(PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)){
-                            PermissionGet();
-                        }
-                        else {
-                            PermissionGet();
-                        }
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), intent.getData());
-                            Uri uri = intent.getData();
-                            Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
-                            photo.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        a = 2;
-
+                    //마쉬멜로우 이상 권한 얻기
+                    if(PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                        PermissionGet();
                     }
-                    else if (a == 2){
-                        Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
-                        drawable = photo.getDrawable();
-                        bitmap = ((BitmapDrawable)drawable).getBitmap();
-                        test.setImageBitmap(bitmap);
-                        Toast.makeText(MainActivity.this, "2", Toast.LENGTH_SHORT).show();
-                        UserInfoAsync test = new UserInfoAsync(MainActivity.this, database);
-                        test.execute("3",bitmap );
+                    else {
+                        PermissionGet();
                     }
+                    break;
+                case R.id.back_photo :
+                    Toast.makeText(MainActivity.this, "이미지가 초기화 되었습니다.", Toast.LENGTH_SHORT).show();
+                    uri = null;
+                    photo.setImageResource(0);
 
+                    break;
+            }
+        }
 
-
-
-
+        //회원가입 유효성 검사
+        void JoinMent(String id,String pwd1, String pwd2, String name,String sex){
+            if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")) {
+                Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            } else if (!pwd1.equals(pwd2)) {
+                Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                if (uri == null){
+                    Toast.makeText(MainActivity.this, "없음", Toast.LENGTH_SHORT).show();
+                    a = 1;
+                    real_uri = "null";
+                }
+                OkhttpUser okhttpUser = new OkhttpUser(MainActivity.this, database);
+                okhttpUser.execute("1", id, pwd1, name, "01012341234", "12", sex, real_uri);
             }
         }
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
-            Toast.makeText(getBaseContext(), "resultCode : "+resultCode,Toast.LENGTH_SHORT).show();
-
-            if(requestCode == REQ_CODE_SELECT_IMAGE)
-            {
-                if(resultCode == Activity.RESULT_OK){
+            if(requestCode == REQ_CODE_SELECT_IMAGE) {
+                if(resultCode == Activity.RESULT_OK) {
                     photo.setImageURI(data.getData());
                     uri = data.getData();
-                    Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+
+                    String[] projection = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = managedQuery(uri, projection, null, null, null);
+                    startManagingCursor(cursor);
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    real_uri = cursor.getString(columnIndex);
                 }
             }
         }
 }
+
+
 
 
     Boolean PermissionStatus(String permission){
@@ -309,12 +287,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         if(permissionCheck== PackageManager.PERMISSION_DENIED){
             // 권한 없음
-
-            Log.d("as","1");
             return true;
-        }else{
+        }
+        else{
             // 권한 있음
-            Log.d("as","1");
             return false;
         }
 
@@ -326,32 +302,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
             // 이 권한을 필요한 이유를 설명해야하는가?
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
                 // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
                 // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
-                /*AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
-                alt_bld.setTitle("권한");
-                alt_bld.setMessage("갤러리에 대한 접근을 승낙하시겠습니까");*//**//*
-                alt_bld.setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(MainActivity.this, "승낙", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                alt_bld.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(MainActivity.this, "못써 새꺄", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Toast.makeText(MainActivity.this, "승낙!!", Toast.LENGTH_SHORT).show();
-*/
-
-            } else {
-                Toast.makeText(this, "승낙?", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
                 // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
 
             }
@@ -365,15 +321,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
-                    Log.d("aa","1111");
                     // 권한 허가
-// 해당 권한을 사용해서 작업을 진행할 수 있습니다
+                // 해당 권한을 사용해서 작업을 진행할 수 있습니다
                 } else {
-                    Toast.makeText(this, "2222", Toast.LENGTH_SHORT).show();
-                    Log.d("aa","2222");
                     // 권한 거부
-// 사용자가 해당권한을 거부했을때 해주어야 할 동작을 수행합니다
+                // 사용자가 해당권한을 거부했을때 해주어야 할 동작을 수행합니다
                 }
                 return;
         }

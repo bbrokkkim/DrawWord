@@ -22,7 +22,8 @@ public class Database extends SQLiteOpenHelper {
                 "iden INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "server_iden TEXT, " +
                 "name TEXT," +
-                "server_token TEXT);");
+                "server_token TEXT," +
+                "photo_uri TEXT);");
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -57,9 +57,27 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/textView1"/>
-    <ListView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
-        android:id="@+id/friend_list"/>
+        android:layout_weight="9">
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/friend_list"/>
+
+
+        <Button
+            android:text="+"
+            android:textSize="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|end"
+            android:id="@+id/add_friend" />
+
+
+    </FrameLayout>
+
 </LinearLayout>

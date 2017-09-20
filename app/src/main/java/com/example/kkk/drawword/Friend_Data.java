@@ -10,8 +10,8 @@ import android.graphics.drawable.Drawable;
 public class Friend_Data {
     String user_name;
     String user_ment;
-    Bitmap user_photo;
-    public Friend_Data(String user_name, String user_ment,Bitmap user_photo){
+    String user_photo;
+    public Friend_Data(String user_name, String user_ment,String user_photo){
 //        this.user_photo = user_photo;
         this.user_name = user_name;
         this.user_ment = user_ment;
@@ -22,7 +22,7 @@ public class Friend_Data {
         this.user_photo = user_photo;
     }*/
 
-    public void setUser_photo(Bitmap user_photo) {
+    public void setUser_photo(String user_photo) {
         this.user_photo = user_photo;
     }
 
@@ -41,7 +41,7 @@ public class Friend_Data {
 */
 
 
-    public Bitmap getUser_photo() {
+    public String getUser_photo() {
         return user_photo;
     }
 

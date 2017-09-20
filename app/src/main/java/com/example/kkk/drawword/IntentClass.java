@@ -25,25 +25,40 @@ public class IntentClass {
         this.context = context;
     }
 
-    void PushUserInfo(Intent intent, Database database) {
-        String iden = database.show_id("select * from user_token", 0, 1);
+    void PushUserInfo(Intent intent) {
+/*        String iden = database.show_id("select * from user_token", 0, 1);
         String id = database.show_id("select * from user_token", 0, 2);
         String token = database.show_id("select * from user_token", 0, 3);
-        intent.putExtra("user_iden", iden);
-        intent.putExtra("user_id", id);
-        intent.putExtra("user_token", token);
+        String uri = database.show_id("select * from user_token", 0, 4);
+
         Toast.makeText(context, iden, Toast.LENGTH_SHORT).show();
         Toast.makeText(context, id, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, token, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, token, Toast.LENGTH_SHORT).show();*/
         context.startActivity(intent);
     }
 
-    void GetUserInfo(Database database, String iden, String id, String token) {
-        iden = database.show_id("select * from user_token", 0, 1);
-        id = database.show_id("select * from user_token", 0, 2);
-        token = database.show_id("select * from user_token", 0, 3);
-        Toast.makeText(context, id, Toast.LENGTH_SHORT).show();
+    void InsertUserInfo(Database database,String iden,String user_id,String user_token,String uri){
+        database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "','"+ uri + "');");
     }
+    String GetIden(Database database) {
+        String iden = database.show_id("select * from user_token", 0, 1);
+        return iden;
+    }
+
+    String GetId(Database database) {
+        String id = database.show_id("select * from user_token", 0, 2);
+        return id;
+    }
+    String GetToken(Database database){
+        String token = database.show_id("select * from user_token", 0, 3);
+        return token;
+    }
+    String GetUri(Database database){
+        String uri = database.show_id("select * from user_token", 0, 4);
+        return uri;
+    }
+
+
 
 
     void UserLogout(Database database) {
@@ -57,33 +72,11 @@ public class IntentClass {
         return count;
     }
 
-    Bitmap GetPhoto() {
+    Intent GetPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        context.startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
-        context.startActivity(intent);
-        Bitmap bitmap = null;
-
-        if(PermissionStatus(Manifest.permission.READ_EXTERNAL_STORAGE)){
-            PermissionGet();
-        }
-        else {
-            PermissionGet();
-            Toast.makeText(context, "권한 없음", Toast.LENGTH_SHORT).show();
-        }
-
-
-
-/*
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), intent.getData());
-        } catch (IOException e) {
-            Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-*/
-        return bitmap;
+        return intent;
     }
 
     Boolean PermissionStatus(String permission){

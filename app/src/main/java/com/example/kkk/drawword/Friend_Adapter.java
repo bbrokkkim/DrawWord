@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 /**
@@ -62,7 +64,7 @@ public class Friend_Adapter extends BaseAdapter {
 
         user_name.setText(item.get(pos).getUser_name());
         user_ment.setText(item.get(pos).getUser_ment());
-        photo.setImageBitmap(item.get(pos).getUser_photo());
+        Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).into(photo);
 //        photo.setImageDrawable(item.get(pos).getUser_photo());
 
         return convertView;

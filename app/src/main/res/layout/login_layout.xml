@@ -33,6 +33,7 @@
         android:contentInsetEnd="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
+        android:background="#85ed9b"
         android:weightSum="10">
 
         <FrameLayout
@@ -42,7 +43,7 @@
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="#000000ff"
+                android:background="#000000"
                 android:id="@+id/back_btn"/>
 
             <TextView

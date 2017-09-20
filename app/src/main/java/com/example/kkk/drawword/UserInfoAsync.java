@@ -1,12 +1,9 @@
 package com.example.kkk.drawword;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -25,7 +24,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
@@ -47,7 +45,6 @@ public class UserInfoAsync extends AsyncTask<Object ,String ,String > {
     UserInfoAsync(MainActivity context, Database database){
         this.context = context;
         this.database = database;
-
     }
 
 
@@ -66,25 +63,25 @@ public class UserInfoAsync extends AsyncTask<Object ,String ,String > {
         }
         else {
             try {
-                JSONArray json = new JSONArray(output);
-                JSONObject json_ob = json.getJSONObject(0);
-                String iden = json_ob.getString("iden");
-                String user_id = json_ob.getString("id");
-                String user_token = json_ob.getString("token");
-                Intent intent = new Intent(context, GameActivity.class);
-                //회원가입 했을 시
-                if (ch.equals("1")) {
-                    Toast.makeText(context, "회원가입 완료", Toast.LENGTH_SHORT).show();
-                }
-                //GameActivity로
-                if (iden.equals("wrong")) {
-                    Toast.makeText(context, "틀림", Toast.LENGTH_SHORT).show();
-                } else if (!iden.equals("wrong")) {
-                    database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "');");
+                    JSONArray json = new JSONArray(output);
+                    JSONObject json_ob = json.getJSONObject(0);
+                    String iden = json_ob.getString("iden");
+                    String user_id = json_ob.getString("id");
+                    String user_token = json_ob.getString("token");
+                    Intent intent = new Intent(context, GameActivity.class);
+                    //회원가입 했을 시
+                    if (ch.equals("1")) {
+                        Toast.makeText(context, "회원가입 완료", Toast.LENGTH_SHORT).show();
+                    }
+                    //GameActivity로
+                    if (iden.equals("wrong")) {
+                        Toast.makeText(context, "틀림", Toast.LENGTH_SHORT).show();
+                    } else if (!iden.equals("wrong")) {
+                        database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "');");
 //                Toast.makeText(context, user_id, Toast.LENGTH_SHORT).show();
-                    IntentClass intentClass = new IntentClass(context);
-                    intentClass.PushUserInfo(intent, database);
-                }
+                        IntentClass intentClass = new IntentClass(context);
+                        intentClass.PushUserInfo(intent);
+                    }
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -137,8 +134,7 @@ public class UserInfoAsync extends AsyncTask<Object ,String ,String > {
                 parameter =
                         String.format("id=%s", URLEncoder.encode(id, "UTF-8"))
                                 + String.format("&pwd=%s", URLEncoder.encode(pwd, "UTF-8"));
-    
-    
+                Log.d("a",parameter);
             }
 
             if (ch.equals("3")){
@@ -147,7 +143,7 @@ public class UserInfoAsync extends AsyncTask<Object ,String ,String > {
 
             }
 
-            Log.d("asd", url.toString());
+            Log.d("URLURLURL", url.toString());
 //            Log.d("set",parameter);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -155,72 +151,82 @@ public class UserInfoAsync extends AsyncTask<Object ,String ,String > {
             conn.setDoOutput(true);
 
 
-
-
-
             if(ch.equals("3")){
-                conn.setRequestMethod("POST");
                 conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Cache-Control", "no-cache");
-                conn.setRequestProperty(
-                        "Content-Type", "multipart/form-data;boundary=" + this.boundary);
-
-                conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
                 Bitmap bitmap = (Bitmap) params[1];
+                Uri uri = (Uri) params[2];
 //                conn.setRequestProperty("uploaded_file", String.valueOf(bitmap));
-                /*
-
-                ByteArrayOutputStream bao = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-                byte [] ba = bao.toByteArray();
-                String ba1 = Base64.encodeToString(ba, Base64.DEFAULT);
-                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("image", ba1));
-*/
 
                 // content wrapper시작
                 DataOutputStream request = new DataOutputStream(
                         conn.getOutputStream());
 
                 request.writeBytes(twoHyphens + boundary + crlf);
-                request.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + "test"+"\"" + crlf);
-                request.writeBytes(crlf);
+
 // Bitmap을 ByteBuffer로 전환
-/*
+
                 byte[] pixels = new byte[bitmap.getWidth() * bitmap.getHeight()];
                 for (int i = 0; i < bitmap.getWidth(); ++i) {
                     for (int j = 0; j < bitmap.getHeight(); ++j) {
-                        //we're interested only in the MSB of the first byte,
-                        //since the other 3 bytes are identical for B&W images
                         pixels[i + j] = (byte) ((bitmap.getPixel(i, j) & 0x80) >> 7);
                     }
                 }
-//                request.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + fileName + "\"" + lineEnd);
 
+                /*ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+                bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+                byte[] byteArray = stream.toByteArray() ;
+*/
+//                request.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + "test123.jpg"+"\"" + crlf);
+//                request.write(pixels);/*
+//                request.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\"; filename=\"image.jpg\"\r\n");
+                request.writeBytes("\r\n--" + boundary + "\r\n");
+
+                /*File f = new File(uri.getPath());
+                FileInputStream fileInputStream = new FileInputStream(uri.toString());
+                int bytesAvailable = fileInputStream.available();
+                int maxBufferSize = 1024;
+                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                byte[] buffer = new byte[bufferSize];
+                int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                while (bytesRead > 0)
+                {
+                // Upload file part(s)
+                    DataOutputStream dataWrite = new DataOutputStream(conn.getOutputStream());
+                    dataWrite.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+                fileInputStream.close();*/;
+                request.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\"; filename=\"uploadedfile\"\r\n");
+
+
+                request.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+                request.writeBytes("\r\n--" + boundary + "--\r\n");
                 request.write(pixels);
+                request.flush();
+//                request.writeUTF(bitmap.toString());
 
-// content wrapper종료
-                request.writeBytes(this.crlf);
-                request.writeBytes(this.twoHyphens + this.boundary +
-                        this.twoHyphens + this.crlf);
-
+                // content wrapper종료
+                /*request.writeBytes(this.crlf);
+                request.writeBytes(this.twoHyphens + this.boundary + this.twoHyphens + this.crlf);
 // buffer flush
                 request.flush();
                 request.close();
 */
-
                 parameter = "choice=3";
             }
 
-            OutputStream os = conn.getOutputStream();
+            /*OutputStream os = conn.getOutputStream();
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
 
-            /*writer.write(parameter);
+            writer.write(parameter);
             writer.flush();
-            writer.close();*/
-
+            writer.close();
+*/
             Log.d("set","5");
             InputStreamReader inputStream = new InputStreamReader(conn.getInputStream(), "UTF-8");
             BufferedReader reader = new BufferedReader(inputStream);

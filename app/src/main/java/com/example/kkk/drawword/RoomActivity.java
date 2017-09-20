@@ -63,7 +63,7 @@ public class RoomActivity extends Activity {
         //read_thread = new Read_thread();
         tcp_connect = new Tcp_Connect();
         String num = "8000";
-        item.add(new ChatData("asd","hi~"));
+        item.add(new ChatData("user_name","hi~"));
         tcp_connect.execute(num);
 
         try {
@@ -91,20 +91,6 @@ public class RoomActivity extends Activity {
             }
         });
 
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Toast.makeText(RoomActivity.this, "refresh", Toast.LENGTH_SHORT).show();
-                Log.d("stream","123");
-                Tcp_refresh tcp_refresh = new Tcp_refresh();
-                Log.d("stream","345");
-                tcp_refresh.execute();
-                Log.d("stream","567");*/
-                Toast.makeText(RoomActivity.this, "시작", Toast.LENGTH_SHORT).show();
-//                checkUpdate.start();
-            }
-        });
-
 
         handler2 = new Handler(){
             public void handleMessage(Message msg) {
@@ -121,7 +107,6 @@ public class RoomActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        read_thread.interrupt();
         Toast.makeText(this, "뒤로가기", Toast.LENGTH_SHORT).show();
     }
 
@@ -150,7 +135,6 @@ public class RoomActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     };
 
@@ -172,32 +156,7 @@ public class RoomActivity extends Activity {
         }
     };
 
-    public class Tcp_refresh extends AsyncTask<String ,String ,String> {
-        String user,ment;
-        @Override
-        protected String doInBackground(String... params) {
-            Log.d("stream","asdd11123123");
-            try {
-                read1 = bufferedReader.readLine();
-                read2 = bufferedReader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("fail","refresh");
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            item.add(new ChatData(read1,read2));
-            room_adapter.notifyDataSetChanged();
-            Log.d("stream","refresh");
-            Toast.makeText(RoomActivity.this, "새로고침", Toast.LENGTH_SHORT).show();
-
-        }
-    }
 
     public class Tcp_chat extends AsyncTask<String ,String ,String> {
         String user,ment,ment1;

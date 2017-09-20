@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DrawWord</string><!--
     <String name="server_ip">172.31.15.181</String>
     <String name="server_http">http://172.31.15.181/</String>-->
+    <string name="DOMAIN_URL">http://13.124.229.116/</string>
 </resources>
