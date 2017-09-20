@@ -23,6 +23,13 @@
             android:orientation="vertical">
 
             <TextView
+                android:text="iden"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/iden" />
+
+            <TextView
                 android:text="bbrotherkk"
                 android:textSize="20dp"
                 android:gravity="center_vertical"
@@ -38,8 +45,11 @@
                 android:layout_weight="1"
                 android:id="@+id/user_ment" />
 
+
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

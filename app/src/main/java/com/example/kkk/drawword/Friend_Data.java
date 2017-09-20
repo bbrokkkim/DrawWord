@@ -11,16 +11,22 @@ public class Friend_Data {
     String user_name;
     String user_ment;
     String user_photo;
-    public Friend_Data(String user_name, String user_ment,String user_photo){
+    String iden;
+    public Friend_Data(String user_name, String user_ment,String user_photo,String iden){
 //        this.user_photo = user_photo;
         this.user_name = user_name;
         this.user_ment = user_ment;
         this.user_photo = user_photo;
+        this.iden = iden;
     }
 
 /*    public void setUser_photo(Bitmap user_photo) {
         this.user_photo = user_photo;
     }*/
+
+    public void setIden(String iden) {
+        this.iden = iden;
+    }
 
     public void setUser_photo(String user_photo) {
         this.user_photo = user_photo;
@@ -53,4 +59,7 @@ public class Friend_Data {
         return user_ment;
     }
 
+    public String getIden() {
+        return iden;
+    }
 }

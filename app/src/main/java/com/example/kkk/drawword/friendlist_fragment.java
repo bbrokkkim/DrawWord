@@ -18,7 +18,13 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,15 +42,14 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
     Friend_Adapter friend_adapter;
     ArrayList<Friend_Data> item = new ArrayList<Friend_Data>();
     String iden,id,ment,photo_uri,token,friend_list_json;
+    String friend_iden,friend_id,friend_photo_uri,friend_ment;
+    String default_photo_url = "http://13.124.229.116/user_photo/";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);
         ButterKnife.bind(this,view);
 
-        IntentClass intentClass = new IntentClass(getActivity());
-        Database database = new Database(getActivity(),"user_db", null,1);
 
-        Bundle bundle = new Bundle();
         iden = getArguments().getString("iden");
         id = getArguments().getString("id");
         photo_uri = getArguments().getString("uri");
@@ -57,6 +62,9 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
         Log.d("photo_uri",photo_backUri+photo_uri);
         Log.d("photo_uri",id+ iden);
+        Log.d("fr_list",friend_list_json);
+
+        GetJson();
 
         add_friend.setOnClickListener(this);
 
@@ -67,7 +75,34 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
     }
 
 
+    void GetJson(){
+        Log.d("테스트", "not null");
+        try {
+            JSONArray json = new JSONArray(friend_list_json);
+            for (int i = 0; i < json.length(); i++) {
 
+
+                JSONObject jsonObject = json.getJSONObject(i);
+                friend_iden = jsonObject.getString("iden");
+                friend_id = jsonObject.getString("id");
+                friend_photo_uri = jsonObject.getString("photo_uri");
+                friend_ment = jsonObject.getString("ment");
+                if (friend_ment.equals("null")){
+                    friend_ment = "멘트가 없습니다.";
+                }
+                if (friend_photo_uri.equals("null")){
+                    friend_photo_uri = "default/default.jpg";
+                }
+                friend_photo_uri = default_photo_url+friend_photo_uri;
+                item.add(new Friend_Data(friend_id,friend_ment,friend_photo_uri,friend_iden));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

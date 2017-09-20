@@ -44,7 +44,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         Log.d("token",token);
         if (!iden.equals(null)){
             try {
-                friend_list_json = new OkhttpFriend().execute("1",token,iden).get();
+                friend_list_json = new OkhttpFriend().execute("1",iden,token).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -87,6 +87,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         if (type == 1){
             fr = new friendlist_fragment();
             bundle.putString("friend_list_json",friend_list_json);
+            Log.d("listlistlist", friend_list_json);
         }
         else {
             fr = new gamelist_fragment();
