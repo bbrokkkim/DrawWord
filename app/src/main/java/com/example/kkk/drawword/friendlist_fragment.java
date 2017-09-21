@@ -1,6 +1,8 @@
 package com.example.kkk.drawword;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +68,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         Log.d("photo_uri",id+ iden);
         Log.d("fr_list",friend_list_json);
 
-        GetJson();
+        GetJson(friend_list_json);
 
         add_friend.setOnClickListener(this);
 
@@ -75,10 +79,11 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
     }
 
 
-    void GetJson(){
+    void GetJson(String json_list){
         Log.d("테스트", "not null");
         try {
-            JSONArray json = new JSONArray(friend_list_json);
+            JSONArray json = new JSONArray(json_list);
+            Log.d("json_length",String.valueOf( json.length()));
             for (int i = 0; i < json.length(); i++) {
 
 
@@ -95,6 +100,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
                 }
                 friend_photo_uri = default_photo_url+friend_photo_uri;
                 item.add(new Friend_Data(friend_id,friend_ment,friend_photo_uri,friend_iden));
+//                friend_adapter.notifyDataSetChanged();
             }
 
         } catch (JSONException e) {
@@ -116,8 +122,44 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_friend:
-                OkhttpFriend okhttpFriend = new OkhttpFriend();
-                okhttpFriend.execute("2");
+               /* OkhttpFriend okhttpFriend = new OkhttpFriend();
+                okhttpFriend.execute("2");*/
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.add_friend_dialog, null);
+                final EditText friend_name= (EditText)dialogView.findViewById(R.id.friend_name);
+                final AlertDialog.Builder buider= new AlertDialog.Builder(getActivity());
+                buider.setTitle("친구추가"); //Dialog 제목
+                buider.setIcon(android.R.drawable.ic_menu_add); //제목옆의 아이콘 이미지(원하는 이미지 설정)
+                buider.setView(dialogView);
+                buider.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String friend = friend_name.getText().toString();
+                        String friend_output = null;
+                        OkhttpFriend okhttpFriend = new OkhttpFriend(getActivity());
+                        try {
+                            friend_output = okhttpFriend.execute("2",iden,id,friend).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        if (!friend_output.equals("already") || !friend_output.equals("cantfind")) {
+                            GetJson(friend_output);
+                        }
+                    }
+                });
+                buider.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+
+
+                buider.show();
+
         }
     }
 }

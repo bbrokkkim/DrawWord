@@ -41,17 +41,20 @@ public class GameActivity extends Activity implements View.OnClickListener{
         id = intentClass.GetId(database);
         token = intentClass.GetToken(database);
         uri = intentClass.GetUri(database);
-        Log.d("token",token);
+        Log.d("test_iden",iden);
         if (!iden.equals(null)){
             try {
-                friend_list_json = new OkhttpFriend().execute("1",iden,token).get();
+                friend_list_json = new OkhttpFriend(this).execute("1",iden,token).get();
+                Log.d("friend_json",friend_list_json);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Log.d("friend_json1","test");
             } catch (ExecutionException e) {
                 e.printStackTrace();
+                Log.d("friend_json2","test2");
             }
         }
-
+        Log.d("friend_json","??");
         //프레그먼트 호출
         switchfragment(1);
 
