@@ -1,6 +1,7 @@
 package com.example.kkk.drawword;
 
 import android.content.Context;
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,9 @@ public class Friend_Adapter extends BaseAdapter {
     Context context;
     LayoutInflater inflater;
 
-    public Friend_Adapter(LayoutInflater inflater, ArrayList<Friend_Data> item){
+    public Friend_Adapter(LayoutInflater inflater,Context context, ArrayList<Friend_Data> item){
 
-        //this.context = context;
+        this.context = context;
         this.inflater = inflater;
         this.item = item;
     }
@@ -56,7 +57,7 @@ public class Friend_Adapter extends BaseAdapter {
         }
 
 //        item = new ArrayList<Friend_Data>();
-        Friend_Data friend_data = item.get(pos);
+//        Friend_Data friend_data = item.get(pos);
 
         ImageView photo = (ImageView) convertView.findViewById(R.id.user_photo);
         TextView user_name = (TextView) convertView.findViewById(R.id.user_name);
@@ -69,5 +70,8 @@ public class Friend_Adapter extends BaseAdapter {
 //        photo.setImageDrawable(item.get(pos).getUser_photo());
 
         return convertView;
+    }
+    public int getItemPosition(Object object) {
+        return PagerAdapter.POSITION_NONE;
     }
 }

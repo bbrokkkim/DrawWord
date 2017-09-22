@@ -3,14 +3,12 @@ package com.example.kkk.drawword;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,15 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
@@ -71,41 +66,63 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         GetJson(friend_list_json);
 
         add_friend.setOnClickListener(this);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Friend_Data fr_data = (Friend_Data) listView.getItemAtPosition(position);
+                String friend_iden = fr_data.getIden();
+                OkhttpFriend okhttpFriend = new OkhttpFriend(getActivity());
+                String del_json = null;
+                try {
+                    del_json = okhttpFriend.execute("3",iden,friend_iden).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                Log.d("testesetset",del_json);
+                item.clear();
+                friend_adapter.notifyDataSetChanged();
+                GetJson(del_json);
+                return false;
+            }
+        });
 
-        friend_adapter = new Friend_Adapter(inflater,item);
+        friend_adapter = new Friend_Adapter(inflater,getActivity(),item);
         listView.setAdapter(friend_adapter);
 
         return view;
     }
 
-
     void GetJson(String json_list){
         Log.d("테스트", "not null");
-        try {
-            JSONArray json = new JSONArray(json_list);
-            Log.d("json_length",String.valueOf( json.length()));
-            for (int i = 0; i < json.length(); i++) {
 
 
-                JSONObject jsonObject = json.getJSONObject(i);
-                friend_iden = jsonObject.getString("iden");
-                friend_id = jsonObject.getString("id");
-                friend_photo_uri = jsonObject.getString("photo_uri");
-                friend_ment = jsonObject.getString("ment");
-                if (friend_ment.equals("null")){
-                    friend_ment = "멘트가 없습니다.";
+            try {
+                JSONArray json = new JSONArray(json_list);
+                Log.d("json_length", String.valueOf(json.length()));
+                for (int i = 0; i < json.length(); i++) {
+
+
+                    JSONObject jsonObject = json.getJSONObject(i);
+                    friend_iden = jsonObject.getString("iden");
+                    friend_id = jsonObject.getString("id");
+                    friend_photo_uri = jsonObject.getString("photo_uri");
+                    friend_ment = jsonObject.getString("ment");
+                    if (friend_ment.equals("null")) {
+                        friend_ment = "멘트가 없습니다.";
+                    }
+                    if (friend_photo_uri.equals("null")) {
+                        friend_photo_uri = "default/default.jpg";
+                    }
+                    friend_photo_uri = default_photo_url + friend_photo_uri;
+                    item.add(new Friend_Data(friend_id, friend_ment, friend_photo_uri, friend_iden));
+
                 }
-                if (friend_photo_uri.equals("null")){
-                    friend_photo_uri = "default/default.jpg";
-                }
-                friend_photo_uri = default_photo_url+friend_photo_uri;
-                item.add(new Friend_Data(friend_id,friend_ment,friend_photo_uri,friend_iden));
-//                friend_adapter.notifyDataSetChanged();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
     }
@@ -124,7 +141,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
             case R.id.add_friend:
                /* OkhttpFriend okhttpFriend = new OkhttpFriend();
                 okhttpFriend.execute("2");*/
-                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.add_friend_dialog, null);
                 final EditText friend_name= (EditText)dialogView.findViewById(R.id.friend_name);
                 final AlertDialog.Builder buider= new AlertDialog.Builder(getActivity());
@@ -144,7 +161,14 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
-                        if (!friend_output.equals("already") || !friend_output.equals("cantfind")) {
+                        Log.d("output_json",friend_output);
+                        if (friend_output.equals("already") || friend_output.equals("cantfind")){
+                            Toast.makeText(getActivity(),"good", Toast.LENGTH_SHORT).show();
+                        }
+                        
+                        else if (friend_output.equals("already") || !friend_output.equals("cantfind")) {
+                            item.clear();
+                            friend_adapter.notifyDataSetChanged();
                             GetJson(friend_output);
                         }
                     }
@@ -152,14 +176,13 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
                 buider.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.dismiss();
                     }
                 });
-
-
-
                 buider.show();
+                break;
 
         }
     }
+
 }

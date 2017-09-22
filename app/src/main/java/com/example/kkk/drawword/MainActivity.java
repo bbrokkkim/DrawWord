@@ -48,8 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,new Join_fragment());
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Join_fragment());
+        fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
+        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
         fragmentTransaction.commit();
 
         intentClass = new IntentClass(MainActivity.this);
@@ -213,6 +213,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+                //회원가입 완료
                 case R.id.joinbutton:
                     id = user_id.getText().toString();
                     pwd1 = user_pwd1.getText().toString();
@@ -221,6 +222,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     sex = (String) sex_spinner.getSelectedItem();
                     JoinMent(id,pwd1,pwd2,name,sex);
                     break;
+                //이미지 선택
                 case R.id.join_photo_select:
 
                         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -236,6 +238,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                         PermissionGet();
                     }
                     break;
+                //이미지 초기화
                 case R.id.back_photo :
                     Toast.makeText(MainActivity.this, "이미지가 초기화 되었습니다.", Toast.LENGTH_SHORT).show();
                     uri = null;
