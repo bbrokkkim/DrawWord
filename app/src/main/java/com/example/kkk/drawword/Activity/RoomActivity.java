@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.kkk.drawword.ChatData;
+import com.example.kkk.drawword.R;
+import com.example.kkk.drawword.Room_Adapter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,7 +23,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /**

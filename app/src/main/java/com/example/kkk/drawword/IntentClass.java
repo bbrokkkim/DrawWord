@@ -21,11 +21,11 @@ public class IntentClass {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     Activity context;
 
-    IntentClass(Activity context) {
+    public IntentClass(Activity context) {
         this.context = context;
     }
 
-    void PushUserInfo(Intent intent) {
+    public void PushUserInfo(Intent intent) {
 /*        String iden = database.show_id("select * from user_token", 0, 1);
         String id = database.show_id("select * from user_token", 0, 2);
         String token = database.show_id("select * from user_token", 0, 3);
@@ -37,23 +37,23 @@ public class IntentClass {
         context.startActivity(intent);
     }
 
-    void InsertUserInfo(Database database,String iden,String user_id,String user_token,String uri){
+    public void InsertUserInfo(Database database,String iden,String user_id,String user_token,String uri){
         database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "','"+ uri + "');");
     }
-    String GetIden(Database database) {
+    public String GetIden(Database database) {
         String iden = database.show_id("select * from user_token", 0, 1);
         return iden;
     }
 
-    String GetId(Database database) {
+    public String GetId(Database database) {
         String id = database.show_id("select * from user_token", 0, 2);
         return id;
     }
-    String GetToken(Database database){
+    public String GetToken(Database database){
         String token = database.show_id("select * from user_token", 0, 3);
         return token;
     }
-    String GetUri(Database database){
+    public String GetUri(Database database){
         String uri = database.show_id("select * from user_token", 0, 4);
         return uri;
     }
@@ -61,25 +61,25 @@ public class IntentClass {
 
 
 
-    void UserLogout(Database database) {
+    public void UserLogout(Database database,Intent intent) {
         database.delete("delete from user_token");
         Toast.makeText(context, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
-        context.finish();
+        context.startActivity(intent);
     }
 
-    int UserCount(Database database) {
+    public int UserCount(Database database) {
         int count = database.count("select * from user_token");
         return count;
     }
 
-    Intent GetPhoto() {
+    public Intent GetPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         return intent;
     }
 
-    Boolean PermissionStatus(String permission){
+    public Boolean PermissionStatus(String permission){
         int permissionCheck = ContextCompat.checkSelfPermission(context, permission);
 
         if(permissionCheck== PackageManager.PERMISSION_DENIED){
@@ -95,7 +95,7 @@ public class IntentClass {
 
     }
 
-    void PermissionGet(){
+    public void PermissionGet(){
         // Activity에서 실행하는경우
         if (ContextCompat.checkSelfPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
 

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.net.Socket;
+import com.example.kkk.drawword.Activity.RoomActivity;
+
 import java.util.ArrayList;
 
 /**
@@ -26,6 +24,7 @@ public class gamelist_fragment extends Fragment {
     ArrayList<Gamelist_Data> item = new ArrayList<Gamelist_Data>();
     Gamelist_Adapter gamelist_adapter;
     Button create_room;
+    public gamelist_fragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

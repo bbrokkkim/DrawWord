@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,16 +25,25 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.example.kkk.drawword.Database;
+import com.example.kkk.drawword.IntentClass;
+import com.example.kkk.drawword.Model_login;
+import com.example.kkk.drawword.OkhttpUser;
+import com.example.kkk.drawword.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 public class MainActivity extends Activity implements View.OnClickListener{
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
     @BindView(R.id.other_frag) Button join;
-    boolean where = false;
+    boolean where = true;
     boolean active = false;
     Database database;
     IntentClass intentClass;
+    public MainActivity (){
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +55,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         final String check_login_info = "uncorrect";
         final Model_login model_login = new Model_login(check_login_info);
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,new Login_fragment());
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,new Login_fragment());
-        fragmentTransaction.commit();
+        //fragment
+        switchfragment();
 
         intentClass = new IntentClass(MainActivity.this);
 
@@ -60,6 +66,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         if (count != 0){
             Intent intent = new Intent(MainActivity.this,GameActivity.class);
             intentClass.PushUserInfo(intent);
+            finish();
         }
 
         join.setOnClickListener(this);
@@ -91,19 +98,23 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
     public void switchfragment(){
-        Fragment fr,hide_fr;
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
 
         if (where == true){
-            fr = new Login_fragment();
+            Login_fragment login = new Login_fragment();
+            fragmentTransaction.add(R.id.fragmentloginorjoin,login);
+            fragmentTransaction.replace(R.id.fragmentloginorjoin,login);
         }
-        else {
-            fr = new Join_fragment();
+        else if (where == false) {
+            Join_fragment join = new Join_fragment();
+            fragmentTransaction.add(R.id.fragmentloginorjoin,join);
+            fragmentTransaction.replace(R.id.fragmentloginorjoin,join);
         }
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentloginorjoin,fr);
-        fragmentTransaction.replace(R.id.fragmentloginorjoin,fr);
+
+
         fragmentTransaction.commit();
     }
 
@@ -140,7 +151,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.ed_id) EditText id;
         @BindView(R.id.ed_password) EditText pwd;
 
-
+        public Login_fragment(){}
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -189,9 +200,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         int REQ_CODE_SELECT_IMAGE = 1;
         Uri uri;
         String real_uri;
-        public Join_fragment(){
-
-        }
+        public Join_fragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

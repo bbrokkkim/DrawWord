@@ -43,6 +43,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
     String iden,id,ment,photo_uri,token,friend_list_json;
     String friend_iden,friend_id,friend_photo_uri,friend_ment;
     String default_photo_url = "http://13.124.229.116/user_photo/";
+    public friendlist_fragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);

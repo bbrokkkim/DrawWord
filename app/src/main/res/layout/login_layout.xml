@@ -10,12 +10,12 @@
 
 
 
-<!--    <fragment android:name="com.example.kkk.drawword.MainActivity$Login_fragment"
+<!--    <fragment android:name="com.example.kkk.drawword.Activity.MainActivity$Login_fragment"
         android:id="@+id/Login_fr"
         android:layout_weight="2"
         android:layout_width="0dp"
         android:layout_height="match_parent" />
-    <fragment android:name="com.example.kkk.drawword.MainActivity$Join_fragment"
+    <fragment android:name="com.example.kkk.drawword.Activity.MainActivity$Join_fragment"
         android:id="@+id/Join_fr"
         android:layout_weight="2"
         android:layout_width="0dp"

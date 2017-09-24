@@ -28,7 +28,7 @@ public class Model_login {
     Boolean check = false;
 
     Connect_login connect_login1 = new Connect_login();
-    Model_login(String info){
+    public Model_login(String info){
         this.id = id;
         this.pwd = pwd;
         this.info = info;
@@ -47,7 +47,7 @@ public class Model_login {
     }*/
 
 
-    class Connect_login extends AsyncTask<String ,String ,String  >{
+   public class Connect_login extends AsyncTask<String ,String ,String  >{
         String output="as";
         String str;
         @Override

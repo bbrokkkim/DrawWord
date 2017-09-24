@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,6 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.kkk.drawword.Database;
+import com.example.kkk.drawword.IntentClass;
+import com.example.kkk.drawword.MyFirebaseMessagingService;
+import com.example.kkk.drawword.OkhttpFriend;
+import com.example.kkk.drawword.R;
+import com.example.kkk.drawword.friendlist_fragment;
+import com.example.kkk.drawword.gamelist_fragment;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.ExecutionException;
 
@@ -28,6 +37,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.port_num) EditText port_num;
     @BindView(R.id.ment) EditText ment;
     @BindView(R.id.tcp_test) Button tcp_btn;
+    @BindView(R.id.logout) Button logout;
     String friend_list_json,iden,id,token,uri;
     Database database;
     IntentClass intentClass = new IntentClass(GameActivity.this);
@@ -36,6 +46,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
         ButterKnife.bind(this);
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("TOKEN", "Refreshed token~~: " + refreshedToken);
         database = new Database(GameActivity.this,"user_db", null,1);
         iden = intentClass.GetIden(database);
         id = intentClass.GetId(database);
@@ -64,8 +76,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
         tcp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intentClass.UserLogout(database);
+                Intent intent = new Intent(GameActivity.this,MainActivity.class);
+                intentClass.UserLogout(database,intent);
             }
         });
 
@@ -79,6 +91,9 @@ public class GameActivity extends Activity implements View.OnClickListener{
             case R.id.game_button:
                 switchfragment(2);
                 break;
+            case R.id.logout:
+                Intent intent = new Intent(GameActivity.this,MainActivity.class);
+                intentClass.UserLogout(database,intent);
         }
     }
 

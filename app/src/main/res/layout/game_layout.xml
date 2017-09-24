@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:background="#4bff45"
-                android:id="@+id/etc"/>
+                android:id="@+id/logout"/>
         </FrameLayout>
     </android.support.v7.widget.Toolbar>
 
