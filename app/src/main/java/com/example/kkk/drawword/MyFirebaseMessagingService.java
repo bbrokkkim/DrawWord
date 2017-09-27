@@ -1,25 +1,23 @@
 package com.example.kkk.drawword;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.accessibility.AccessibilityManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.GameActivity;
 import com.example.kkk.drawword.Activity.MainActivity;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -29,6 +27,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "TEST";
+
+
 
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
@@ -47,22 +47,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
-                    Toast.makeText(MyFirebaseMessagingService.this, remoteMessage.getNotification().getBody(), Toast.LENGTH_SHORT).show();
-                    showNotification("asdf","fldjfldfjdflrealreald");
+                        Toast.makeText(MyFirebaseMessagingService.this, remoteMessage.getNotification().getBody(), Toast.LENGTH_SHORT).show();
+                    showNotification("asdf",remoteMessage.getNotification().getBody());
+                    new OkhttpFriend().execute("2","123","134","asdfasdg");
+//                    Dialog as = new Dialog(MyFirebaseMessagingService.this);
+//                    as.Show(remoteMessage.getNotification().getBody());
                 }
             };
             handler.sendEmptyMessage(0);
-
-//            Toast.makeText(this, remoteMessage.getNotification().getBody(), Toast.LENGTH_SHORT).show();
         }
     }
 
 
 
     private void showNotification(String title, String message) {
-        Intent intent = new Intent(this, GameActivity.class);
+        /*Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+        intent.putExtra(message,"message");
+        startActivity(intent);*/
+        /*PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -78,6 +81,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notificationBuilder.build());
+*/
+
+       /* AlertDialog.Builder dialog =
+                new AlertDialog.Builder(FirebaseMessagingService);
+        dialog.setTitle("씨가 친구를 추가 했습니다.");
+        dialog.setMessage("친구를 추가하시겠습니까?");
+        dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                okhttpFriend.execute();
+
+            }
+        });
+        dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "아니오", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show();*/
     }
 
 
