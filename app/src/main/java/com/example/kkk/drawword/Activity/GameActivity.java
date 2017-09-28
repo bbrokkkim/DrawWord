@@ -48,6 +48,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     String friend_list_json,check_json,iden,id,token,uri,friend_iden,friend_id;
     int json_length = 0;
     int json_row = 1;
+    int testint = 0;
     Database database;
     IntentClass intentClass = new IntentClass(GameActivity.this);
     @Override
@@ -120,7 +121,6 @@ public class GameActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    //이걸 프렌드프레그먼트로 옮겨?
     void GetJson(String json_list, boolean type) {
         Log.d("테스트", "not null");
         if (!json_list.equals("nothing")) {
@@ -205,6 +205,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
             Log.d("listlistlist", friend_list_json);
         }
         else {
+            /*bundle.putInt("test",testint);
+            testint = testint + 1;*/
             fr = new gamelist_fragment();
         }
         bundle.putString("iden",iden);
