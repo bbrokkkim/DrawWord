@@ -49,7 +49,6 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);
         ButterKnife.bind(this,view);
 
-
         iden = getArguments().getString("iden");
         id = getArguments().getString("id");
         photo_uri = getArguments().getString("uri");
@@ -59,6 +58,9 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         //user_info
         myname.setText(id);
         myment.setText("아직 준비 모함");
+        if (photo_uri.equals("null")){
+            photo_uri = "default/default.jpg";
+        }
         String photo_backUri = "http://13.124.229.116/user_photo/";
         Picasso.with(getActivity()).load(photo_backUri+photo_uri).into(myphoto);
         Log.d("photo_uri",photo_backUri+photo_uri);

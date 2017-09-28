@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +15,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.RoomActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -36,21 +44,24 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
 
     @BindView(R.id.create_room) Button create_room;
     @BindView(R.id.game_list) ListView listView;
-    String id,iden;
+    @BindView(R.id.refresh) ImageButton refresh;
+    String id,iden,refresh_json,room_name,room_con;
+    int room_iden;
+    boolean refresh_stop = false;
     public gamelist_fragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gamelist_fragment,container,false);
         ButterKnife.bind(this,view);
-
+        checkUpdate.start();
         id = getArguments().getString("id");
         iden = getArguments().getString("iden");
         int test = getArguments().getInt("test");
         Toast.makeText(getActivity(), String.valueOf(test), Toast.LENGTH_SHORT).show();
         
         gamelist_adapter = new Gamelist_Adapter(inflater,item);
-        item.add(new Gamelist_Data("1","테스트방입니다","2/4"));
+        item.add(new Gamelist_Data(1,"테스트방입니다","2/4"));
         listView.setAdapter(gamelist_adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,7 +73,7 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
         });
 
         create_room.setOnClickListener(this);
-
+        refresh.setOnClickListener(this);
         Toast.makeText(getActivity(),"oncreateview", Toast.LENGTH_SHORT).show();
         return view;
     }
@@ -75,17 +86,6 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
         Toast.makeText(getActivity(), "onActivityCreateed", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Toast.makeText(getActivity(), "onStart", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Toast.makeText(getActivity(), "onResume", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onPause() {
@@ -134,7 +134,7 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
                     public void onClick(DialogInterface dialog, int which) {
                         String room_name = room.getText().toString();
                         OkhttpGame okhttpGame = new OkhttpGame();
-                        okhttpGame.execute("1",iden,id);
+                        okhttpGame.execute("1",room_name);
                     }
                 });
                 buider.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -145,6 +145,76 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
                 });
                 buider.show();
                 break;
+            case R.id.refresh :
+                try {
+                    refresh_json = new OkhttpGame().execute("2").get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
         }
     }
+
+    private Thread checkUpdate = new Thread() {
+
+        public void run() {
+
+            while (true){
+                try {
+                    if (refresh_stop == true){
+                        break;
+                    }
+                    handler.sendEmptyMessage(0);
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                refresh_json = new OkhttpGame().execute("2").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    void GetJson(String json_list){
+        Log.d("refresh", "not null");
+        try {
+            JSONArray json = new JSONArray(json_list);
+            Log.d("json_length", String.valueOf(json.length()));
+            int real_iden = 0;
+            for (int i = 0; i < json.length(); i++) {
+
+
+                JSONObject jsonObject = json.getJSONObject(i);
+                room_name = jsonObject.getString("name");
+                room_con = jsonObject.getString("room_status");
+                room_iden = jsonObject.getInt("iden");
+                real_iden = room_iden % 1000;
+
+                room_name = jsonObject.getString("room_name");
+                item.add(new Gamelist_Data(real_iden,room_name,room_con));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }
+
+
+

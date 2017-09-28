@@ -5,16 +5,16 @@ package com.example.kkk.drawword;
  */
 
 public class Gamelist_Data {
-    String room_num;
+    int room_num;
     String room_name;
     String room_con;
-    public Gamelist_Data(String room_num,String room_name,String room_con){
+    public Gamelist_Data(int room_num,String room_name,String room_con){
         this.room_num = room_num;
         this.room_name = room_name;
         this.room_con = room_con;
     }
 
-    public void setRoom_num(String room_num) {
+    public void setRoom_num(int room_num) {
         this.room_num = room_num;
     }
 
@@ -26,7 +26,7 @@ public class Gamelist_Data {
         this.room_con = room_con;
     }
 
-    public String getRoom_num() {
+    public int getRoom_num() {
         return room_num;
     }
 

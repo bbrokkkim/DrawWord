@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,11 +41,9 @@ import butterknife.ButterKnife;
 public class GameActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.game_button) Button game_btn;
     @BindView(R.id.friend_button) Button friend_btn;
-    @BindView(R.id.proto_test) TextView test;
-    @BindView(R.id.port_num) EditText port_num;
-    @BindView(R.id.ment) EditText ment;
-    @BindView(R.id.tcp_test) Button tcp_btn;
-//    @BindView(R.id.log_out) Button logout;
+    @BindView(R.id.proto_test) TextView ment;
+    @BindView(R.id.my_info) Button my_info;
+    @BindView(R.id.logout) ImageButton logout;
     String friend_list_json,check_json,iden,id,token,uri,friend_iden,friend_id;
     int json_length = 0;
     int json_row = 1;
@@ -97,27 +96,24 @@ public class GameActivity extends Activity implements View.OnClickListener{
         //버튼
         friend_btn.setOnClickListener(this);
         game_btn.setOnClickListener(this);
-        tcp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(GameActivity.this,MainActivity.class);
-                intentClass.UserLogout(database,intent);
-        }
-        });
+        logout.setOnClickListener(this);
+
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.friend_button:
                 switchfragment(1);
+                ment.setText("친구목록");
                 break;
             case R.id.game_button:
                 switchfragment(2);
+                ment.setText("게임목록");
                 break;
-            /*case R.id.log_out:
+            case R.id.logout:
                 Intent intent = new Intent(GameActivity.this,MainActivity.class);
                 intentClass.UserLogout(database,intent);
-                break;*/
+                break;
         }
     }
 

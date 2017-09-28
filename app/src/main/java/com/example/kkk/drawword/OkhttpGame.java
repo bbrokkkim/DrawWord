@@ -17,29 +17,32 @@ import okhttp3.Response;
 
 public class OkhttpGame extends  AsyncTask<Object,Void,String> {
     String output, ch, url;
-    String user_iden, token, user_id, friend_id, friend_iden, type;
+    String user_iden, token, user_id, friend_id, friend_iden, type,room_name;
     RequestBody requestBody;
 
 
     @Override
     protected String doInBackground(Object... params) {
         ch = (String) params[0];
-        user_iden = (String) params[1];
-        user_id = (String) params[2];
+
         OkHttpClient client = new OkHttpClient();
         //join or login
         if (ch.equals("1")) {
-            token = (String) params[2];
+            room_name = (String) params[1];
             requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("choice", ch)
-                    .addFormDataPart("user_iden", user_iden)
-                    .addFormDataPart("token", token)
+                    .addFormDataPart("room_name", room_name)
+                    .build();
+
+            Log.d("room_name",room_name);
+        }
+        else if (ch.equals("2")) {
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
                     .build();
         }
         url = "http://13.124.229.116/php/friend.php";
-
         Log.d("choice",ch);
-        Log.d("user_iden",user_iden);
 
         Request request = new Request.Builder()
                 .url("http://13.124.229.116/php/gamelist.php")
@@ -53,5 +56,11 @@ public class OkhttpGame extends  AsyncTask<Object,Void,String> {
         }
 
         return output;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        Log.d("outputhttp",output);
     }
 }
