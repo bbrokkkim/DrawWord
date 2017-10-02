@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Okhttp;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.GameActivity;
+import com.example.kkk.drawword.Database;
+import com.example.kkk.drawword.IntentClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;

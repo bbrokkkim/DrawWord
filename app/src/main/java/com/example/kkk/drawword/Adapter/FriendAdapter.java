@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.kkk.drawword.Data.FriendData;
+import com.example.kkk.drawword.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -17,13 +19,13 @@ import java.util.ArrayList;
  * Created by KKK on 2017-08-17.
  */
 
-public class Friend_Adapter extends BaseAdapter {
+public class FriendAdapter extends BaseAdapter {
 
-    ArrayList<Friend_Data> item;
+    ArrayList<FriendData> item;
     Context context;
     LayoutInflater inflater;
 
-    public Friend_Adapter(LayoutInflater inflater,Context context, ArrayList<Friend_Data> item){
+    public FriendAdapter(LayoutInflater inflater, Context context, ArrayList<FriendData> item){
 
         this.context = context;
         this.inflater = inflater;
@@ -56,8 +58,8 @@ public class Friend_Adapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.friend_row, null);
         }
 
-//        item = new ArrayList<Friend_Data>();
-//        Friend_Data friend_data = item.get(pos);
+//        item = new ArrayList<FriendData>();
+//        FriendData friend_data = item.get(pos);
 
         ImageView photo = (ImageView) convertView.findViewById(R.id.user_photo);
         TextView user_name = (TextView) convertView.findViewById(R.id.user_name);
@@ -67,11 +69,11 @@ public class Friend_Adapter extends BaseAdapter {
         user_ment.setText(item.get(pos).getUser_ment());
         user_iden.setText(item.get(pos).getIden());
         Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).into(photo);
-//        photo.setImageDrawable(item.get(pos).getUser_photo());
 
         return convertView;
     }
     public int getItemPosition(Object object) {
         return PagerAdapter.POSITION_NONE;
     }
+
 }

@@ -1,10 +1,9 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,12 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.RoomActivity;
+import com.example.kkk.drawword.Adapter.GamelistAdapter;
+import com.example.kkk.drawword.Data.GamelistData;
+import com.example.kkk.drawword.Okhttp.OkhttpGame;
+import com.example.kkk.drawword.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -37,85 +39,89 @@ import butterknife.ButterKnife;
  * Created by KKK on 2017-08-17.
  */
 
-public class gamelist_fragment extends Fragment implements View.OnClickListener {
+public class GamelistFragment extends Fragment implements View.OnClickListener {
 
-    ArrayList<Gamelist_Data> item = new ArrayList<Gamelist_Data>();
-    Gamelist_Adapter gamelist_adapter;
+    ArrayList<GamelistData> item = new ArrayList<GamelistData>();
+    GamelistAdapter gamelistadapter;
 
     @BindView(R.id.create_room) Button create_room;
     @BindView(R.id.game_list) ListView listView;
     @BindView(R.id.refresh) ImageButton refresh;
-    String id,iden,refresh_json,room_name,room_con;
+    String id, iden, refresh_json, room_name, room_con;
     int room_iden;
     boolean refresh_stop = false;
-    public gamelist_fragment(){}
-
+    public GamelistFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gamelist_fragment,container,false);
         ButterKnife.bind(this,view);
-        checkUpdate.start();
+
         id = getArguments().getString("id");
         iden = getArguments().getString("iden");
-        int test = getArguments().getInt("test");
-        Toast.makeText(getActivity(), String.valueOf(test), Toast.LENGTH_SHORT).show();
-        
-        gamelist_adapter = new Gamelist_Adapter(inflater,item);
-        item.add(new Gamelist_Data(1,"테스트방입니다","2/4"));
-        listView.setAdapter(gamelist_adapter);
 
+        Toast.makeText(getActivity(), id, Toast.LENGTH_SHORT).show();
+
+        //리스트 구현
+        gamelistadapter = new GamelistAdapter(inflater,getActivity(),item);
+        item.add(new GamelistData(1,"테스트방입니다","2/4"));
+        listView.setAdapter(gamelistadapter);
+
+        //리스트 아이템
+        getOkhttp("2");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id_pos) {
                 Intent intent = new Intent(getActivity(),RoomActivity.class);
+                intent.putExtra("id",id);
+                intent.putExtra("iden",iden);
+                intent.putExtra("room_num",item.get(position).getRoom_num());
+                intent.putExtra("room_name",item.get(position).getRoom_name());
                 startActivity(intent);
             }
         });
 
+        //버튼
         create_room.setOnClickListener(this);
         refresh.setOnClickListener(this);
-        Toast.makeText(getActivity(),"oncreateview", Toast.LENGTH_SHORT).show();
         return view;
     }
 
-
-
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Toast.makeText(getActivity(), "onActivityCreateed", Toast.LENGTH_SHORT).show();
-    }
+    public void onResume() {
+        super.onResume();
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                getOkhttp("2");
+            }
+        };
 
+        Thread checkUpdate = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        Thread.sleep(50000);
+                        if (refresh_stop == true){
+                            break;
+                        }
+                        handler.sendEmptyMessage(0);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        checkUpdate.start();
+    }
 
     @Override
     public void onPause() {
         super.onPause();
-        Toast.makeText(getActivity(), "onPause", Toast.LENGTH_SHORT).show();
+        refresh_stop = true;
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Toast.makeText(getActivity(), "onStop", Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Toast.makeText(getActivity(), "onDetach", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Toast.makeText(getActivity(), "onDestroyView", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(getActivity(), "onDestroy", Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -146,73 +152,47 @@ public class gamelist_fragment extends Fragment implements View.OnClickListener 
                 buider.show();
                 break;
             case R.id.refresh :
-                try {
-                    refresh_json = new OkhttpGame().execute("2").get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                getOkhttp("2");
         }
     }
 
-    private Thread checkUpdate = new Thread() {
-
-        public void run() {
-
-            while (true){
-                try {
-                    if (refresh_stop == true){
-                        break;
-                    }
-                    handler.sendEmptyMessage(0);
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+    void getOkhttp(String choice){
+        try {
+            refresh_json = new OkhttpGame().execute(choice).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-    };
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            try {
-                refresh_json = new OkhttpGame().execute("2").get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+        GetJson(refresh_json);
+    }
 
     void GetJson(String json_list){
-        Log.d("refresh", "not null");
+        item.clear();
+        gamelistadapter.notifyDataSetChanged();
+        Log.d("refresh", json_list);
+        if (json_list.equals("nothing")){
+            Log.d("test","return");
+            Toast.makeText(getActivity(), "게임 방이 없습니다. 방을 만들어주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             JSONArray json = new JSONArray(json_list);
             Log.d("json_length", String.valueOf(json.length()));
             int real_iden = 0;
             for (int i = 0; i < json.length(); i++) {
-
-
                 JSONObject jsonObject = json.getJSONObject(i);
-                room_name = jsonObject.getString("name");
                 room_con = jsonObject.getString("room_status");
+                room_name = jsonObject.getString("room_name");
                 room_iden = jsonObject.getInt("iden");
                 real_iden = room_iden % 1000;
 
-                room_name = jsonObject.getString("room_name");
-                item.add(new Gamelist_Data(real_iden,room_name,room_con));
-
+                item.add(new GamelistData(real_iden,room_name,room_con));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 }
 

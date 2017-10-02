@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Okhttp;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,11 +15,10 @@ import okhttp3.Response;
  * Created by KKK on 2017-09-28.
  */
 
-public class OkhttpGame extends  AsyncTask<Object,Void,String> {
+public class OkhttpGame extends AsyncTask<Object,Void,String> {
     String output, ch, url;
     String user_iden, token, user_id, friend_id, friend_iden, type,room_name;
     RequestBody requestBody;
-
 
     @Override
     protected String doInBackground(Object... params) {
@@ -41,8 +40,8 @@ public class OkhttpGame extends  AsyncTask<Object,Void,String> {
                     .addFormDataPart("choice", ch)
                     .build();
         }
-        url = "http://13.124.229.116/php/friend.php";
-        Log.d("choice",ch);
+        url = "http://13.124.229.116/php/gamelist.php";
+        Log.d("choice!!!!",ch);
 
         Request request = new Request.Builder()
                 .url("http://13.124.229.116/php/gamelist.php")
@@ -53,6 +52,7 @@ public class OkhttpGame extends  AsyncTask<Object,Void,String> {
             output = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("choice!!!!","false");
         }
 
         return output;
@@ -63,4 +63,6 @@ public class OkhttpGame extends  AsyncTask<Object,Void,String> {
         super.onPostExecute(s);
         Log.d("outputhttp",output);
     }
+
+
 }

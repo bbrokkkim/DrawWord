@@ -1,11 +1,15 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Adapter;
 
 import android.content.Context;
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.kkk.drawword.Data.ChatData;
+import com.example.kkk.drawword.R;
 
 import java.util.ArrayList;
 
@@ -13,11 +17,11 @@ import java.util.ArrayList;
  * Created by KKK on 2017-08-25.
  */
 
-public class Room_Adapter extends BaseAdapter {
+public class RoomAdapter extends BaseAdapter {
     ArrayList<ChatData> item;
     Context context;
     LayoutInflater inflater;
-    public Room_Adapter(LayoutInflater inflater, ArrayList<ChatData> item){
+    public RoomAdapter(LayoutInflater inflater, ArrayList<ChatData> item){
         this.inflater = inflater;
         this.item = item;
     }
@@ -55,5 +59,8 @@ public class Room_Adapter extends BaseAdapter {
         ment.setText(item.get(pos).getMent());
 
         return convertView;
+    }
+    public int getItemPosition(Object object) {
+        return PagerAdapter.POSITION_NONE;
     }
 }

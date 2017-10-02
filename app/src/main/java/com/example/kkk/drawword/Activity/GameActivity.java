@@ -11,18 +11,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Database;
-import com.example.kkk.drawword.Friend_Data;
+import com.example.kkk.drawword.Fragment.GamelistFragment;
 import com.example.kkk.drawword.IntentClass;
-import com.example.kkk.drawword.OkhttpFriend;
+import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.example.kkk.drawword.R;
-import com.example.kkk.drawword.friendlist_fragment;
-import com.example.kkk.drawword.gamelist_fragment;
+import com.example.kkk.drawword.Fragment.FriendlistFragment;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -195,7 +193,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         Fragment fr;
         Bundle bundle = new Bundle();
         if (type == 1){
-            fr = new friendlist_fragment();
+            fr = new FriendlistFragment();
             bundle.putString("friend_list_json",friend_list_json);
             bundle.putString("check_json",check_json);
             Log.d("listlistlist", friend_list_json);
@@ -203,7 +201,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         else {
             /*bundle.putInt("test",testint);
             testint = testint + 1;*/
-            fr = new gamelist_fragment();
+            fr = new GamelistFragment();
         }
         bundle.putString("iden",iden);
         bundle.putString("id",id);

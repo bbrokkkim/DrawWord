@@ -27,8 +27,8 @@ import android.widget.Toast;
 
 import com.example.kkk.drawword.Database;
 import com.example.kkk.drawword.IntentClass;
-import com.example.kkk.drawword.Model_login;
-import com.example.kkk.drawword.OkhttpUser;
+import com.example.kkk.drawword.ModelLogin;
+import com.example.kkk.drawword.Okhttp.OkhttpUser;
 import com.example.kkk.drawword.R;
 
 import butterknife.BindView;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         join.setText("회원가입으로");
         final String check_login_info = "uncorrect";
-        final Model_login model_login = new Model_login(check_login_info);
+        final ModelLogin model_login = new ModelLogin(check_login_info);
 
         //fragment
         switchfragment();

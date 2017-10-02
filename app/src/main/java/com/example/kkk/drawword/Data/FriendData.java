@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Data;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -7,22 +7,17 @@ import android.graphics.drawable.Drawable;
  * Created by KKK on 2017-08-17.
  */
 
-public class Friend_Data {
+public class FriendData {
     String user_name;
     String user_ment;
     String user_photo;
     String iden;
-    public Friend_Data(String user_name, String user_ment,String user_photo,String iden){
-//        this.user_photo = user_photo;
+    public FriendData(String user_name, String user_ment, String user_photo, String iden){
         this.user_name = user_name;
         this.user_ment = user_ment;
         this.user_photo = user_photo;
         this.iden = iden;
     }
-
-/*    public void setUser_photo(Bitmap user_photo) {
-        this.user_photo = user_photo;
-    }*/
 
     public void setIden(String iden) {
         this.iden = iden;
@@ -39,12 +34,6 @@ public class Friend_Data {
     public void setUser_ment(String user_ment) {
         this.user_ment = user_ment;
     }
-/*
-
-    public Bitmap getUser_photo() {
-        return user_photo;
-    }
-*/
 
 
     public String getUser_photo() {

@@ -21,14 +21,14 @@ import java.net.URLEncoder;
  * Created by KKK on 2017-08-14.
  */
 
-public class Model_login {
+public class ModelLogin {
     String id;
     String pwd;
     String info;
     Boolean check = false;
 
     Connect_login connect_login1 = new Connect_login();
-    public Model_login(String info){
+    public ModelLogin(String info){
         this.id = id;
         this.pwd = pwd;
         this.info = info;

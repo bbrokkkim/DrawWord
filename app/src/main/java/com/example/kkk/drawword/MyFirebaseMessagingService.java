@@ -1,23 +1,12 @@
 package com.example.kkk.drawword;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.kkk.drawword.Activity.GameActivity;
-import com.example.kkk.drawword.Activity.MainActivity;
+import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

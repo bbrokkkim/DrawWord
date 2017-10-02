@@ -1,6 +1,7 @@
 package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kkk.drawword.ChatData;
+import com.example.kkk.drawword.Data.ChatData;
+import com.example.kkk.drawword.Okhttp.TcpChat;
 import com.example.kkk.drawword.R;
-import com.example.kkk.drawword.Room_Adapter;
+import com.example.kkk.drawword.Adapter.RoomAdapter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,18 +27,24 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by KKK on 2017-08-17.
  */
-
 public class RoomActivity extends Activity {
+    @BindView(R.id.text_ment) EditText text;
+    @BindView(R.id.ment_view) ListView listView;
+    @BindView(R.id.room_name) TextView roomname;
     private Handler mHandler;
-    ListView listView;
+
     ArrayList<ChatData> item= new ArrayList();
-    Room_Adapter room_adapter;
-    EditText text,port_num;
-    Button submit,refresh;
+    RoomAdapter room_adapter;
+    EditText port_num;
+    Button submit;
     ChatData chatData;
     boolean socket_condition = true;
     String read1 = "";
@@ -45,12 +54,12 @@ public class RoomActivity extends Activity {
     Socket socket;
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
-    //Read_thread read_thread;
     Tcp_chat tcp_chat;
     Tcp_Connect tcp_connect;
 
     String ip = "13.124.229.116";
-    int port = 8000;
+    String id,iden,room_name,room_num;
+    int port = 8001;
 
     Handler handler2;
 
@@ -59,20 +68,26 @@ public class RoomActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.room_layout);
         layout();
+        ButterKnife.bind(this);
+        Intent get = getIntent();
+        id = get.getStringExtra("id");
+        iden = get.getStringExtra("iden");
+        room_name = get.getStringExtra("room_name");
+        int asdf = get.getIntExtra("room_num",1);
+        room_num = String.valueOf(asdf);
+        Toast.makeText(this, room_num, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, room_name, Toast.LENGTH_SHORT).show();
+        roomname.setText(room_num + "Asdf" + room_name);
+        Log.d("asdfas",id);
+        String my_info = room_num + "\n" + room_name + "\n" + iden + "\n" + id;
         listView.setAdapter(room_adapter);
-
-        //read_thread = new Read_thread();
-        tcp_connect = new Tcp_Connect();
-        String num = "8000";
-        item.add(new ChatData("user_name","hi~"));
-        tcp_connect.execute(num);
-
         try {
-            Thread.sleep(500);
+            new TcpChat(this,socket,bufferedReader,bufferedWriter).execute("1",port,my_info).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-
         Log.d("test","thread1");
         checkUpdate.start();
         Log.d("test","thread2");
@@ -80,15 +95,14 @@ public class RoomActivity extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String port = port_num.getText().toString();
                 String chat_content = text.getText().toString();
+                String push_content = room_num + "\n" + room_name + "\n" + iden + "\n" + id + "\n" + chat_content;
                 Toast.makeText(RoomActivity.this, "누름", Toast.LENGTH_SHORT).show();
                 tcp_chat = new Tcp_chat();
-                tcp_chat.execute("asdf",chat_content);
-                /*ClientThread clientThread1;
+                tcp_chat.execute(id ,push_content);
+/*                ClientThread clientThread1;
                 clientThread1 = new ClientThread(client, handler2);
-                clientThread1.start();
-                */
+                clientThread1.start();*/
             }
         });
 
@@ -150,7 +164,7 @@ public class RoomActivity extends Activity {
             else
                 Toast.makeText(RoomActivity.this, "틀림", Toast.LENGTH_SHORT).show();
 
-            item.add(new ChatData("경관",ment));
+            item.add(new ChatData(id,ment));
             room_adapter.notifyDataSetChanged();
 
             Log.d("test","chat456");
@@ -171,7 +185,7 @@ public class RoomActivity extends Activity {
             user_writer.println(user);*/
 
             PrintWriter ment_writer = new PrintWriter(bufferedWriter, true);
-            ment_writer.println("asdf");
+            ment_writer.println(ment);
 
             Log.d("send",ment);
             return null;
@@ -229,8 +243,6 @@ public class RoomActivity extends Activity {
                 bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
                 Log.d("stream","fin");
-                
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -243,9 +255,7 @@ public class RoomActivity extends Activity {
     void layout(){
         listView = (ListView) findViewById(R.id.ment_view);
         text = (EditText) findViewById(R.id.text_ment);
-        port_num = (EditText) findViewById(R.id.port);
         submit = (Button) findViewById(R.id.submit_ment);
-        refresh = (Button) findViewById(R.id.refresh);
-        room_adapter = new Room_Adapter(getLayoutInflater(),item);
+        room_adapter = new RoomAdapter(getLayoutInflater(),item);
     }
 }

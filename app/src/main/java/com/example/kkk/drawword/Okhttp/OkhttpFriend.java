@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Okhttp;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,8 +30,8 @@ public class OkhttpFriend extends AsyncTask<Object,Void,String>{
     String user_iden,token,user_id,friend_id,friend_iden,type;
     RequestBody requestBody;
 
-    public OkhttpFriend( ){
-    }
+    public OkhttpFriend( ){}
+
     @Override
     protected String  doInBackground(Object... params) {
 

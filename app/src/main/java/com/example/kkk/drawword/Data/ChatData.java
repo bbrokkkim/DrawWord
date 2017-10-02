@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Data;
 
 /**
  * Created by KKK on 2017-08-25.

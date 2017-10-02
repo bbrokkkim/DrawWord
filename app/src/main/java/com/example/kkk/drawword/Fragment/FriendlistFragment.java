@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -16,6 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Adapter.FriendAdapter;
+import com.example.kkk.drawword.Data.FriendData;
+import com.example.kkk.drawword.Okhttp.OkhttpFriend;
+import com.example.kkk.drawword.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -32,18 +36,18 @@ import butterknife.ButterKnife;
  * Created by KKK on 2017-08-17.
  */
 
-public class friendlist_fragment extends Fragment implements View.OnClickListener{
+public class FriendlistFragment extends Fragment implements View.OnClickListener{
     @BindView(R.id.friend_list) ListView listView;
     @BindView(R.id.my_photo) ImageView myphoto;
     @BindView(R.id.my_name) TextView myname;
     @BindView(R.id.my_ment) TextView myment;
     @BindView(R.id.add_friend) Button add_friend;
-    Friend_Adapter friend_adapter;
-    ArrayList<Friend_Data> item = new ArrayList<Friend_Data>();
+    FriendAdapter friend_adapter;
+    ArrayList<FriendData> item = new ArrayList<FriendData>();
     String iden,id,ment,photo_uri,token,friend_list_json,check_json;
     String friend_iden,friend_id,friend_photo_uri,friend_ment;
     String default_photo_url = "http://13.124.229.116/user_photo/";
-    public friendlist_fragment(){}
+    public FriendlistFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);
@@ -73,7 +77,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Friend_Data fr_data = (Friend_Data) listView.getItemAtPosition(position);
+                FriendData fr_data = (FriendData) listView.getItemAtPosition(position);
                 String friend_iden = fr_data.getIden();
                 OkhttpFriend okhttpFriend = new OkhttpFriend();
                 String del_json = null;
@@ -92,7 +96,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
             }
         });
 
-        friend_adapter = new Friend_Adapter(inflater,getActivity(),item);
+        friend_adapter = new FriendAdapter(inflater,getActivity(),item);
         listView.setAdapter(friend_adapter);
 
         return view;
@@ -121,7 +125,7 @@ public class friendlist_fragment extends Fragment implements View.OnClickListene
                     }
                     if (type == true) {
                         friend_photo_uri = default_photo_url + friend_photo_uri;
-                        item.add(new Friend_Data(friend_id, friend_ment, friend_photo_uri, friend_iden));
+                        item.add(new FriendData(friend_id, friend_ment, friend_photo_uri, friend_iden));
                     }
                 }
 

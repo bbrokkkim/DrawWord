@@ -1,14 +1,14 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Data;
 
 /**
  * Created by KKK on 2017-08-17.
  */
 
-public class Gamelist_Data {
+public class GamelistData {
     int room_num;
     String room_name;
     String room_con;
-    public Gamelist_Data(int room_num,String room_name,String room_con){
+    public GamelistData(int room_num, String room_name, String room_con){
         this.room_num = room_num;
         this.room_name = room_name;
         this.room_con = room_con;
