@@ -63,7 +63,7 @@ public class TcpChat extends AsyncTask<Object,Void,String> {
             e.printStackTrace();
             Log.d("fail",e.toString());
         }
-        return null;
+        return ch;
 
     }
 
@@ -83,6 +83,8 @@ public class TcpChat extends AsyncTask<Object,Void,String> {
         }
         else
             Toast.makeText(activity, "실패", Toast.LENGTH_SHORT).show();
+        Log.d("111","1111");
+
     }
 
 

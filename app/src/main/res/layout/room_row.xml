@@ -6,23 +6,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:text="TextView"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="25dp"
             android:id="@+id/chat_name" />
 
         <TextView
             android:text="TextView"
             android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/textviewline"
             android:id="@+id/chat_ment" />
 
 
