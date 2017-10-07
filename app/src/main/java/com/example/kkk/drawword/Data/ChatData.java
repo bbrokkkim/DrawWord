@@ -7,11 +7,12 @@ package com.example.kkk.drawword.Data;
 public class ChatData {
     String user_name;
     String ment;
+    boolean check;
 
-    public ChatData(String user_name,String ment){
+    public ChatData(String user_name,String ment,boolean check){
         this.ment = ment;
         this.user_name = user_name;
-
+        this.check = check;
     }
 
     public void setUser_name(String user_name) {
@@ -20,6 +21,10 @@ public class ChatData {
 
     public void setMent(String ment) {
         this.ment = ment;
+    }
+
+    public boolean isCheck() {
+        return check;
     }
 
     public String getUser_name() {

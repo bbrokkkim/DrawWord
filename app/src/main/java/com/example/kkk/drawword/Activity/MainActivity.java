@@ -56,6 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         final ModelLogin model_login = new ModelLogin(check_login_info);
 
         //fragment
+
         switchfragment();
 
         intentClass = new IntentClass(MainActivity.this);

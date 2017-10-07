@@ -77,7 +77,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                     e.printStackTrace();
                 }
                 Log.d("friend_json22",friend_list_json);
-                switchfragment(1);
+                switchfragment(2);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

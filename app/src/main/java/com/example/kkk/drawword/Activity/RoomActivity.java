@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
 public class RoomActivity extends Activity {
     @BindView(R.id.text_ment) EditText text;
     @BindView(R.id.ment_view) ListView listView;
+    @BindView(R.id.ready_list) ListView readylist;
     @BindView(R.id.room_name) TextView roomname;
     private Handler mHandler;
 
@@ -108,7 +109,6 @@ public class RoomActivity extends Activity {
             public void onClick(View v) {
                 String chat_content = text.getText().toString();
                 String push_content = room_num + "《" + id + "》" + chat_content;
-                Toast.makeText(RoomActivity.this, "누름", Toast.LENGTH_SHORT).show();
                 new Tcp_chat().execute(id ,push_content);
             }
         });
@@ -119,7 +119,7 @@ public class RoomActivity extends Activity {
                 super.handleMessage(msg);
                 Bundle bundle = msg.getData();
                 String asdf =bundle.getString("msg");
-                item.add(new ChatData("나나난",asdf));
+//                item.add(new ChatData("나나난",asdf));
             }
         };
     }
@@ -131,7 +131,6 @@ public class RoomActivity extends Activity {
         super.onBackPressed();
         tcp_chat = new Tcp_chat();
         tcp_chat.execute(id ,"fin!@#!@#");
-        Toast.makeText(this, "뒤로가기??", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -145,29 +144,30 @@ public class RoomActivity extends Activity {
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
                     Log.w("Chatting is running", "1");
-                    if (test == false){
+                    /*if (test == false){
                         test = true;
-                        Log.d("Chatting is once", "1");
                         continue;
-                    }
-                    else {
-                        Log.d("Chatting is running111", line);
-                        int idx = line.indexOf("》");
-                        Log.d("chatting Test", String.valueOf(idx));
-                        to = line.substring(0, idx);
-                        ment = line.substring(idx + 1);
-                        Log.d("Chatting is running111", to);
-                        Log.d("Chatting is running222", ment);
+                    }*/
+                    Log.d("line", line);
+                    int idx_ment = line.indexOf("《");
+                    String real_ment = line.substring(idx_ment + 1);
+                    Log.d("made_line", real_ment);
+                    int idx = real_ment.indexOf("》");
+                    Log.d("chatting Test", String.valueOf(idx));
+                    to = real_ment.substring(0, idx);
+                    ment = real_ment.substring(idx + 1);
+                    Log.d("Chatting is running111", to);
+                    Log.d("Chatting is running222", ment);
 
-                        Log.d("Chatting is running", "2");
+                    Log.d("Chatting is running", "2");
 
-                        try {
-                            handler.sendEmptyMessage(0);
-                            Log.d("Chatting is running", "3");
-                        } catch (Exception e) {
-                            Log.d("Chatting is running", "fail");
-                        }
+                    try {
+                        handler.sendEmptyMessage(0);
+                        Log.d("Chatting is running", "3");
+                    } catch (Exception e) {
+                        Log.d("Chatting is running", "fail");
                     }
+
                 }
                 Log.d("Chatting is running", "21");
 
@@ -183,23 +183,27 @@ public class RoomActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.d("test","chat123");
-            if (ment.equals("name")){
-                Toast.makeText(RoomActivity.this, "맞음", Toast.LENGTH_SHORT).show();
-            }
-            else
-                Toast.makeText(RoomActivity.this, "틀림", Toast.LENGTH_SHORT).show();
+            boolean check = true;
+            Log.d("test",String.valueOf(item.size()));
 
-            item.add(new ChatData(to,"  " + ment + "  "));
+            /*if (item.size() != 0 ){
+                String before =item.get(item.size()).getUser_name();
+                if (ment.equals(before)){
+                    check = false;
+                }
+            }*/
+
+
+            item.add(new ChatData(to,"  " + ment + "  ",check));
             room_adapter.notifyDataSetChanged();
-            int position = item.size();
+/*
             if (position > 1) {
                 Log.d("before", String.valueOf(item.get(position - 2).getUser_name()));
                 Log.d("to", String.valueOf(to));
                 if (to.equals(item.get(position - 2).getUser_name())) {
-                    Toast.makeText(RoomActivity.this, "같음", Toast.LENGTH_SHORT).show();
                 }
             }
+*/
             Log.d("test","chat456");
         }
     };
@@ -228,7 +232,6 @@ public class RoomActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("stream","asdd");
-            Toast.makeText(RoomActivity.this, "전송됨", Toast.LENGTH_SHORT).show();
 
 
         }
@@ -295,6 +298,6 @@ public class RoomActivity extends Activity {
         listView = (ListView) findViewById(R.id.ment_view);
         text = (EditText) findViewById(R.id.text_ment);
         submit = (Button) findViewById(R.id.submit_ment);
-        room_adapter = new RoomAdapter(getLayoutInflater(),item);
+        room_adapter = new RoomAdapter(getLayoutInflater(),item,id);
     }
 }
