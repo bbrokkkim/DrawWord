@@ -26,11 +26,9 @@ public class RoomAdapter extends BaseAdapter {
     String before = "asdf";
     int count = 1;
     boolean check = true;
-    String name;
-    public RoomAdapter(LayoutInflater inflater, ArrayList<ChatData> item, String name){
+    public RoomAdapter(LayoutInflater inflater, ArrayList<ChatData> item){
         this.inflater = inflater;
         this.item = item;
-        this.name = name;
     }
 
     @Override
@@ -66,39 +64,20 @@ public class RoomAdapter extends BaseAdapter {
 
         name.setText(item.get(pos).getUser_name());
         ment.setText(item.get(pos).getMent());
-        check = item.get(pos).isCheck();
-
-        if (check = true){
-            Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
-        }
-        else
-            Toast.makeText(context, "no", Toast.LENGTH_SHORT).show();
 
         Log.d("getcount", String.valueOf(getCount()));
         Log.d("count", String.valueOf(count));
 
 
-//        if (check == true){
-            if (pos > 0) {
-                String before = item.get(pos - 1).getUser_name();
-                String after = item.get(pos).getUser_name();
-                Log.d("before", before);
-                Log.d("after", after);
-                if (before.equals(after)){
-                    name.setVisibility(View.GONE);
-                }
+        if (pos > 0) {
+            String before = item.get(pos - 1).getUser_name();
+            String after = item.get(pos).getUser_name();
+            Log.d("before", before);
+            Log.d("after", after);
+            if (before.equals(after)){
+                name.setVisibility(View.GONE);
             }
-//        }
-/*        if (after.equals(before)){
-            name.setVisibility(convertView.GONE);
-        }*/
-        /*if (asdf.equals("test1")){
-            Toast.makeText(context, "QQQQQQQ", Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(context, "WWWWWW", Toast.LENGTH_SHORT).show();
-        */
-        
 
         return convertView;
     }

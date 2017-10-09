@@ -8,13 +8,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Adapter.ReadyAdapter;
 import com.example.kkk.drawword.Data.ChatData;
+import com.example.kkk.drawword.Data.ReadyData;
 import com.example.kkk.drawword.Okhttp.TcpChat;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Adapter.RoomAdapter;
@@ -36,14 +40,21 @@ import butterknife.ButterKnife;
  * Created by KKK on 2017-08-17.
  */
 public class RoomActivity extends Activity {
+    @BindView(R.id.fl_activity_main_container) FrameLayout frameLayout;
     @BindView(R.id.text_ment) EditText text;
     @BindView(R.id.ment_view) ListView listView;
     @BindView(R.id.ready_list) ListView readylist;
     @BindView(R.id.room_name) TextView roomname;
     private Handler mHandler;
 
+    private String[] navItems = {"Brown", "Cadet Blue", "Dark Olive Green",
+            "Dark Orange", "Golden Rod"};
+
+
     ArrayList<ChatData> item= new ArrayList();
+    ArrayList<ReadyData> item_ready = new ArrayList<>();
     RoomAdapter room_adapter;
+    ReadyAdapter readyAdapter;
     EditText port_num;
     Button submit;
     ChatData chatData;
@@ -80,16 +91,9 @@ public class RoomActivity extends Activity {
         Log.d("asdfas",id);
         String my_info = room_num + "\n" + room_name + "\n" + iden + "\n" + id;
         listView.setAdapter(room_adapter);
+        readylist.setAdapter(readyAdapter);
+        item_ready.add(new ReadyData("Asdf","asdf"));
         String test = null;
-/*        try {
-            test = new TcpChat(this,socket,bufferedReader,bufferedWriter).execute("1",port,my_info).get();
-//            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.d("asd",test);*/
 
         try {
             test = new Tcp_Connect().execute("8000",room_num + "《" + id).get();
@@ -194,7 +198,7 @@ public class RoomActivity extends Activity {
             }*/
 
 
-            item.add(new ChatData(to,"  " + ment + "  ",check));
+            item.add(new ChatData(to,"  " + ment + "  "));
             room_adapter.notifyDataSetChanged();
 /*
             if (position > 1) {
@@ -298,6 +302,7 @@ public class RoomActivity extends Activity {
         listView = (ListView) findViewById(R.id.ment_view);
         text = (EditText) findViewById(R.id.text_ment);
         submit = (Button) findViewById(R.id.submit_ment);
-        room_adapter = new RoomAdapter(getLayoutInflater(),item,id);
+        room_adapter = new RoomAdapter(getLayoutInflater(),item);
+        readyAdapter = new ReadyAdapter(getLayoutInflater(),this,item_ready);
     }
 }
