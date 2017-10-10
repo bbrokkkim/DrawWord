@@ -90,6 +90,9 @@ public class RoomActivity extends Activity {
         roomname.setText(room_num + ".  " + room_name);
         Log.d("asdfas",id);
         String my_info = room_num + "\n" + room_name + "\n" + iden + "\n" + id;
+        String tcp_user_list_json = null;
+        String tcp_type = null;
+
         listView.setAdapter(room_adapter);
         readylist.setAdapter(readyAdapter);
         item_ready.add(new ReadyData("Asdf","asdf"));
@@ -112,7 +115,7 @@ public class RoomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String chat_content = text.getText().toString();
-                String push_content = room_num + "《" + id + "》" + chat_content;
+                String push_content = "1》" + room_num + "《" + id + "》" + chat_content;
                 new Tcp_chat().execute(id ,push_content);
             }
         });
@@ -134,17 +137,16 @@ public class RoomActivity extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         tcp_chat = new Tcp_chat();
-        tcp_chat.execute(id ,"fin!@#!@#");
+        tcp_chat.execute(id ,"fin!@#!@#》");
     }
 
 
     private Thread checkUpdate = new Thread() {
 
         public void run() {
-
-                String line = null;
-                Log.w("ChattingStart", "Start Thread");
-                boolean test = false;
+            String line = null;
+            Log.w("ChattingStart", "Start Thread");
+            boolean test = false;
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
                     Log.w("Chatting is running", "1");
@@ -160,8 +162,8 @@ public class RoomActivity extends Activity {
                     Log.d("chatting Test", String.valueOf(idx));
                     to = real_ment.substring(0, idx);
                     ment = real_ment.substring(idx + 1);
-                    Log.d("Chatting is running111", to);
-                    Log.d("Chatting is running222", ment);
+                    Log.d("Chatting is to", to);
+                    Log.d("Chatting is ment", ment);
 
                     Log.d("Chatting is running", "2");
 
