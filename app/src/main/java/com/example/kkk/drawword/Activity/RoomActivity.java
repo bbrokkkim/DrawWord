@@ -115,7 +115,7 @@ public class RoomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String chat_content = text.getText().toString();
-                String push_content = "1》" + room_num + "《" + id + "》" + chat_content;
+                String push_content = "2《" + room_num + "《" + id + "》" + chat_content;
                 new Tcp_chat().execute(id ,push_content);
             }
         });
@@ -158,7 +158,7 @@ public class RoomActivity extends Activity {
                     int idx_ment = line.indexOf("《");
                     String real_ment = line.substring(idx_ment + 1);
                     Log.d("made_line", real_ment);
-                    int idx = real_ment.indexOf("》");
+                    int idx = real_ment.indexOf("《");
                     Log.d("chatting Test", String.valueOf(idx));
                     to = real_ment.substring(0, idx);
                     ment = real_ment.substring(idx + 1);
