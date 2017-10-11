@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kkk.drawword.Data.FriendData;
@@ -54,12 +55,15 @@ public class ReadyAdapter extends BaseAdapter {
         }
 
         TextView user = (TextView) convertView.findViewById(R.id.user);
-        TextView status = (TextView) convertView.findViewById(R.id.status);
-        Button ready = (Button) convertView.findViewById(R.id.ready);
+        ImageView status = (ImageView) convertView.findViewById(R.id.status);
 
         user.setText(item.get(position).getUser());
-        status.setText(item.get(position).getStatus());
-
+        String status_type = item.get(position).getStatus();
+        if (status_type.equals("wait")){
+            status.setImageResource(0);
+        }
+        else
+            status.setImageResource(R.mipmap.ic_launcher);
 
         return convertView;
     }

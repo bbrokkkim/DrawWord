@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,9 @@ public class RoomActivity extends Activity {
     @BindView(R.id.ment_view) ListView listView;
     @BindView(R.id.ready_list) ListView readylist;
     @BindView(R.id.room_name) TextView roomname;
+    @BindView(R.id.test) Button test_btn;
+    @BindView(R.id.ready_btn) Button ready_btn;
+    @BindView(R.id.my_ready) TextView my_ready;
     private Handler mHandler;
 
     private String[] navItems = {"Brown", "Cadet Blue", "Dark Olive Green",
@@ -53,6 +57,7 @@ public class RoomActivity extends Activity {
 
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
+    ArrayList<String> ready_list;
     RoomAdapter room_adapter;
     ReadyAdapter readyAdapter;
     EditText port_num;
@@ -62,13 +67,13 @@ public class RoomActivity extends Activity {
     String read1 = "";
     String read2 = "";
     String user_name,ment,to;
-
+    String content;
     Socket socket;
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
     Tcp_chat tcp_chat;
     Tcp_Connect tcp_connect;
-
+    boolean ready = true;
     String ip = "13.124.229.116";
     String id,iden,room_name,room_num;
     int port = 8001;
@@ -82,6 +87,8 @@ public class RoomActivity extends Activity {
         layout();
         ButterKnife.bind(this);
         Intent get = getIntent();
+
+        //정보 가지고오기
         id = get.getStringExtra("id");
         iden = get.getStringExtra("iden");
         room_name = get.getStringExtra("room_name");
@@ -89,13 +96,45 @@ public class RoomActivity extends Activity {
         room_num = String.valueOf(asdf);
         roomname.setText(room_num + ".  " + room_name);
         Log.d("asdfas",id);
-        String my_info = room_num + "\n" + room_name + "\n" + iden + "\n" + id;
-        String tcp_user_list_json = null;
-        String tcp_type = null;
+
 
         listView.setAdapter(room_adapter);
         readylist.setAdapter(readyAdapter);
-        item_ready.add(new ReadyData("Asdf","asdf"));
+        readylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long ida) {
+
+                Toast.makeText(RoomActivity.this, "test", Toast.LENGTH_SHORT).show();
+                String push_content = "2《" + room_num + "《" + id + "》";
+                new Tcp_chat().execute(id ,push_content);
+            }
+        });
+
+
+        my_ready.setText(id);
+        test_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        ready_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ready_content;
+                if (ready == true){
+                    ready_content = "wait";
+                    ready = false;
+                }
+                else {
+                    ready_content = "ready";
+                    ready = true;
+                }
+                Toast.makeText(RoomActivity.this, ready_content, Toast.LENGTH_SHORT).show();
+                String push_content = "2《" + room_num + "《" + id + "》" + ready_content;
+                new Tcp_chat().execute(id ,push_content);
+            }
+        });
         String test = null;
 
         try {
@@ -115,7 +154,7 @@ public class RoomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String chat_content = text.getText().toString();
-                String push_content = "2《" + room_num + "《" + id + "》" + chat_content;
+                String push_content = "1《" + room_num + "《" + id + "》" + chat_content;
                 new Tcp_chat().execute(id ,push_content);
             }
         });
@@ -126,7 +165,6 @@ public class RoomActivity extends Activity {
                 super.handleMessage(msg);
                 Bundle bundle = msg.getData();
                 String asdf =bundle.getString("msg");
-//                item.add(new ChatData("나나난",asdf));
             }
         };
     }
@@ -146,37 +184,65 @@ public class RoomActivity extends Activity {
         public void run() {
             String line = null;
             Log.w("ChattingStart", "Start Thread");
+            String tcp_type = null;
+            content = null;
             boolean test = false;
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
-                    Log.w("Chatting is running", "1");
-                    /*if (test == false){
-                        test = true;
-                        continue;
-                    }*/
+                    Log.w("Chatting is running" , "1");
+
                     Log.d("line", line);
                     int idx_ment = line.indexOf("《");
                     String real_ment = line.substring(idx_ment + 1);
                     Log.d("made_line", real_ment);
                     int idx = real_ment.indexOf("《");
                     Log.d("chatting Test", String.valueOf(idx));
-                    to = real_ment.substring(0, idx);
-                    ment = real_ment.substring(idx + 1);
-                    Log.d("Chatting is to", to);
-                    Log.d("Chatting is ment", ment);
+                    tcp_type = real_ment.substring(0, idx);
+                    content = real_ment.substring(idx+1);
+                    Log.d("Chatting is content", content);
+
+                    //chatting
+                    if (tcp_type.equals("1")){
+                        idx = content.indexOf("》");
+                        to = content.substring(0,idx);
+                        ment = content.substring(idx+1);
+                        chatting.sendEmptyMessage(0);
+                        Log.d("Chatting is to", to);
+                        Log.d("Chatting is ment", ment);
+                    }
+
+                    //user_list_status
+                    else if (tcp_type.equals("2")){
+                        int test_int = 1;
+                        ready_list = new ArrayList<>();
+                        while (true){
+                            if (content.contains("《")){
+                                idx = content.indexOf("《");
+                                ready_list.add(content.substring(0,idx));
+                                Log.d("list"+test_int,content.substring(0,idx));
+                                content = content.substring(idx+1);
+                            }
+                            else {
+                                ready_list.add(content);
+                                Log.d("last"+test_int,content);
+                                break;
+                            }
+                            test_int = test_int + 1;
+                        }
+                    }
+                    else if (tcp_type.equals("5")){
+                        
+                    }
+
+                    user_list_status.sendEmptyMessage(0);
+//                    ment = real_ment.substring(idx + 1);
+
 
                     Log.d("Chatting is running", "2");
 
-                    try {
-                        handler.sendEmptyMessage(0);
-                        Log.d("Chatting is running", "3");
-                    } catch (Exception e) {
-                        Log.d("Chatting is running", "fail");
-                    }
 
                 }
                 Log.d("Chatting is running", "21");
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -185,32 +251,54 @@ public class RoomActivity extends Activity {
         }
     };
 
-    Handler handler = new Handler(){
+    Handler chatting = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            boolean check = true;
             Log.d("test",String.valueOf(item.size()));
-
-            /*if (item.size() != 0 ){
-                String before =item.get(item.size()).getUser_name();
-                if (ment.equals(before)){
-                    check = false;
-                }
-            }*/
-
 
             item.add(new ChatData(to,"  " + ment + "  "));
             room_adapter.notifyDataSetChanged();
-/*
-            if (position > 1) {
-                Log.d("before", String.valueOf(item.get(position - 2).getUser_name()));
-                Log.d("to", String.valueOf(to));
-                if (to.equals(item.get(position - 2).getUser_name())) {
-                }
+
+        }
+    };
+
+    Handler all_start = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int idx;
+            String other_id,other_status;
+            /*item_ready.clear();
+            for (int i = 0; i < ready_list.size(); i++) {
+                idx = ready_list.get(i).indexOf("》");
+                other_id = ready_list.get(i).substring(0,idx);
+                other_status = ready_list.get(i).substring(idx+1);
+                Log.d("status",other_status);
+                item_ready.add(new ReadyData(other_id,other_status));
             }
-*/
-            Log.d("test","chat456");
+            readyAdapter.notifyDataSetChanged();*/
+            Toast.makeText(RoomActivity.this, "시작합니다.", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+    Handler user_list_status = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int idx;
+            String other_id,other_status;
+            item_ready.clear();
+            for (int i = 0; i < ready_list.size(); i++) {
+                idx = ready_list.get(i).indexOf("》");
+                other_id = ready_list.get(i).substring(0,idx);
+                other_status = ready_list.get(i).substring(idx+1);
+                Log.d("status",other_status);
+                item_ready.add(new ReadyData(other_id,other_status));
+            }
+            readyAdapter.notifyDataSetChanged();
+
         }
     };
 
