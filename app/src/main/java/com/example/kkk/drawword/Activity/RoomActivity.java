@@ -76,9 +76,7 @@ public class RoomActivity extends Activity {
     boolean ready = true;
     String ip = "13.124.229.116";
     String id,iden,room_name,room_num;
-    int port = 8001;
 
-    Handler handler2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +95,7 @@ public class RoomActivity extends Activity {
         roomname.setText(room_num + ".  " + room_name);
         Log.d("asdfas",id);
 
-
+        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setAdapter(room_adapter);
         readylist.setAdapter(readyAdapter);
         readylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,13 +122,16 @@ public class RoomActivity extends Activity {
                 String ready_content;
                 if (ready == true){
                     ready_content = "wait";
+                    ready_btn.setText("right");
                     ready = false;
                 }
                 else {
                     ready_content = "ready";
+                    ready_btn.setText("wait");
                     ready = true;
                 }
                 Toast.makeText(RoomActivity.this, ready_content, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomActivity.this, id, Toast.LENGTH_SHORT).show();
                 String push_content = "2《" + room_num + "《" + id + "》" + ready_content;
                 new Tcp_chat().execute(id ,push_content);
             }
@@ -160,13 +161,6 @@ public class RoomActivity extends Activity {
         });
 
 
-        handler2 = new Handler(){
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                Bundle bundle = msg.getData();
-                String asdf =bundle.getString("msg");
-            }
-        };
     }
 
 
@@ -200,6 +194,8 @@ public class RoomActivity extends Activity {
                     tcp_type = real_ment.substring(0, idx);
                     content = real_ment.substring(idx+1);
                     Log.d("Chatting is content", content);
+                    Log.d("Chatting is tcp_type", tcp_type);
+
 
                     //chatting
                     if (tcp_type.equals("1")){
@@ -229,12 +225,14 @@ public class RoomActivity extends Activity {
                             }
                             test_int = test_int + 1;
                         }
+                        user_list_status.sendEmptyMessage(0);
                     }
                     else if (tcp_type.equals("5")){
-                        
+                        all_start.sendEmptyMessage(0);
+                        break;
                     }
 
-                    user_list_status.sendEmptyMessage(0);
+
 //                    ment = real_ment.substring(idx + 1);
 
 
@@ -279,6 +277,8 @@ public class RoomActivity extends Activity {
             }
             readyAdapter.notifyDataSetChanged();*/
             Toast.makeText(RoomActivity.this, "시작합니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(RoomActivity.this,DrawActivity.class);
+            startActivity(intent);
         }
     };
 

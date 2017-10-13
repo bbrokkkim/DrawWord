@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".Activity.GameActivity"/>
         <activity android:name=".Activity.RoomActivity"/>
-
+        <activity android:name=".Activity.DrawActivity"/>
         <service
             android:name=".MyFirebaseMessagingService">
             <intent-filter>
