@@ -60,6 +60,7 @@ public class DrawActivity extends Activity{
                 item.add(new DrawData(answer,"aa"));
                 Toast.makeText(DrawActivity.this, answer, Toast.LENGTH_SHORT).show();
                 drawAdapter.notifyDataSetChanged();
+                answer_ed.setText("");
             }
         });
     }

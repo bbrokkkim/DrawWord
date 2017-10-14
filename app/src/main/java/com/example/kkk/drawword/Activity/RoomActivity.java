@@ -1,18 +1,23 @@
 package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,40 +46,34 @@ import butterknife.ButterKnife;
  * Created by KKK on 2017-08-17.
  */
 public class RoomActivity extends Activity {
+
     @BindView(R.id.fl_activity_main_container) FrameLayout frameLayout;
     @BindView(R.id.text_ment) EditText text;
     @BindView(R.id.ment_view) ListView listView;
     @BindView(R.id.ready_list) ListView readylist;
     @BindView(R.id.room_name) TextView roomname;
-    @BindView(R.id.test) Button test_btn;
     @BindView(R.id.ready_btn) Button ready_btn;
     @BindView(R.id.my_ready) TextView my_ready;
-    private Handler mHandler;
-
-    private String[] navItems = {"Brown", "Cadet Blue", "Dark Olive Green",
-            "Dark Orange", "Golden Rod"};
-
+    @BindView(R.id.back_btn_game) ImageButton back_btn;
+    @BindView(R.id.open_navigation) ImageButton open_navigation;
+    @BindView(R.id.navigation) LinearLayout naviation;
+    @BindView(R.id.dl_activity_main_drawer) DrawerLayout drawerLayout;
 
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
     ArrayList<String> ready_list;
+
     RoomAdapter room_adapter;
     ReadyAdapter readyAdapter;
-    EditText port_num;
+
     Button submit;
-    ChatData chatData;
-    boolean socket_condition = true;
-    String read1 = "";
-    String read2 = "";
-    String user_name,ment,to;
+    String ment,to;
     String content;
     Socket socket;
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
     Tcp_chat tcp_chat;
-    Tcp_Connect tcp_connect;
     boolean ready = true;
-    String ip = "13.124.229.116";
     String id,iden,room_name,room_num;
 
 
@@ -94,7 +93,7 @@ public class RoomActivity extends Activity {
         room_num = String.valueOf(asdf);
         roomname.setText(room_num + ".  " + room_name);
         Log.d("asdfas",id);
-
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setAdapter(room_adapter);
         readylist.setAdapter(readyAdapter);
@@ -110,24 +109,18 @@ public class RoomActivity extends Activity {
 
 
         my_ready.setText(id);
-        test_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         ready_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String ready_content;
                 if (ready == true){
                     ready_content = "wait";
-                    ready_btn.setText("right");
+                    ready_btn.setText("wait");
                     ready = false;
                 }
                 else {
                     ready_content = "ready";
-                    ready_btn.setText("wait");
+                    ready_btn.setText("ready");
                     ready = true;
                 }
                 Toast.makeText(RoomActivity.this, ready_content, Toast.LENGTH_SHORT).show();
@@ -157,19 +150,38 @@ public class RoomActivity extends Activity {
                 String chat_content = text.getText().toString();
                 String push_content = "1《" + room_num + "《" + id + "》" + chat_content;
                 new Tcp_chat().execute(id ,push_content);
+
+
             }
         });
 
+        open_navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(naviation);
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+            }
+        });
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tcp_chat = new Tcp_chat();
+                tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+                finish();
+
+            }
+        });
 
     }
-
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         tcp_chat = new Tcp_chat();
-        tcp_chat.execute(id ,"fin!@#!@#》");
+        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
     }
 
 
@@ -183,8 +195,11 @@ public class RoomActivity extends Activity {
             boolean test = false;
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
+                    if (!line.contains("《") || !line.contains("》")){
+                        Log.w("Chatting is error" , "error");
+                        continue;
+                    }
                     Log.w("Chatting is running" , "1");
-
                     Log.d("line", line);
                     int idx_ment = line.indexOf("《");
                     String real_ment = line.substring(idx_ment + 1);
@@ -199,6 +214,9 @@ public class RoomActivity extends Activity {
 
                     //chatting
                     if (tcp_type.equals("1")){
+                        idx = content.indexOf("《");
+                        content = content.substring(idx + 1);
+
                         idx = content.indexOf("》");
                         to = content.substring(0,idx);
                         ment = content.substring(idx+1);

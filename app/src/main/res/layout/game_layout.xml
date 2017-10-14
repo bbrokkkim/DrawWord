@@ -25,8 +25,9 @@
                 android:id="@+id/back_btn"/>
 
             <TextView
-                android:text="회원가입"
+                android:text="친구목록"
                 android:gravity="center"
+                android:id="@+id/proto_test"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <ImageButton
@@ -49,14 +50,6 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:text="친구목록"
-                android:gravity="center_horizontal"
-                android:textSize="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:id="@+id/proto_test" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,21 +58,21 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:text="Button"
+                    android:text="친구목록"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:id="@+id/friend_button" />
 
                 <Button
-                    android:text="Button"
+                    android:text="게임목록"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:id="@+id/game_button" />
 
                 <Button
-                    android:text="Button"
+                    android:text="아직몰라"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
