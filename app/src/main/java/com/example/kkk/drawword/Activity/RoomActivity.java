@@ -28,6 +28,7 @@ import com.example.kkk.drawword.Data.ReadyData;
 import com.example.kkk.drawword.Okhttp.TcpChat;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Adapter.RoomAdapter;
+import com.example.kkk.drawword.SocketGet;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -76,6 +78,7 @@ public class RoomActivity extends Activity {
     boolean ready = true;
     String id,iden,room_name,room_num;
 
+    SocketGet socketGet = new SocketGet(socket,bufferedReader,bufferedWriter);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +109,6 @@ public class RoomActivity extends Activity {
                 new Tcp_chat().execute(id ,push_content);
             }
         });
-
 
         my_ready.setText(id);
         ready_btn.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +142,7 @@ public class RoomActivity extends Activity {
             e.printStackTrace();
         }
 
-        checkUpdate.start();
+//        checkUpdate.start();
 
         Log.d("test","thread2");
 
@@ -150,7 +152,6 @@ public class RoomActivity extends Activity {
                 String chat_content = text.getText().toString();
                 String push_content = "1《" + room_num + "《" + id + "》" + chat_content;
                 new Tcp_chat().execute(id ,push_content);
-
 
             }
         });
@@ -194,7 +195,7 @@ public class RoomActivity extends Activity {
             content = null;
             boolean test = false;
             try {
-                while ((line = bufferedReader.readLine()) !=null) {
+                while ((line = socketGet.getBufferedReader().readLine()) !=null) {
                     if (!line.contains("《") || !line.contains("》")){
                         Log.w("Chatting is error" , "error");
                         continue;
@@ -296,6 +297,7 @@ public class RoomActivity extends Activity {
             readyAdapter.notifyDataSetChanged();*/
             Toast.makeText(RoomActivity.this, "시작합니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RoomActivity.this,DrawActivity.class);
+            intent.putExtra("socket_info", socketGet);
             startActivity(intent);
         }
     };
@@ -344,8 +346,6 @@ public class RoomActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("stream","asdd");
-
-
         }
     }
 
@@ -363,14 +363,16 @@ public class RoomActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            
-            if (status == true) {
 
+            if (status == true) {
                 Toast.makeText(RoomActivity.this, "연결됨", Toast.LENGTH_SHORT).show();
+                socketGet.setSocket(socket);
+                socketGet.setBufferedReader(bufferedReader);
+                socketGet.setBufferedWriter(bufferedWriter);
+                checkUpdate.start();
             }
             else
                 Toast.makeText(RoomActivity.this, "실패", Toast.LENGTH_SHORT).show();
-
         }
 
         @Override

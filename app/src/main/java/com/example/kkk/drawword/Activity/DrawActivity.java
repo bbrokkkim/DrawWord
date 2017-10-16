@@ -1,6 +1,7 @@
 package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,10 +17,12 @@ import com.example.kkk.drawword.Adapter.DrawAdapter;
 import com.example.kkk.drawword.Data.ChatData;
 import com.example.kkk.drawword.Data.DrawData;
 import com.example.kkk.drawword.R;
+import com.example.kkk.drawword.SocketGet;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -41,6 +44,7 @@ public class DrawActivity extends Activity{
     BufferedReader bufferedReader;
     String to,ment,content,tcp_type;
 
+    Socket socket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,13 @@ public class DrawActivity extends Activity{
         drawAdapter = new DrawAdapter(getLayoutInflater(),item);
         listView.setAdapter(drawAdapter);
 
-//        checkUpdate.start();
+        Intent intent = getIntent();
+        SocketGet socketGet = (SocketGet) intent.getSerializableExtra("socket_info");
+        socket = socketGet.getSocket();
+        bufferedReader = socketGet.getBufferedReader();
+        bufferedWriter = socketGet.getBufferedWriter();
+
+        checkUpdate.start();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
