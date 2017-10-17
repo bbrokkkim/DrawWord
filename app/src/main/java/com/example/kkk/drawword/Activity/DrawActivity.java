@@ -18,6 +18,7 @@ import com.example.kkk.drawword.Data.ChatData;
 import com.example.kkk.drawword.Data.DrawData;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.SocketGet;
+import com.example.kkk.drawword.Tcp_chat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,38 +43,58 @@ public class DrawActivity extends Activity{
     //tcp
     BufferedWriter bufferedWriter;
     BufferedReader bufferedReader;
-    String to,ment,content,tcp_type;
+    String to,ment,content,tcp_type,id,room_num;
 
     Socket socket;
+    Tcp_chat tcp_chat;
+    SocketGet socketGet = SocketGet.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.draw_layout);
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        id = intent.getStringExtra("id");
+        room_num = intent.getStringExtra("room_num");
         item = new ArrayList<>();
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         drawAdapter = new DrawAdapter(getLayoutInflater(),item);
         listView.setAdapter(drawAdapter);
 
-        Intent intent = getIntent();
-        SocketGet socketGet = (SocketGet) intent.getSerializableExtra("socket_info");
         socket = socketGet.getSocket();
         bufferedReader = socketGet.getBufferedReader();
         bufferedWriter = socketGet.getBufferedWriter();
-
+        Toast.makeText(this, String.valueOf(socketGet.getA()), Toast.LENGTH_SHORT).show();
         checkUpdate.start();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String answer = answer_ed.getText().toString();
-                item.add(new DrawData(answer,"aa"));
+//                item.add(new DrawData(answer,"aa"));
                 Toast.makeText(DrawActivity.this, answer, Toast.LENGTH_SHORT).show();
+                String push_content = "1《" + room_num + "《" + id + "》" + answer;
+                new Tcp_chat().execute(id ,push_content);
+
                 drawAdapter.notifyDataSetChanged();
                 answer_ed.setText("");
             }
         });
     }
+
+
+    Handler game_chatting = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.d("test",String.valueOf(item.size()));
+
+            item.add(new DrawData(to+ " : " + ment , "aa"));
+            drawAdapter.notifyDataSetChanged();
+
+        }
+    };
 
     private Thread checkUpdate = new Thread() {
 
@@ -111,7 +132,7 @@ public class DrawActivity extends Activity{
 
                     //user_list_status
                     else if (tcp_type.equals("2")) {
-
+                        game_chatting.sendEmptyMessage(0);
                     }
                 }
                 Log.d("Chatting is running", "21");
