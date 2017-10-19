@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -41,7 +42,11 @@ dependencies {
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.github.antwankakki:FabricView:latest'
-
-//    compile 'com.google.firebase:firebase-core:11.0.4'
+/*
+<<<<<<< HEAD
+    compile 'com.google.firebase:firebase-core:11.0.4'
+=======
+>>>>>>> origin/master*/
 }
 apply plugin: 'com.google.gms.google-services'
+

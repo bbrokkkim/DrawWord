@@ -19,6 +19,7 @@
             android:layout_gravity="right"
             android:id="@+id/key" />
 
+<!--
 
         <!--<com.example.kkk.drawword.MyView
 
@@ -27,9 +28,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffdd00"/>
-
-
 -->
+
+
+<<<<<<< HEAD
+-->
+=======
+        <com.agsw.FabricView.FabricView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/faricView"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" />
+>>>>>>> origin/master
 
         <com.byox.drawview.views.DrawView
             android:id="@+id/draw_view"
@@ -64,7 +75,7 @@
             android:id="@+id/answer"/>
 
         <Button
-            android:text="Button"
+            android:text="전송"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
