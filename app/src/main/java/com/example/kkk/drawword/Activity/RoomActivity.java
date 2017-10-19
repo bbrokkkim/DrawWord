@@ -24,11 +24,14 @@ import android.widget.Toast;
 
 import com.example.kkk.drawword.Adapter.ReadyAdapter;
 import com.example.kkk.drawword.Data.ChatData;
+import com.example.kkk.drawword.Data.DrawData;
 import com.example.kkk.drawword.Data.ReadyData;
 import com.example.kkk.drawword.Okhttp.TcpChat;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Adapter.RoomAdapter;
 import com.example.kkk.drawword.SocketGet;
+import com.example.kkk.drawword.Tcp_chat;
+import com.example.kkk.drawword.Tcp_connect;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -47,7 +50,7 @@ import butterknife.ButterKnife;
 /**
  * Created by KKK on 2017-08-17.
  */
-public class RoomActivity extends Activity {
+public class RoomActivity extends Activity implements View.OnClickListener{
 
     @BindView(R.id.fl_activity_main_container) FrameLayout frameLayout;
     @BindView(R.id.text_ment) EditText text;
@@ -60,6 +63,8 @@ public class RoomActivity extends Activity {
     @BindView(R.id.open_navigation) ImageButton open_navigation;
     @BindView(R.id.navigation) LinearLayout naviation;
     @BindView(R.id.dl_activity_main_drawer) DrawerLayout drawerLayout;
+    @BindView(R.id.submit_ment) Button submit;
+
 
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
@@ -68,17 +73,18 @@ public class RoomActivity extends Activity {
     RoomAdapter room_adapter;
     ReadyAdapter readyAdapter;
 
-    Button submit;
+
     String ment,to;
     String content;
     Socket socket;
+    String push_content;
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
     Tcp_chat tcp_chat;
     boolean ready = true;
     String id,iden,room_name,room_num;
 
-    SocketGet socketGet = new SocketGet(socket,bufferedReader,bufferedWriter);
+    SocketGet socketGet = SocketGet.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,20 +106,52 @@ public class RoomActivity extends Activity {
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setAdapter(room_adapter);
         readylist.setAdapter(readyAdapter);
-        readylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long ida) {
-
-                Toast.makeText(RoomActivity.this, "test", Toast.LENGTH_SHORT).show();
-                String push_content = "2《" + room_num + "《" + id + "》";
-                new Tcp_chat().execute(id ,push_content);
-            }
-        });
 
         my_ready.setText(id);
-        ready_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        try {
+            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
+            Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
+            checkUpdate.start();
+            Log.d("test","thread1");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        submit.setOnClickListener(this);
+        open_navigation.setOnClickListener(this);
+        back_btn.setOnClickListener(this);
+        ready_btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            //채팅문자전송
+            case R.id.submit_ment:
+                String chat_content = text.getText().toString();
+                push_content = "1《" + room_num + "《" + id + "》" + chat_content;
+                new Tcp_chat().execute(id, push_content);
+                break;
+            //네비게이션드로어 열기
+            case R.id.open_navigation:
+                drawerLayout.openDrawer(naviation);
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+                break;
+            //채팅방 나오기
+            case R.id.back_btn_game :
+                tcp_chat = new Tcp_chat();
+                tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+                finish();
+                break;
+            //게임준비하기
+            case R.id.ready_btn :
                 String ready_content;
                 if (ready == true){
                     ready_content = "wait";
@@ -127,56 +165,20 @@ public class RoomActivity extends Activity {
                 }
                 Toast.makeText(RoomActivity.this, ready_content, Toast.LENGTH_SHORT).show();
                 Toast.makeText(RoomActivity.this, id, Toast.LENGTH_SHORT).show();
-                String push_content = "2《" + room_num + "《" + id + "》" + ready_content;
+                push_content = "2《" + room_num + "《" + id + "》" + ready_content;
                 new Tcp_chat().execute(id ,push_content);
-            }
-        });
-        String test = null;
-
-        try {
-            test = new Tcp_Connect().execute("8000",room_num + "《" + id).get();
-            Log.d("test","thread1");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
-
-//        checkUpdate.start();
-
-        Log.d("test","thread2");
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String chat_content = text.getText().toString();
-                String push_content = "1《" + room_num + "《" + id + "》" + chat_content;
-                new Tcp_chat().execute(id ,push_content);
-
-            }
-        });
-
-        open_navigation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(naviation);
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
-            }
-        });
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tcp_chat = new Tcp_chat();
-                tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
-                finish();
-
-            }
-        });
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (socketGet.getBufferedReader() != null){
+            Toast.makeText(this, "adsf", Toast.LENGTH_SHORT).show();
+        }
+        else
+            Toast.makeText(this, "bbbb", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onBackPressed() {
@@ -186,7 +188,7 @@ public class RoomActivity extends Activity {
     }
 
 
-    private Thread checkUpdate = new Thread() {
+    Thread checkUpdate = new Thread() {
 
         public void run() {
             String line = null;
@@ -195,11 +197,13 @@ public class RoomActivity extends Activity {
             content = null;
             boolean test = false;
             try {
-                while ((line = socketGet.getBufferedReader().readLine()) !=null) {
+                while ((line = socketGet.getBufferedReader().readLine()) != null) {
+
                     if (!line.contains("《") || !line.contains("》")){
                         Log.w("Chatting is error" , "error");
                         continue;
                     }
+
                     Log.w("Chatting is running" , "1");
                     Log.d("line", line);
                     int idx_ment = line.indexOf("《");
@@ -212,6 +216,42 @@ public class RoomActivity extends Activity {
                     Log.d("Chatting is content", content);
                     Log.d("Chatting is tcp_type", tcp_type);
 
+
+                    /*switch (tcp_type){
+                        case "1":
+                            idx = content.indexOf("《");
+                            content = content.substring(idx + 1);
+                            idx = content.indexOf("》");
+                            to = content.substring(0,idx);
+                            ment = content.substring(idx+1);
+                            chatting.sendEmptyMessage(0);
+                            Log.d("Chatting is to", to);
+                            Log.d("Chatting is ment", ment);
+                            break;
+                        case "2":
+                            int test_int = 1;
+                            ready_list = new ArrayList<>();
+                            while (true){
+                                if (content.contains("《")){
+                                    idx = content.indexOf("《");
+                                    ready_list.add(content.substring(0,idx));
+                                    Log.d("list"+test_int,content.substring(0,idx));
+                                    content = content.substring(idx+1);
+                                }
+                                else {
+                                    ready_list.add(content);
+                                    Log.d("last"+test_int,content);
+                                    break;
+                                }
+                                test_int = test_int + 1;
+                            }
+                            user_list_status.sendEmptyMessage(0);
+                            break;
+                        case "5":
+                            all_start.sendEmptyMessage(0);
+                            break;
+                            break;
+                    }*/
 
                     //chatting
                     if (tcp_type.equals("1")){
@@ -280,6 +320,7 @@ public class RoomActivity extends Activity {
         }
     };
 
+
     Handler all_start = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -297,7 +338,8 @@ public class RoomActivity extends Activity {
             readyAdapter.notifyDataSetChanged();*/
             Toast.makeText(RoomActivity.this, "시작합니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RoomActivity.this,DrawActivity.class);
-            intent.putExtra("socket_info", socketGet);
+            intent.putExtra("id",id);
+            intent.putExtra("room_num",room_num);
             startActivity(intent);
         }
     };
@@ -324,94 +366,9 @@ public class RoomActivity extends Activity {
 
 
 
-    public class Tcp_chat extends AsyncTask<String ,String ,String> {
-        String user,ment,ment1;
-        @Override
-        protected String doInBackground(String... params) {
-            Log.d("stream","async시작");
-            user = params[0];
-            ment = params[1];
 
-            /*PrintWriter user_writer = new PrintWriter(bufferedWriter, true);
-            user_writer.println(user);*/
-
-            PrintWriter ment_writer = new PrintWriter(bufferedWriter, true);
-            ment_writer.println(ment);
-
-            Log.d("send",ment);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d("stream","asdd");
-        }
-    }
-
-
-
-    public class Tcp_Connect extends AsyncTask<String ,String,String >{
-        String port_st;
-        boolean status;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(RoomActivity.this, "소켓 연결중..", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (status == true) {
-                Toast.makeText(RoomActivity.this, "연결됨", Toast.LENGTH_SHORT).show();
-                socketGet.setSocket(socket);
-                socketGet.setBufferedReader(bufferedReader);
-                socketGet.setBufferedWriter(bufferedWriter);
-                checkUpdate.start();
-            }
-            else
-                Toast.makeText(RoomActivity.this, "실패", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            port_st = params[0];
-            String ment = params[1];
-            int port = Integer.parseInt(port_st);
-            try {
-                Log.d("stream","asdd123");
-                socket = new Socket("13.124.229.116",port);
-                Log.d("second",String.valueOf(port));
-//                "13.124.60.238",8007
-                boolean result = socket.isConnected();
-                if(result) {
-                    Log.d("stream","서버에 연결됨");
-                    status = true;
-                }
-                else {
-                    Log.d("stream","서버에 연결안됨");
-                    status = false;
-                }
-                bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
-                bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
-                PrintWriter ment_writer = new PrintWriter(bufferedWriter, true);
-                ment_writer.println(ment);
-                Log.d("stream","fin");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("fail",e.toString());
-            }
-            return null;
-        }
-    }
 
     void layout(){
-        listView = (ListView) findViewById(R.id.ment_view);
-        text = (EditText) findViewById(R.id.text_ment);
-        submit = (Button) findViewById(R.id.submit_ment);
         room_adapter = new RoomAdapter(getLayoutInflater(),item);
         readyAdapter = new ReadyAdapter(getLayoutInflater(),this,item_ready);
     }

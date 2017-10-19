@@ -188,23 +188,13 @@ int a = 0;
             for (int i = 0; i < 500; i++) {
                 MotionEvent event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 400+i,400+i*2, 0);
                 inst.sendPointerSync(event);
-                /*event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 402,400, 0);
-                inst.sendPointerSync(event);
-                event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 404,400, 0);
-                inst.sendPointerSync(event);
-                event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 406,400, 0);
-                inst.sendPointerSync(event);*/
+
                 Log.d("toast","???");
             }
             for (int i = 0; i < 0; i--) {
                 MotionEvent event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 400+i,400+i, 0);
                 inst.sendPointerSync(event);
-                /*event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 402,400, 0);
-                inst.sendPointerSync(event);
-                event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 404,400, 0);
-                inst.sendPointerSync(event);
-                event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 406,400, 0);
-                inst.sendPointerSync(event);*/
+
                 Log.d("toast","???");
             }
             Log.d("toast","???");
