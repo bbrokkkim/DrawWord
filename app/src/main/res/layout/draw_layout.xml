@@ -20,7 +20,7 @@
             android:id="@+id/key" />
 
 
-        <com.example.kkk.drawword.MyView
+        <!--<com.example.kkk.drawword.MyView
 
             android:id="@+id/myView"
 
@@ -29,8 +29,13 @@
             android:background="#ffdd00"/>
 
 
+-->
 
-
+        <com.byox.drawview.views.DrawView
+            android:id="@+id/draw_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
         <ListView
             android:layout_width="match_parent"
@@ -48,7 +53,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
         <EditText

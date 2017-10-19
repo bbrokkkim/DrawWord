@@ -22,6 +22,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Activity.DrawActivity"
             android:configChanges="orientation|keyboard"/>
+        <activity android:name=".Activity.TestActivity"/>
         <service
             android:name=".MyFirebaseMessagingService">
             <intent-filter>

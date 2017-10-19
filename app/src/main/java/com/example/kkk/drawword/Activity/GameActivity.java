@@ -95,7 +95,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         friend_btn.setOnClickListener(this);
         game_btn.setOnClickListener(this);
         logout.setOnClickListener(this);
-
+        my_info.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -110,8 +110,12 @@ public class GameActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.logout:
                 Intent intent = new Intent(GameActivity.this,MainActivity.class);
-                intentClass.UserLogout(database,intent);
+//                intentClass.UserLogout(database,intent);
                 break;
+            case R.id.my_info :
+                Intent intenta = new Intent(GameActivity.this,TestActivity.class);
+                startActivity(intenta);
+
         }
     }
 
