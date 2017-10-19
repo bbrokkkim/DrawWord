@@ -20,12 +20,12 @@
             android:id="@+id/key" />
 
 
-<!--        <com.agsw.FabricView.FabricView
+       <com.agsw.FabricView.FabricView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/faricView"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"/>
 
 
         <com.byox.drawview.views.DrawView
@@ -34,10 +34,10 @@
             android:layout_height="match_parent"
             />-->
 
-        <com.byox.drawview.views.DrawView
+<!--        <com.byox.drawview.views.DrawView
             android:id="@+id/draw_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"/>-->
 
         <ListView
             android:layout_width="match_parent"

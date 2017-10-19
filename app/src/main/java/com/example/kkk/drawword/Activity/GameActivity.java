@@ -21,6 +21,7 @@ import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Fragment.FriendlistFragment;
+import com.example.kkk.drawword.Test2Activity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -113,7 +114,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 //                intentClass.UserLogout(database,intent);
                 break;
             case R.id.my_info :
-                Intent intenta = new Intent(GameActivity.this,TestActivity.class);
+                Intent intenta = new Intent(GameActivity.this,Test2Activity.class);
                 startActivity(intenta);
 
         }

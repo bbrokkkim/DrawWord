@@ -2,7 +2,10 @@ package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,11 +14,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agsw.FabricView.FabricView;
+import com.byox.drawview.enums.DrawingCapture;
 import com.byox.drawview.enums.DrawingMode;
 import com.byox.drawview.views.DrawView;
 import com.example.kkk.drawword.R;
@@ -28,7 +33,7 @@ import butterknife.ButterKnife;
  */
 
 public class TestActivity extends Activity implements View.OnTouchListener {
-//    @BindView(R.id.draw_view) DrawView drawView;
+    @BindView(R.id.draw_view) DrawView drawView;
     @BindView(R.id.button1)
     Button btn1;
     @BindView(R.id.button2) Button btn2;
@@ -36,57 +41,70 @@ public class TestActivity extends Activity implements View.OnTouchListener {
     TextView textView;
     @BindView(R.id.textView1)
     TextView textView2;
-    @BindView(R.id.lin)LinearLayout lin;
-//    @BindView(R.id.faricView)
+    @BindView(R.id.lin)LinearLayout linearLayout;
+/*    @BindView(R.id.imageView)
+    ImageView image;*/
+    //    @BindView(R.id.faricView)
 //    FabricView fabricView;
-    float x, y;
+//    float x = event.getX(), y;
+    float x;
+    float y;
+    int ty = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.testayout);
         ButterKnife.bind(this);
-        final int[] a = {1};
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
-                drawView.setDrawWidth(a[0]);
-                a[0] = a[0] + 1;
-*/
-//                drawView.setDrawingMode(DrawingMode.DRAW);
+
+                drawView.setDrawingMode(DrawingMode.DRAW);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            /*    drawView.setDrawWidth(20);
+                drawView.setDrawWidth(20);
                 drawView.setDrawingMode(DrawingMode.ERASER);
-            */}
+            }
         });
-
-        lin.setOnTouchListener(this);
+//        drawView.setEnabled(false);
+        linearLayout.setOnTouchListener(this);
 
 
 //        fabricView.setColor(Color.BLUE);
 //        fabricView.setOnTouchListener(this);
-
+//        drawView.setOnTouchListener(this);
+        drawView.setBackgroundColor(Color.WHITE);
+        drawView.setDrawColor(Color.BLUE);
         thread.start();
 
 //        float x = fabricView.getWidth();
 //        float y = fabricView.getHeight();
-
-        textView2.setText("x : " + x + " y : " + y);
-        /*drawView.setOnDrawViewListener(new DrawView.OnDrawViewListener() {
+        final int[] a = {0};
+        textView2.setText("x : " + x + " y1 : " + y);
+//        MotionEvent event;
+        final MotionEvent finalEvent = null;
+        final String[] str = new String[1];
+//        int a = 1;
+        drawView.setOnDrawViewListener(new DrawView.OnDrawViewListener() {
             @Override
             public void onStartDrawing() {
                 // Your stuff here
-                event.getX
-                Toast.makeText(TestActivity.this, "Start", Toast.LENGTH_SHORT).show();
+
+//                Toast.makeText(TestActivity.this, "Start", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onEndDrawing() {
                 // Your stuff here
-                Toast.makeText(TestActivity.this, "end", Toast.LENGTH_SHORT).show();
+                Paint paint = drawView.getCurrentPaintParams();
+
+//                Toast.makeText(TestActivity.this, "end", Toast.LENGTH_SHORT).show();
+                drawView.createCapture(DrawingCapture.BITMAP);
+//                image.setImageBitmap(a);
+//                y = drawView.getTranslationY();
+//                Toast.makeText(TestActivity.this, ""+ x+ " , "+ y, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onClearDrawing() {
@@ -101,16 +119,25 @@ public class TestActivity extends Activity implements View.OnTouchListener {
             @Override
             public void onAllMovesPainted() {
                 // Your stuff here
+                /*x = drawView.getWidth();
+                y = drawView.getHeight();*/
+//                Log.d("location",""+ x+ " , "+ y );
+                // 좌표값을 이용하여 문자열을 구성한다.
+                str[0] = "Coordinate4 : ( " + (int)x + ", " + (int)y + " )"  + ty;
+                Log.d("ttttttt",str[0]);
+                // 구성한 문자열을 텍스트뷰에 출력한다.
+//                Toast.makeText(this, String.valueOf(a), Toast.LENGTH_SHORT).show();
+
+                textView.setText(str[0]);
 //                Toast.makeText(TestActivity.this, "allmove", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
 
     }
-int a = 0;
+    int a = 0;
     public boolean onTouch(View v, MotionEvent event)
     {
-        float x;
-        float y;
+
 
         String str = null;
         // 좌표값을 이용하여 문자열을 구성한다.
@@ -122,7 +149,7 @@ int a = 0;
             case MotionEvent.ACTION_DOWN:
                 x = event.getX();
                 y = event.getY();
-
+                ty= 2;
                 // 좌표값을 이용하여 문자열을 구성한다.
                 str = "Coordinate1 : ( " + (int)x + ", " + (int)y + " )";
                 // 구성한 문자열을 텍스트뷰에 출력한다.
@@ -132,7 +159,7 @@ int a = 0;
                 // 터치가 발생한 X, Y 의 각 좌표를 얻는다.
                 x = event.getX();
                 y = event.getY();
-
+                ty= 3;
                 // 좌표값을 이용하여 문자열을 구성한다.
                 str = "Coordinate2 : ( " + (int)x + ", " + (int)y + " )";
                 // 구성한 문자열을 텍스트뷰에 출력한다.
@@ -149,7 +176,7 @@ int a = 0;
         return false;
     }
 
-    /*@Override
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         final int action = event.getAction();
@@ -174,7 +201,7 @@ int a = 0;
         }
         return true;
 
-    }*/
+    }
     private Handler handler = new Handler(){
 
     };
@@ -202,3 +229,4 @@ int a = 0;
     };
 
 }
+

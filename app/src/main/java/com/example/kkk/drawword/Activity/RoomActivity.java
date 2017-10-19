@@ -32,6 +32,7 @@ import com.example.kkk.drawword.Adapter.RoomAdapter;
 import com.example.kkk.drawword.SocketGet;
 import com.example.kkk.drawword.Tcp_chat;
 import com.example.kkk.drawword.Tcp_connect;
+import com.example.kkk.drawword.Test2Activity;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -139,10 +140,12 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 break;
             //네비게이션드로어 열기
             case R.id.open_navigation:
-                drawerLayout.openDrawer(naviation);
+                /*drawerLayout.openDrawer(naviation);
 
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);*/
+                Intent intenta = new Intent(RoomActivity.this,Test2Activity.class);
+                startActivity(intenta);
                 break;
             //채팅방 나오기
             case R.id.back_btn_game :

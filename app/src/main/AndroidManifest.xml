@@ -23,6 +23,8 @@
         <activity android:name=".Activity.DrawActivity"
             android:configChanges="orientation|keyboard"/>
         <activity android:name=".Activity.TestActivity"/>
+
+        <activity android:name=".Test2Activity"/>
         <service
             android:name=".MyFirebaseMessagingService">
             <intent-filter>
