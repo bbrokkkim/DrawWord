@@ -114,7 +114,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
             Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
-            checkUpdate.start();
+//            checkUpdate.start();
             Log.d("test","thread1");
         } catch (InterruptedException e) {
             e.printStackTrace();

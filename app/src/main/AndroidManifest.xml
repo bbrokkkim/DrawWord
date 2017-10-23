@@ -16,15 +16,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.GameActivity"
-            android:configChanges="orientation|keyboard"/>
+            android:configChanges="orientation|keyboard"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Activity.RoomActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Activity.DrawActivity"
-            android:configChanges="orientation|keyboard"/>
-        <activity android:name=".Activity.TestActivity"/>
+            android:configChanges="orientation|keyboard"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.TestActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".Test2Activity"/>
+        <activity android:name=".Test2Activity"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".MyFirebaseMessagingService">
             <intent-filter>

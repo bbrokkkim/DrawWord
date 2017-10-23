@@ -3,6 +3,7 @@ package com.example.kkk.drawword;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.RoomActivity;

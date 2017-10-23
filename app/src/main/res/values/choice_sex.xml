@@ -8,12 +8,20 @@
     <item>female</item>
 </string-array>
 
-<string-array name="cinema"
+<string-array name="draw_color"
     layout_width="wrap_content">
-    <item>choice</item>
-    <item>CGV</item>
-    <item>Lotte</item>
-    <item>Megabox</item>
+    <item>BLACK</item>
+    <item>BLUE</item>
+    <item>RED</item>
+    <item>GREEN</item>
+</string-array>
+
+<string-array name="draw_thick"
+    layout_width="wrap_content">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
 </string-array>
 
 </resources>

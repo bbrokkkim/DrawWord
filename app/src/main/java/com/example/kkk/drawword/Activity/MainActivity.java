@@ -42,7 +42,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     Database database;
     IntentClass intentClass;
     public MainActivity (){
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
