@@ -289,7 +289,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                         }
                         user_list_status.sendEmptyMessage(0);
                     }
-                    else if (tcp_type.equals("5")){
+                    else if (tcp_type.equals("2.5")){
                         all_start.sendEmptyMessage(0);
                         break;
                     }
