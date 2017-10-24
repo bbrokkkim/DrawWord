@@ -32,8 +32,8 @@ import butterknife.ButterKnife;
  * Created by KKK on 2017-10-18.
  */
 
-public class TestActivity extends Activity implements View.OnTouchListener {
-    @BindView(R.id.draw_view) DrawView drawView;
+public class TestActivity extends Activity /*implements View.OnTouchListener*/ {
+    /*@BindView(R.id.draw_view) DrawView drawView;
     @BindView(R.id.button1)
     Button btn1;
     @BindView(R.id.button2) Button btn2;
@@ -42,8 +42,8 @@ public class TestActivity extends Activity implements View.OnTouchListener {
     @BindView(R.id.textView1)
     TextView textView2;
     @BindView(R.id.lin)LinearLayout linearLayout;
-/*    @BindView(R.id.imageView)
-    ImageView image;*/
+*//*    @BindView(R.id.imageView)
+    ImageView image;*//*
     //    @BindView(R.id.faricView)
 //    FabricView fabricView;
 //    float x = event.getX(), y;
@@ -119,8 +119,8 @@ public class TestActivity extends Activity implements View.OnTouchListener {
             @Override
             public void onAllMovesPainted() {
                 // Your stuff here
-                /*x = drawView.getWidth();
-                y = drawView.getHeight();*/
+                *//*x = drawView.getWidth();
+                y = drawView.getHeight();*//*
 //                Log.d("location",""+ x+ " , "+ y );
                 // 좌표값을 이용하여 문자열을 구성한다.
                 str[0] = "Coordinate4 : ( " + (int)x + ", " + (int)y + " )"  + ty;
@@ -227,6 +227,6 @@ public class TestActivity extends Activity implements View.OnTouchListener {
             Log.d("toast","???");
         }
     };
-
+*/
 }
 

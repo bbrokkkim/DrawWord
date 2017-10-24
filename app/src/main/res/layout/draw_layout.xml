@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,35 +10,89 @@
         android:layout_weight="9">
 
 
-        <TextView
-            android:text="key"
-            android:textSize="30dp"
-            android:gravity="end"
-            android:layout_marginRight="10dp"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:id="@+id/key" />
-
-
-       <com.agsw.FabricView.FabricView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/faricView"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"/>
+            android:orientation="horizontal"
+            android:id="@+id/linear">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/FrameLayout">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="right"
+                    android:id="@+id/modify">
+
+                    <TextView
+                        android:text="wait"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:id="@+id/timer" />
+
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:entries="@array/draw_thick"
+                        android:id="@+id/choice_thick" />
 
 
-        <com.byox.drawview.views.DrawView
-            android:id="@+id/draw_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:entries="@array/draw_color"
+                        android:id="@+id/choice_color" />
 
-<!--        <com.byox.drawview.views.DrawView
-            android:id="@+id/draw_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>-->
+                    <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/drawable_transparent_pattern"
+                        android:id="@+id/draworerase" />
+                    <TextView
+                        android:text="answer"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="match_parent"
+                        android:id="@+id/answer" />
+
+
+                </LinearLayout>
+
+                <com.agsw.FabricView.FabricView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/faricView"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true" />
+
+
+
+                <Button
+                    android:text="맞춰보세요"
+                    android:textSize="40dp"
+                    android:gravity="center_vertical"
+                    android:background="#00000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/blind" />
+
+
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+
 
         <ListView
             android:layout_width="match_parent"
@@ -55,20 +110,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="50dp"
+        android:minHeight="50dp"
+
         android:orientation="horizontal">
 
         <EditText
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:id="@+id/answer"/>
+            android:id="@+id/answer_content"/>
 
         <Button
             android:text="전송"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:id="@+id/game_submit" />
 

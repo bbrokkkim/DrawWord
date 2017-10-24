@@ -75,7 +75,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     ReadyAdapter readyAdapter;
 
 
-    String ment,to;
+    String to,ment;
     String content;
     Socket socket;
     String push_content;
@@ -114,7 +114,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
             Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
-//            checkUpdate.start();
+            checkUpdate.start();
             Log.d("test","thread1");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -140,12 +140,13 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 break;
             //네비게이션드로어 열기
             case R.id.open_navigation:
-                /*drawerLayout.openDrawer(naviation);
-
+                drawerLayout.openDrawer(naviation);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);*/
+                imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+/*
                 Intent intenta = new Intent(RoomActivity.this,Test2Activity.class);
                 startActivity(intenta);
+*/
                 break;
             //채팅방 나오기
             case R.id.back_btn_game :
@@ -287,6 +288,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                             }
                             test_int = test_int + 1;
                         }
+                        Log.d("last"+test_int,content);
                         user_list_status.sendEmptyMessage(0);
                     }
                     else if (tcp_type.equals("2.5")){
