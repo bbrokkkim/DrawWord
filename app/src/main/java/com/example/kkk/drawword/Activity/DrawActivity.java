@@ -59,6 +59,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     @BindView(R.id.choice_color) Spinner choice_color;
     @BindView(R.id.choice_thick) Spinner choice_thick;
     @BindView(R.id.modify) LinearLayout modify;
+    @BindView(R.id.linear) LinearLayout linear;
+
     @BindView(R.id.draworerase) ImageButton draw_or_erase;
     DrawAdapter drawAdapter;
     ArrayList<DrawData> item;
@@ -82,6 +84,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     String answer = "";
     String time = "";
     String draw_erase = "1";
+    String status = "";
     SocketGet socketGet = SocketGet.getInstance();
     boolean draw_type;
     MotionEvent event;
@@ -95,20 +98,31 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
         room_num = intent.getStringExtra("room_num");
+        status = intent.getStringExtra("status");
+        Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
         item = new ArrayList<>();
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         drawAdapter = new DrawAdapter(getLayoutInflater(),item);
         listView.setAdapter(drawAdapter);
-
+        modify.bringToFront();
         socket = socketGet.getSocket();
         bufferedReader = socketGet.getBufferedReader();
         bufferedWriter = socketGet.getBufferedWriter();
         Toast.makeText(this, String.valueOf(socketGet.getA()), Toast.LENGTH_SHORT).show();
+
+        if (status.equals("1")) {
+            blind.setVisibility(View.GONE);
+//            content =
+            Dialog();
+//            new Tcp_chat().execute(id,content);
+        }
+        else if (status.equals("2")){
+            blind.setVisibility(View.VISIBLE);
+        }
         checkUpdate.start();
-        blind.setVisibility(View.GONE);
 
         fabricView.setOnTouchListener(this);
-        modify.setOnTouchListener(this);
+        linear.setOnTouchListener(this);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,9 +147,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     draw_erase = "2";
                     Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 }
-                else{
+                else {
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher_erase);
-                    FabricSetThick(color);
+                    FabricSetColor(color);
                     draw_or_erase_boolean = true;
                     draw_erase = "1";
                     Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
@@ -163,23 +177,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        checkUpdate.start();
+
     }
 
-
-
-
-    Handler game_chatting = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Log.d("test",String.valueOf(item.size()));
-
-            item.add(new DrawData(to+ " : " + content , "aa"));
-            drawAdapter.notifyDataSetChanged();
-
-        }
-    };
 
     private Thread checkUpdate = new Thread() {
 
@@ -250,6 +250,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     else if (tcp_type.equals("6.5")){
                         //다이얼로그 띄우고 타입 6으로 보내기
                         Dialog();
+//                        Toast.makeText(DrawActivity.this, "aaaaaatest ", Toast.LENGTH_SHORT).show();
+                                
                     }
                     //맞추기
                     else if (tcp_type.equals("7")){
@@ -262,6 +264,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     else if (tcp_type.equals("8")){
                         idx = content.indexOf("《");
                         time = content.substring(0,idx);
+                        Log.d("timeout",time);
                         if (time.equals("65")){
                             Log.d("timeout","next");
 
@@ -285,6 +288,17 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         }
     };
 
+    Handler game_chatting = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.d("test",String.valueOf(item.size()));
+
+            item.add(new DrawData(to+ " : " + content , "aa"));
+            drawAdapter.notifyDataSetChanged();
+
+        }
+    };
 
     Handler chatting = new Handler(){
         @Override
@@ -427,17 +441,22 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         }
     }
     public void Dialog(){
-        final AlertDialog.Builder dialog =
-                new AlertDialog.Builder(this);
+        Toast.makeText(DrawActivity.this, "aaaaaatest ", Toast.LENGTH_SHORT).show();
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setCancelable(false);
         dialog.setTitle("술래입니다.");
         dialog.setMessage("준비가 되셨습니까?");
         dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                content = "《6《"+ room_num + "《" + user_name + "《";
+                content = "6《"+ room_num + "《" + id + "《";
                 new Tcp_chat().execute(id,content);
+
             }
         });
+
         dialog.show();
     }
+
 }

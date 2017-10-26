@@ -202,14 +202,14 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             boolean test = false;
             try {
                 while ((line = socketGet.getBufferedReader().readLine()) != null) {
-
+                    Log.d("line", line);
                     if (!line.contains("《") || !line.contains("》")){
                         Log.w("Chatting is error" , "error");
                         continue;
                     }
 
                     Log.w("Chatting is running" , "1");
-                    Log.d("line", line);
+
                     int idx_ment = line.indexOf("《");
                     String real_ment = line.substring(idx_ment + 1);
                     Log.d("made_line", real_ment);
@@ -282,17 +282,22 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                                 content = content.substring(idx+1);
                             }
                             else {
-                                ready_list.add(content);
+//                                ready_list.add(content);
                                 Log.d("last"+test_int,content);
                                 break;
                             }
                             test_int = test_int + 1;
+
                         }
                         Log.d("last"+test_int,content);
                         user_list_status.sendEmptyMessage(0);
                     }
                     else if (tcp_type.equals("2.5")){
                         all_start.sendEmptyMessage(0);
+                        break;
+                    }
+                    else if (tcp_type.equals("6.5")){
+                        master_start.sendEmptyMessage(0);
                         break;
                     }
 
@@ -345,6 +350,19 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             Intent intent = new Intent(RoomActivity.this,DrawActivity.class);
             intent.putExtra("id",id);
             intent.putExtra("room_num",room_num);
+            intent.putExtra("status","2");
+            startActivity(intent);
+        }
+    };
+    Handler master_start = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(RoomActivity.this, "방장으로 시작합니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(RoomActivity.this,DrawActivity.class);
+            intent.putExtra("id",id);
+            intent.putExtra("room_num",room_num);
+            intent.putExtra("status","1");
             startActivity(intent);
         }
     };
@@ -357,11 +375,13 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             int idx;
             String other_id,other_status;
             item_ready.clear();
+//            Log.d("check",ready_list.get(0));
             for (int i = 0; i < ready_list.size(); i++) {
+//                Log.d("check",ready_list.get(i));
                 idx = ready_list.get(i).indexOf("》");
                 other_id = ready_list.get(i).substring(0,idx);
                 other_status = ready_list.get(i).substring(idx+1);
-                Log.d("status",other_status);
+                Log.d("status_",other_status);
                 item_ready.add(new ReadyData(other_id,other_status));
             }
             readyAdapter.notifyDataSetChanged();
