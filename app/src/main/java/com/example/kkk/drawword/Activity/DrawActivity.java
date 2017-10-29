@@ -37,6 +37,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +96,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.draw_layout);
         ButterKnife.bind(this);
-
+        timer_view.setText("aaasdsddf");
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
         room_num = intent.getStringExtra("room_num");
@@ -114,6 +116,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             blind.setVisibility(View.GONE);
 //            content =
             Dialog();
+            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
 //            new Tcp_chat().execute(id,content);
         }
         else if (status.equals("2")){
@@ -123,12 +126,14 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
         fabricView.setOnTouchListener(this);
         linear.setOnTouchListener(this);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String answer = answer_ed.getText().toString();
 //                item.add(new DrawData(answer,"aa"));
                 Toast.makeText(DrawActivity.this, answer, Toast.LENGTH_SHORT).show();
+
                 String push_content = "1《" + room_num + "《" + id + "》" + answer;
                 new Tcp_chat().execute(id ,push_content);
 
@@ -162,17 +167,19 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 color = (String) choice_color.getSelectedItem();
                 FabricSetColor(color);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
+
         });
         choice_thick.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 thick = (String) choice_thick.getSelectedItem();
-
                 FabricSetThick(thick);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -180,20 +187,24 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
     }
 
-
     private Thread checkUpdate = new Thread() {
 
         public void run() {
             String line = null;
             Log.w("ChattingStart", "Start Thread");
-            String tcp_type = null;
+
             content = null;
             boolean test = false;
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
                     Log.w("Chatting is running" , "1");
-
                     Log.d("line", line);
+
+                    if (!line.contains("《")){
+                        Log.w("Chatting is error" , "error");
+                        continue;
+                    }
+
                     int idx_ment = line.indexOf("《");
                     String real_ment = line.substring(idx_ment + 1);
                     Log.d("made_line", real_ment);
@@ -203,7 +214,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     content = real_ment.substring(idx+1);
                     Log.d("Chatting is content", content);
                     Log.d("Chatting is tcp_type", tcp_type);
-
 
                     //chatting
                     if (tcp_type.equals("1")){
@@ -219,17 +229,20 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     else if (tcp_type.equals("2")) {
                         game_chatting.sendEmptyMessage(0);
                     }
+
                     else if (tcp_type.equals("3")){
 
                         Log.d("Chatting is tcp_type", tcp_type);
                         Log.d("bb",String.valueOf(draw_type));
                         drawing.sendEmptyMessage(0);
                     }
+
                     else if (tcp_type.equals("4")){
                         drawing.sendEmptyMessage(0);
                         Log.d("Chatting is tcp_type", tcp_type);
                         Log.d("bb",String.valueOf(draw_type));
                     }
+
                     else if (tcp_type.equals("5")){
                         drawing.sendEmptyMessage(0);
                         Log.d("Chatting is tcp_type", tcp_type);
@@ -247,11 +260,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         drawing_form.sendEmptyMessage(0);
                         Log.d("Chatting is tcp_type", tcp_type);
                     }
+                    //턴 컨트롤
                     else if (tcp_type.equals("6.5")){
                         //다이얼로그 띄우고 타입 6으로 보내기
-                        Dialog();
-//                        Toast.makeText(DrawActivity.this, "aaaaaatest ", Toast.LENGTH_SHORT).show();
-                                
+                        dialoghandler.sendEmptyMessage(0);
                     }
                     //맞추기
                     else if (tcp_type.equals("7")){
@@ -267,15 +279,11 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         Log.d("timeout",time);
                         if (time.equals("65")){
                             Log.d("timeout","next");
-
                         }
-
                         timer.sendEmptyMessage(0);
                     }
 
 //                    ment = real_ment.substring(idx + 1);
-
-
                     Log.d("Chatting is running", "2");
 
                 }
@@ -285,6 +293,14 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             }
             Log.d("Chatting is running", "2111");
 
+        }
+    };
+    Handler dialoghandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(DrawActivity.this, "그릴 준비 하세요", Toast.LENGTH_SHORT).show();
+            Dialog();
         }
     };
 
@@ -317,10 +333,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             idx = content.indexOf("《");
-//            Log.d("aa",String.valueOf(idx));
             color = content.substring(idx + 1);
             user_name = content.substring(0,idx);
-
             //색깔
             idx = color.indexOf("《");
             thick = color.substring(idx+1);
@@ -341,8 +355,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             //Y좌표
             idx = y1.indexOf("《");
             y1 = y1.substring(0,idx);
+
             Log.d("info",room_num + " " + user_name +" " + color +" " + thick + " " + draw_erase +" " + x1 + " " + y1 + "||" );
             Log.d("1111111tcp_type",tcp_type);
+            Log.d("x,y", x1 + " ||| " + y1);
             if (!user_name.equals(id)){
                 x = Float.parseFloat(x1);
                 y = Float.parseFloat(y1);
@@ -354,12 +370,15 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 FabricSetThick(thick);
 //                FabricsetDrawMode("1");
                 if (tcp_type.equals("3")){
+                    Toast.makeText(DrawActivity.this, "타입 3", Toast.LENGTH_SHORT).show();
                     event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x,y, 0);
                 }
                 else if (tcp_type.equals("4")){
+                    Toast.makeText(DrawActivity.this, "타입 4", Toast.LENGTH_SHORT).show();
                     event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, 0);
                 }
                 else if (tcp_type.equals("5")){
+                    Toast.makeText(DrawActivity.this, "타입 5", Toast.LENGTH_SHORT).show();
                     event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
                 }
                 fabricView.onTouchDrawMode(event);
@@ -373,8 +392,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            blind.setVisibility(View.GONE);
+//            blind.setVisibility(View.GONE);
             answer_view.setText(answer);
+            fabricView.refreshDrawableState();
 
         }
     };
@@ -382,7 +402,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            blind.setVisibility(View.VISIBLE);
+            fabricView.refreshDrawableState();
+//            blind.setVisibility(View.VISIBLE);
         }
     };
 
@@ -391,11 +412,54 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             timer_view.setText(time);
+            if (time.equals("65")){
+                Toast.makeText(DrawActivity.this, "제한시간 끝", Toast.LENGTH_SHORT).show();
+                blind.setVisibility(View.VISIBLE);
+            }
         }
     };
 
+
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
+        String str = null;
+        String content;
+        switch (event.getAction()) {
+            // DOWN 이나 MOVE 가 발생한 경우
+            case MotionEvent.ACTION_DOWN:
+//                Toast.makeText(this, "시작", Toast.LENGTH_SHORT).show();
+                x = event.getX();
+                y = event.getY();
+                // 좌표값을 이용하여 문자열을 구성한다.
+                str = "Coordinate1 : ( " + (int) x + ", " + (int) y + " )";
+                timer_view.setText(str);
+                // 구성한 문자열을 텍스트뷰에 출력한다.
+                Log.d("bb",String.valueOf(draw_type));
+                content = "3《"+room_num+"《"+id+"《"+color+"《"+thick+"《"+draw_erase+"《"+x+"《"+y+"《";
+                new Tcp_chat().execute(id,content);
+                draw_type = true;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // 터치가 발생한 X, Y 의 각 좌표를 얻는다.
+                x = event.getX();
+                y = event.getY();
+                str = "Coordinate23 : ( " + (int) x + ", " + (int) y + " )";
+                content = "4《"+room_num+"《"+id+"《"+color+"《"+thick+"《"+draw_erase+"《"+x+"《"+y+"《";
+                new Tcp_chat().execute(id,content);
+                timer_view.setText(str);
+                break;
+            case MotionEvent.ACTION_UP:
+//                Toast.makeText(this, "끝", Toast.LENGTH_SHORT).show();
+                // UP 이 발생한 경우 문자를 출력한다.
+                content = "5《"+room_num+"《"+id+"《"+color+"《"+thick+"《"+draw_erase+"《"+x+"《"+y+"《";
+                timer_view.setText(str);
+
+                new Tcp_chat().execute(id,content);
+
+                break;
+        }
         return false;
     }
 
@@ -415,20 +479,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         }
     }
     void FabricSetThick(String think){
-        switch (think){
-            case "1":
-                fabricView.setSize(3);
-                break;
-            case "2":
-                fabricView.setSize(10);
-                break;
-            case "3":
-                fabricView.setSize(15);
-                break;
-            case "4":
-                fabricView.setSize(20);
-                break;
-        }
+        int thinc_int = Integer.parseInt(think);
+        fabricView.setSize(5 * thinc_int);
+
     }
     void FabricsetDrawMode(String draw_erase){
         switch (draw_erase){
@@ -441,8 +494,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         }
     }
     public void Dialog(){
-        Toast.makeText(DrawActivity.this, "aaaaaatest ", Toast.LENGTH_SHORT).show();
-
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(false);
         dialog.setTitle("술래입니다.");
@@ -452,11 +503,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onClick(DialogInterface dialog, int which) {
                 content = "6《"+ room_num + "《" + id + "《";
                 new Tcp_chat().execute(id,content);
-
+                blind.setVisibility(View.GONE);
             }
         });
-
         dialog.show();
-    }
+    }   
 
 }
