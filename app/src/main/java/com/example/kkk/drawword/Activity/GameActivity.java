@@ -21,6 +21,7 @@ import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Fragment.FriendlistFragment;
+import com.example.kkk.drawword.Tcp_connect;
 import com.example.kkk.drawword.Test2Activity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -52,9 +53,25 @@ public class GameActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.game_layout);
         ButterKnife.bind(this);
+
+        try {
+            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
+            Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
+            checkUpdate.start();
+            Log.d("test","thread1");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("TOKEN", "Refreshed token~~: " + refreshedToken);
         Intent intent = getIntent();
@@ -111,7 +128,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.logout:
                 Intent intent = new Intent(GameActivity.this,MainActivity.class);
-//                intentClass.UserLogout(database,intent);
+                intentClass.UserLogout(database,intent);
                 break;
             case R.id.my_info :
                 Intent intenta = new Intent(GameActivity.this,Test2Activity.class);

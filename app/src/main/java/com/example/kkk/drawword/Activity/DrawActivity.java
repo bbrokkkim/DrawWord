@@ -276,7 +276,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     else if (tcp_type.equals("8")){
                         idx = content.indexOf("《");
                         time = content.substring(0,idx);
-                        Log.d("timeout",time);
+                        Log.d("time",time);
                         if (time.equals("65")){
                             Log.d("timeout","next");
                         }

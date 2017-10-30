@@ -282,14 +282,19 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                                 content = content.substring(idx+1);
                             }
                             else {
-//                                ready_list.add(content);
-                                Log.d("last"+test_int,content);
                                 break;
                             }
+                            /*
+                            else {
+//                                ready_list.add(content);
+                                ready_list.add(content);
+                                Log.d("last"+test_int,content);
+                                break;
+                            }*/
                             test_int = test_int + 1;
 
                         }
-                        Log.d("last"+test_int,content);
+//                        Log.d("last"+test_int,content);
                         user_list_status.sendEmptyMessage(0);
                     }
                     else if (tcp_type.equals("2.5")){
@@ -375,9 +380,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             int idx;
             String other_id,other_status;
             item_ready.clear();
-//            Log.d("check",ready_list.get(0));
+            Log.d("check_size",String.valueOf(ready_list.size()));
             for (int i = 0; i < ready_list.size(); i++) {
-//                Log.d("check",ready_list.get(i));
+                Log.d("check",ready_list.get(i));
+                Log.d("a","b");
                 idx = ready_list.get(i).indexOf("》");
                 other_id = ready_list.get(i).substring(0,idx);
                 other_status = ready_list.get(i).substring(idx+1);
