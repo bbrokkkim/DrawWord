@@ -66,14 +66,12 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.dl_activity_main_drawer) DrawerLayout drawerLayout;
     @BindView(R.id.submit_ment) Button submit;
 
-
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
     ArrayList<String> ready_list;
 
     RoomAdapter room_adapter;
     ReadyAdapter readyAdapter;
-
 
     String to,ment;
     String content;
@@ -110,18 +108,18 @@ public class RoomActivity extends Activity implements View.OnClickListener{
 
         my_ready.setText(id);
 
-        try {
+        /*try {
             String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
             Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
-            checkUpdate.start();
+
             Log.d("test","thread1");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }
-
+        }*/
+        checkUpdate.start();
 
         submit.setOnClickListener(this);
         open_navigation.setOnClickListener(this);
@@ -328,7 +326,6 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Log.d("test",String.valueOf(item.size()));
-
             item.add(new ChatData(to,"  " + ment + "  "));
             room_adapter.notifyDataSetChanged();
 

@@ -21,6 +21,7 @@ import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Fragment.FriendlistFragment;
+import com.example.kkk.drawword.SocketGet;
 import com.example.kkk.drawword.Tcp_connect;
 import com.example.kkk.drawword.Test2Activity;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -29,6 +30,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
@@ -50,14 +56,22 @@ public class GameActivity extends Activity implements View.OnClickListener{
     int testint = 0;
     Database database;
     IntentClass intentClass = new IntentClass(GameActivity.this);
+
+    SocketGet socketGet = SocketGet.getInstance();
+    Socket socket = socketGet.getSocket();
+    BufferedWriter bufferedWriter = socketGet.getBufferedWriter();
+    BufferedReader bufferedReader = null;
+    String tcp_type = "";
+    String content = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
         ButterKnife.bind(this);
 
+
         try {
-            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
+            String test = new Tcp_connect(this).execute("8000","《" + id).get();
             Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
             checkUpdate.start();
@@ -236,4 +250,44 @@ public class GameActivity extends Activity implements View.OnClickListener{
         fragmentTransaction.replace(R.id.fragmentfriendorgame,fr);
         fragmentTransaction.commit();
     }
+
+    Thread checkUpdate = new Thread() {
+
+        public void run() {
+            String line = null;
+            Log.w("ChattingStart", "Start Thread");
+            String tcp_type = null;
+            content = null;
+            bufferedReader = socketGet.getBufferedReader();
+            boolean test = false;
+            try {
+                while ((line = bufferedReader.readLine()) != null) {
+                    Log.d("line", line);
+                    if (!line.contains("《") || !line.contains("》")){
+                        Log.w("Chatting is error" , "error");
+                        continue;
+                    }
+
+                    Log.w("Chatting is running" , "1");
+
+                    int idx_ment = line.indexOf("《");
+                    String real_ment = line.substring(idx_ment + 1);
+                    Log.d("made_line", real_ment);
+                    int idx = real_ment.indexOf("《");
+                    Log.d("chatting Test", String.valueOf(idx));
+                    tcp_type = real_ment.substring(0, idx);
+                    content = real_ment.substring(idx+1);
+                    Log.d("Chatting is content", content);
+                    Log.d("Chatting is tcp_type", tcp_type);
+
+
+                }
+                Log.d("Chatting is running", "21");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d("Chatting is running", "2111");
+
+        }
+    };
 }
