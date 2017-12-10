@@ -2,17 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffe0c1">
+
     <android.support.v7.widget.Toolbar
         android:title="게임"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#85ed9b"
+        android:contentInsetLeft="0dp"
+        android:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetEnd="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        android:background="#b4836d"
         android:weightSum="10"
-        android:paddingLeft="00dp">
+        >
 
         <FrameLayout
+            android:layout_margin="0dp"
+            android:padding="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
@@ -20,8 +32,8 @@
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:background="#4bff45"
+                android:background="#754d27"
+                android:src="@drawable/ic_back_photo"
                 android:id="@+id/back_btn"/>
 
             <TextView
@@ -34,65 +46,99 @@
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:background="#4bff45"
-                android:id="@+id/logout"/>
+                android:background="#754d27"
+                android:src="@drawable/ic_stat_invate"
+                android:id="@+id/invate"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/invate_pocket_group">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/speak_photo"
+                    android:id="@+id/invate_pocket"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/invate_ment"/>
+
+            </FrameLayout>
         </FrameLayout>
     </android.support.v7.widget.Toolbar>
 
 
-
-
-
-        <!-- The main content view -->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
 
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_zone"
+                android:orientation="vertical">
 
-                <Button
-                    android:text="친구목록"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:id="@+id/friend_button" />
 
-                <Button
-                    android:text="게임목록"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:id="@+id/game_button" />
 
-                <Button
-                    android:text="아직몰라"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:id="@+id/my_info" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:text="친구목록"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/brawn_btn"
+                        android:id="@+id/friend_button" />
+
+                    <Button
+                        android:text="게임목록"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/brawn_btn"
+                        android:id="@+id/game_button" />
+
+                    <Button
+                        android:text="로그아웃"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/brawn_btn"
+                        android:layout_height="match_parent"
+                        android:id="@+id/my_info" />
+
+                </LinearLayout>
+
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8"
+                    android:id="@+id/fragmentfriendorgame">
+
+                </FrameLayout>
+
 
             </LinearLayout>
 
+        </FrameLayout>
 
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="8"
-                android:id="@+id/fragmentfriendorgame">
-
-            </FrameLayout>
-
-
-        </LinearLayout>
-
+        <!-- The main content view -->
 
 
 

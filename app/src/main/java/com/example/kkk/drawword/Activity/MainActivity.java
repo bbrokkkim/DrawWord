@@ -36,11 +36,15 @@ import butterknife.ButterKnife;
 public class MainActivity extends Activity implements View.OnClickListener{
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
-    @BindView(R.id.other_frag) Button join;
+    @BindView(R.id.other_frag) Button join_btn;
     boolean where = true;
     boolean active = false;
     Database database;
     IntentClass intentClass;
+    Join_fragment join = new Join_fragment();
+    Login_fragment login = new Login_fragment();
+    FragmentManager fm;
+    FragmentTransaction fragmentTransaction;
     public MainActivity (){
     }
     @Override
@@ -50,13 +54,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
         ButterKnife.bind(this);
         database = new Database(getApplicationContext(), "user_db", null,1);
 
-        join.setText("회원가입으로");
+        join_btn.setText("회원가입으로");
         final String check_login_info = "uncorrect";
         final ModelLogin model_login = new ModelLogin(check_login_info);
 
         //fragment
 
-        switchfragment();
+        switchfragment(true);
 
         intentClass = new IntentClass(MainActivity.this);
 
@@ -69,7 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             finish();
         }
 
-        join.setOnClickListener(this);
+        join_btn.setOnClickListener(this);
         back.setOnClickListener(this);
 
         /*login.setOnClickListener(new View.OnClickListener() {
@@ -97,20 +101,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
 
-    public void switchfragment(){
+    public void switchfragment(boolean where){
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fm = getFragmentManager();
+        fragmentTransaction = fm.beginTransaction();
 
 
         if (where == true){
-            Login_fragment login = new Login_fragment();
-            fragmentTransaction.add(R.id.fragmentloginorjoin,login);
+//            fragmentTransaction.add(R.id.fragmentloginorjoin,login);
             fragmentTransaction.replace(R.id.fragmentloginorjoin,login);
         }
         else if (where == false) {
-            Join_fragment join = new Join_fragment();
-            fragmentTransaction.add(R.id.fragmentloginorjoin,join);
+//            fragmentTransaction.add(R.id.fragmentloginorjoin,join);
             fragmentTransaction.replace(R.id.fragmentloginorjoin,join);
         }
 
@@ -123,8 +125,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         switch (v.getId()){
             case R.id.back_btn:
                 if (where == true){
-                    switchfragment();
-                    join.setVisibility(View.VISIBLE);
+                    switchfragment(true);
+                    join_btn.setVisibility(View.VISIBLE);
                     where = false;
                 }
                 else if (where == false && active == false){
@@ -136,9 +138,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 }
                 break;
             case R.id.other_frag :
-                switchfragment();
-                join.setVisibility(View.GONE);
-                where = true;
+                where = false;
+                switchfragment(false);
+                join_btn.setVisibility(View.GONE);
                 active = false;
                 break;
         }
@@ -150,7 +152,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.login) Button login;
         @BindView(R.id.ed_id) EditText id;
         @BindView(R.id.ed_password) EditText pwd;
-
+        String overlap = "";
         public Login_fragment(){}
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -186,9 +188,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.password1) EditText user_pwd1;
         @BindView(R.id.password2) EditText user_pwd2;
         @BindView(R.id.name) EditText user_name;
-        @BindView(R.id.phone) EditText user_phone;
-        @BindView(R.id.write_certification) EditText user_cer;
-        @BindView(R.id.check_certification) Button certi_bin;
         @BindView(R.id.joinbutton) Button submit;
         @BindView(R.id.back_photo) Button back_button;
         @BindView(R.id.choice_sex) Spinner sex_spinner;
@@ -196,12 +195,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @BindView(R.id.join_photo_select) Button photo_select;
         String id, pwd1,pwd2 ,name,sex;
         int a = 1;
-        IntentClass intentClass;
         int REQ_CODE_SELECT_IMAGE = 1;
         Uri uri;
         String real_uri;
-        public Join_fragment(){}
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -211,7 +207,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             submit.setOnClickListener(this);
             photo_select.setOnClickListener(this);
             back_button.setOnClickListener(this);
-
+            where = true;
             return view;
         }
         @Override
@@ -265,11 +261,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
             } else {
                 if (uri == null){
-                    Toast.makeText(MainActivity.this, "없음", Toast.LENGTH_SHORT).show();
                     a = 1;
                     real_uri = "null";
                 }
                 OkhttpUser okhttpUser = new OkhttpUser(MainActivity.this, database);
+
                 okhttpUser.execute("1", id, pwd1, name, "01012341234", "12", sex, real_uri);
             }
         }

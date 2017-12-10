@@ -43,7 +43,11 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     @BindView(R.id.my_ment) TextView myment;
     @BindView(R.id.add_friend) Button add_friend;
     FriendAdapter friend_adapter;
-    ArrayList<FriendData> item = new ArrayList<FriendData>();
+    ArrayList<FriendData> item = new ArrayList<>();
+    public static ArrayList<FriendData> item_static = new ArrayList<>();
+
+    public static int a  = 12;
+    public static int b;
     String iden,id,ment,photo_uri,token,friend_list_json,check_json;
     String friend_iden,friend_id,friend_photo_uri,friend_ment;
     String default_photo_url = "http://13.124.229.116/user_photo/";
@@ -96,7 +100,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        friend_adapter = new FriendAdapter(inflater,getActivity(),item);
+        friend_adapter = new FriendAdapter(android.R.layout.activity_list_item,getActivity(),item);
         listView.setAdapter(friend_adapter);
 
         return view;
@@ -128,7 +132,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                         item.add(new FriendData(friend_id, friend_ment, friend_photo_uri, friend_iden));
                     }
                 }
-
+                item_static = item;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

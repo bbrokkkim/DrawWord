@@ -5,10 +5,18 @@
     android:id="@+id/login_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffe0c1"
+    android:orientation="vertical"
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="4"
         android:weightSum="8">
@@ -35,11 +43,13 @@
             android:text="로그인"
             android:textColor="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="35dp"
             android:layout_weight="3"
+            android:layout_gravity="bottom"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="15dp"
-            android:id="@+id/login" />
+            android:id="@+id/login"
+            android:background="@drawable/brawn_btn"/>
 
 
     </LinearLayout>

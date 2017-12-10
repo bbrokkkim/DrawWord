@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fac794">
+
+    <TextView
+        android:text="초대할 친구를 선택해주세요"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/textView4"
+        android:layout_weight="1"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/invate_list"
+        android:layout_weight="9"/>
+
+    <Button
+        android:text="선택"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/invate_btn"
+        android:background="@drawable/brawn_btn"
+        android:layout_weight="1"/>
+</LinearLayout>

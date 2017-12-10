@@ -17,7 +17,8 @@ import okhttp3.Response;
 
 public class OkhttpGame extends AsyncTask<Object,Void,String> {
     String output, ch, url;
-    String user_iden, token, user_id, friend_id, friend_iden, type,room_name;
+    String user_iden, token, user_id, friend_id, friend_iden, type,room_name,limit;
+    int room_num;
     RequestBody requestBody;
 
     @Override
@@ -36,10 +37,28 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
             Log.d("room_name",room_name);
         }
         else if (ch.equals("2")) {
+            limit = (String) params[1];
             requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("choice", ch)
+                    .addFormDataPart("limit",limit)
                     .build();
         }
+
+        else if (ch.equals("3")){
+            room_num = (int) params[1];
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
+                    .addFormDataPart("room_num", String.valueOf(room_num))
+                    .build();
+        }
+        else if (ch.equals("4")) {
+            limit = (String) params[1];
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
+                    .addFormDataPart("limit",limit)
+                    .build();
+        }
+
         url = "http://13.124.229.116/php/gamelist.php";
         Log.d("choice!!!!",ch);
 

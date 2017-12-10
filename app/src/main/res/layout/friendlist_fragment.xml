@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/list"
         android:orientation="horizontal">
 
 
@@ -21,6 +22,7 @@
             android:layout_width="0dp"
             android:layout_weight="1.5"
             android:layout_height="wrap_content"
+            android:layout_margin="1dp"
             app:srcCompat="@mipmap/ic_launcher"
             android:id="@+id/my_photo" />
 

@@ -7,13 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:id="@+id/friend_row"
+        android:background="@drawable/list"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1.5"
             android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher"
+            android:layout_margin="1dp"
             android:id="@+id/user_photo" />
 
         <LinearLayout

@@ -130,14 +130,23 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
         super.onPostExecute(aVoid);
 
         Log.d("httpoutput",output);
-        GetJson();
-        if (iden.equals("wrong")){
-            Toast.makeText(activity, "틀림", Toast.LENGTH_SHORT).show();
+        //중복검사
+        if (output.equals("overlap")){
+            Log.d("testttt","loverlap");
+            Toast.makeText(activity, "아이디가 중복입니다.", Toast.LENGTH_SHORT).show();
         }
-        else{
-            intentClass.InsertUserInfo(database,iden,user_id,user_token,uri);
-            Intent intent = new Intent(activity , GameActivity.class);
-            activity.startActivity(intent);
+        else {
+            GetJson();
+            if (iden.equals("wrong")) {
+                Toast.makeText(activity, "아이디나 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                intentClass.InsertUserInfo(database, iden, user_id, user_token, uri);
+                Intent intent = new Intent(activity, GameActivity.class);
+                intent.putExtra("first_login",true);
+
+                activity.startActivity(intent);
+                activity.finish();
+            }
         }
 
     }
@@ -150,7 +159,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
             user_id = json_ob.getString("id");
             user_token = json_ob.getString("token");
             uri = json_ob.getString("photo_uri");
-            Intent intent = new Intent(activity, GameActivity.class);
+//            Intent intent = new Intent(activity, GameActivity.class);
             //회원가입 했을 시
             if (ch.equals("1")) {
                 Toast.makeText(activity, "회원가입 완료", Toast.LENGTH_SHORT).show();

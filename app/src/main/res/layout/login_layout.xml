@@ -2,24 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ffe0c1">
 
 
-
-
-<!--    <fragment android:name="com.example.kkk.drawword.Activity.MainActivity$Login_fragment"
-        android:id="@+id/Login_fr"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" />
-    <fragment android:name="com.example.kkk.drawword.Activity.MainActivity$Join_fragment"
-        android:id="@+id/Join_fr"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" />-->
     <android.support.v7.widget.Toolbar
         android:title="회원가입"
         android:id="@+id/toolbar"
@@ -33,21 +22,22 @@
         android:contentInsetEnd="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
-        android:background="#85ed9b"
+        android:background="#b4836d"
         android:weightSum="10">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="#000000"
+                android:background="#754d27"
+                android:src="@drawable/ic_back_photo"
                 android:id="@+id/back_btn"/>
 
             <TextView
                 android:text="회원가입"
+                android:textColor="#ffffff"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -69,9 +59,11 @@
 
         <Button
             android:text="Button"
+            android:textColor="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="35dp"
             android:id="@+id/other_frag"
+            android:background="@drawable/brawn_btn"
             android:layout_weight="2" />
 
 

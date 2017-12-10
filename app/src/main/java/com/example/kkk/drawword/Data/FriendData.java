@@ -12,11 +12,13 @@ public class FriendData {
     String user_ment;
     String user_photo;
     String iden;
+    Boolean choice;
     public FriendData(String user_name, String user_ment, String user_photo, String iden){
         this.user_name = user_name;
         this.user_ment = user_ment;
         this.user_photo = user_photo;
         this.iden = iden;
+        this.choice = false;
     }
 
     public void setIden(String iden) {
@@ -35,6 +37,17 @@ public class FriendData {
         this.user_ment = user_ment;
     }
 
+    public void setChoice() {
+        if (this.choice){
+            this.choice = false;
+        }
+        else
+            this.choice = true;
+    }
+
+    public Boolean getChoice() {
+        return choice;
+    }
 
     public String getUser_photo() {
         return user_photo;

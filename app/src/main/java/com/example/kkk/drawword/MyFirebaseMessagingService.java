@@ -6,9 +6,14 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.GameActivity;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by KKK on 2017-09-24.
@@ -16,37 +21,67 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "TEST";
-
-
-
+    Database database = new Database(this, "user_db", null,1);
+    String fcm_ment = "";
+    String user_name = "";
+    String room_num = "";
+    String room_name = "";
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d("testttttt","asdf----------------------");
+//        Log.d("output", remoteMessage.getNotification().getBody());
+//        fcm_ment = remoteMessage.getNotification().getBody();
 
+        Log.d(TAG, "Message data choice: " + remoteMessage.getData());
+        GetJson("["+String.valueOf(remoteMessage.getData()) + "]");
+        handler.sendEmptyMessage(0);
 // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
         }
 
 // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            Handler handler = new Handler(Looper.getMainLooper()){
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                        Toast.makeText(MyFirebaseMessagingService.this, remoteMessage.getNotification().getBody(), Toast.LENGTH_SHORT).show();
-                    showNotification("asdf",remoteMessage.getNotification().getBody());
-                    new OkhttpFriend().execute("2","123","134","asdfasdg");
-//                    Dialog as = new Dialog(MyFirebaseMessagingService.this);
-//                    as.Show(remoteMessage.getNotification().getBody());
-                }
-            };
+
             handler.sendEmptyMessage(0);
         }
     }
+    void GetJson(String fcm_list){
+        JSONArray json = null;
+        try {
+            json = new JSONArray(fcm_list);
 
+            Log.d("json_length", String.valueOf(json.length()));
+            JSONObject jsonObject = json.getJSONObject(0);
+            user_name = jsonObject.getString("user_name");
+            room_num = jsonObject.getString("room_num");
+            room_name = jsonObject.getString("room_name");
+            Log.d("id_num", user_name + "|||" + room_num);
+
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+
+    Handler handler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(MyFirebaseMessagingService.this, "초대메세지가 왔습니다.", Toast.LENGTH_SHORT).show();
+//remoteMessage.getNotification().getBody()
+//                    Dialog as = new Dialog(MyFirebaseMessagingService.this);
+//                    as.Show(remoteMessage.getNotification().getBody());
+            Log.d("aaa_________________","testestestestest");
+            ;
+            GameActivity.modify(user_name, room_num, room_name);
+
+            Log.d("aaa11111111","testestestestest");
+        }
+    };
 
 
     private void showNotification(String title, String message) {
