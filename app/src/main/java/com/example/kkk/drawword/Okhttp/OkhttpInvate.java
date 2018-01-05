@@ -39,7 +39,7 @@ public class OkhttpInvate extends AsyncTask<Object,Void,String> {
                 .addFormDataPart("user_list", user_list)
                 .build();
 
-        url = "http://13.124.229.116/php/push_noti.php";
+        url = "http://52.78.217.245/php/push_noti.php";
 
         Log.d("choice",ch);
 

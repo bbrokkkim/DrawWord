@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     @BindView(R.id.game_list) ListView listView;
 //    @BindView(R.id.refresh) ImageButton refresh;
     @BindView(R.id.progressbar) ProgressBar progressBar;
+
     String id, iden, refresh_json, room_name, room_con,check_json;
     String status;
     String refresh_json_before = "";
@@ -72,6 +74,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gamelist_fragment,container,false);
         ButterKnife.bind(this,view);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swype_layout);
         progressBar.setVisibility(View.GONE);
         id = getArguments().getString("id");
         iden = getArguments().getString("iden");
@@ -122,6 +125,16 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
         //버튼
         create_room.setOnClickListener(this);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+//                GetJson(refresh_json,-1);
+                getOkhttp("0","1");
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
         return view;
     }
 
@@ -154,39 +167,6 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /*final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                getOkhttp("2");
-            }
-        };
-
-        Thread checkUpdate = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        Thread.sleep(50000);
-                        if (refresh_stop == true){
-                            break;
-                        }
-                        handler.sendEmptyMessage(0);
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (refreash == false){
-                        break;
-                    }
-                }
-            }
-        });
-        checkUpdate.start();*/
-    }
 
     @Override
     public void onPause() {
@@ -261,9 +241,15 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+//        Log.d("http_output",refresh_json);
+        if (choice.equals("0")){
+            GetJsonRefresh(refresh_json);
+        }
+        else
+            GetJson(refresh_json,-1);
+
         gameListGet.addGameList(refresh_json);
-        Log.d("http_output",refresh_json);
-        GetJson(refresh_json,-1);
         /*int idx = 0;
         if (refresh_json_before.contains("]")){
             idx = refresh_json_before.indexOf("]");
@@ -278,6 +264,33 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
         progressBar.setVisibility(View.GONE);
 
+    }
+    void GetJsonRefresh(String json_list){
+        item.clear();
+        gameListGet.resetGameList();
+        gameListGet.resetFouce();
+        if (json_list.equals("nothing")){
+            Log.d("test","return");
+            Toast.makeText(getActivity(), "더 이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            gamelistadapter.notifyDataSetChanged();
+            JSONArray json = new JSONArray(json_list);
+            Log.d("json_length", String.valueOf(json.length()));
+            int real_iden = 0;
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject jsonObject = json.getJSONObject(i);
+                room_con = jsonObject.getString("room_status");
+                room_name = jsonObject.getString("room_name");
+                room_iden = jsonObject.getInt("iden");
+                real_iden = room_iden % 1000;
+                item.add(new GamelistData(real_iden,room_name,room_con));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     void GetJson(ArrayList<String> json_array, int focus){
@@ -312,14 +325,16 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
     void GetJson(String json_list,int focus){
 
-        gamelistadapter.notifyDataSetChanged();
-        Log.d("refresh", json_list);
+        /*if (!json_list.equals(null)) {
+            Log.d("refresh", json_list);
+        }*/
         if (json_list.equals("nothing")){
             Log.d("test","return");
             Toast.makeText(getActivity(), "더 이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
+            gamelistadapter.notifyDataSetChanged();
             JSONArray json = new JSONArray(json_list);
             Log.d("json_length", String.valueOf(json.length()));
             int real_iden = 0;

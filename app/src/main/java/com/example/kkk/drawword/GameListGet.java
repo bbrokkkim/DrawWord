@@ -25,6 +25,14 @@ public class GameListGet {
         }
         return uniquelnstance;
     }
+
+    public void resetGameList(){
+        GameList = new ArrayList<>();
+    }
+    public void resetFouce(){
+        focus = 0;
+    }
+
     public void addGameList(String row){
         GameList.add(row);
     }

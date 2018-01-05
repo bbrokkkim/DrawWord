@@ -55,6 +55,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:background="#754d27"
+                    android:src="@drawable/ic_action_name_ready_drawer"
                     android:id="@+id/open_navigation"/>
 
             </FrameLayout>

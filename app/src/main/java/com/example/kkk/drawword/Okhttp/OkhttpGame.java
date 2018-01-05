@@ -27,7 +27,17 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
 
         OkHttpClient client = new OkHttpClient();
         //join or login
-        if (ch.equals("1")) {
+
+        if (ch.equals("0")) {
+            room_name = (String) params[1];
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
+                    .addFormDataPart("room_name", room_name)
+                    .build();
+
+            Log.d("room_name",room_name);
+        }
+        else if (ch.equals("1")) {
             room_name = (String) params[1];
             requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("choice", ch)
@@ -59,11 +69,11 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
                     .build();
         }
 
-        url = "http://13.124.229.116/php/gamelist.php";
+        url = "http://52.78.217.245/php/gamelist.php";
         Log.d("choice!!!!",ch);
 
         Request request = new Request.Builder()
-                .url("http://13.124.229.116/php/gamelist.php")
+                .url("http://52.78.217.245/php/gamelist.php")
                 .post(requestBody)
                 .build();
         try {
@@ -80,7 +90,7 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.d("outputhttp",output);
+//        Log.d("outputhttp",output);
     }
 
 

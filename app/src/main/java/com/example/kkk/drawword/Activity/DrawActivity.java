@@ -86,6 +86,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     String a1 = "";
     String b1 = "";
     String answer = "";
+    String cassandra_answer = "";
     String time = "";
     String draw_erase = "1";
     String status = "";
@@ -110,6 +111,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         drawAdapter = new DrawAdapter(getLayoutInflater(),item);
         listView.setAdapter(drawAdapter);
+        timer_view.bringToFront();
         modify.bringToFront();
         socket = socketGet.getSocket();
         bufferedReader = socketGet.getBufferedReader();
@@ -118,7 +120,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
         if (status.equals("1")) {
             blind.setVisibility(View.GONE);
-            Dialog("술래입니다.","준비되셧나요?",1);
+//            Dialog("술래입니다.","준비되셧나요?",1);
         }
         else if (status.equals("2")){
             blind.setVisibility(View.VISIBLE);
@@ -134,7 +136,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             @Override
             public void onClick(View v) {
                 String answer = answer_ed.getText().toString();
-                Toast.makeText(DrawActivity.this, answer, Toast.LENGTH_SHORT).show();
+                Toast.makeText(DrawActivity.this, answer+"tttteest", Toast.LENGTH_SHORT).show();
                 if (!answer.equals("")) {
                     String push_content = "7《" + room_num + "《" + id + "《" + answer;
                     new Tcp_chat().execute(id, push_content);
@@ -199,8 +201,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "destroy", Toast.LENGTH_SHORT).show();
-        new Tcp_chat().execute(id ,"10《" + room_num + "《" + id + "》");
+//        Toast.makeText(this, "destroy", Toast.LENGTH_SHORT).show();
+//        new Tcp_chat().execute(id ,"10《" + room_num + "《" + id + "》");
 
     }
 
@@ -219,7 +221,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     }
 
     private Thread checkUpdate = new Thread() {
-
         public void run() {
             String line = null;
             Log.w("ChattingStart", "Start Thread");
@@ -305,7 +306,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         dialogend.sendEmptyMessage(0);
                         Log.d("Chatting_tcp_type", tcp_type);
                     }
-                    //맞추기 시도
+                    //도전자
                     else if (tcp_type.equals("7")){
                         idx = content.indexOf("《");
                         to = content.substring(0,idx);
@@ -320,16 +321,19 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         idx = content.indexOf("《");
                         to = content.substring(0,idx);
                         content = content.substring(idx+1);
+                        idx = content.indexOf("《");
+                        cassandra_answer = content.substring(idx+1);
+                        content = content.substring(0,idx);
                         Log.d("Chatting is to", to);
                         Log.d("Chatting is ment", content);
                         Log.d("Chatting is tcp_type", tcp_type);
                         answer_chatting.sendEmptyMessage(0);
                     }
                     //게임 끝
-                    else if (tcp_type.equals("7.8")){
+                   /* else if (tcp_type.equals("7.8")){
 
                         answer_chatting.sendEmptyMessage(0);
-                    }
+                    }*/
                     //제한시간
                     else if (tcp_type.equals("8")){
                         idx = content.indexOf("《");
@@ -365,7 +369,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);
             */
+            blind.setVisibility(View.VISIBLE);
             insert.setVisibility(View.VISIBLE);
+            modify.setVisibility(View.GONE);
         }
     };
     Handler finishment = new Handler(){
@@ -411,7 +417,11 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Dialog("정답입니다.",to + "님이 맞추었습니다.",2);
+            Toast.makeText(DrawActivity.this, to + "님이 [" + cassandra_answer +"]를 맞추었습니다", Toast.LENGTH_SHORT).show();
+//            Dialog("정답입니다.",to + "님이 맞추었습니다.",2);
+            item.add(new DrawData(to + "님이 [" + cassandra_answer +"]를 맞추었습니다",""));
+            drawAdapter.notifyDataSetChanged();
+            
         }
     };
 
@@ -421,11 +431,12 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             super.handleMessage(msg);
             Log.d("test",String.valueOf(item.size()));
             item.add(new DrawData(to+" : " + content + "  ",""));
-            answer_view.setVisibility(View.GONE);
+//            modify.setVisibility(View.GONE);
             drawAdapter.notifyDataSetChanged();
 
         }
     };
+
 
     Handler drawing = new Handler() {
         @Override
@@ -526,10 +537,13 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 //            blind.setVisibility(View.GONE);
-            answer_view.setVisibility(View.VISIBLE);
+            modify.setVisibility(View.VISIBLE);
+            blind.setVisibility(View.GONE);
+            insert.setVisibility(View.GONE);
+            fabricView.cleanPage();
             answer_view.setText(answer);
             fabricView.refreshDrawableState();
-
+            Dialog("술래입니다.","준비되셧나요?",1);
         }
     };
     Handler timer = new Handler(){
@@ -626,7 +640,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onClick(DialogInterface dialog, int which) {
                 if (type == 1) {
                     content = "6《" + room_num + "《" + id + "《";
-                    new Tcp_chat().execute(id, content);
+//                    new Tcp_chat().execute(id, content);
                     blind.setVisibility(View.GONE);
                     /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);*/

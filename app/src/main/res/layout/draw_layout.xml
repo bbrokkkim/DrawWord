@@ -24,11 +24,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="#754d27"
-                android:id="@+id/back_btn_game"/>
+
 
             <TextView
                 android:text="채팅"
@@ -36,12 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/room_name"/>
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:background="#754d27"
-                android:id="@+id/open_navigation"/>
+
 
         </FrameLayout>
     </android.support.v7.widget.Toolbar>
@@ -51,7 +42,6 @@
         android:layout_height="0dp"
         android:background="#ffe0c1"
         android:layout_weight="9">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,51 +56,8 @@
                 android:orientation="horizontal"
                 android:id="@+id/FrameLayout">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="right"
-                    android:id="@+id/modify">
-
-                    <TextView
-                        android:text=" ad"
-                        android:textSize="30dp"
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="match_parent"
-                        android:id="@+id/timer" />
-
-                    <Spinner
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="match_parent"
-                        android:entries="@array/draw_thick"
-                        android:id="@+id/choice_thick" />
 
 
-                    <Spinner
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="match_parent"
-                        android:entries="@array/draw_color"
-                        android:id="@+id/choice_color" />
-
-                    <ImageButton
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/drawable_transparent_pattern"
-                        android:id="@+id/draworerase" />
-                    <TextView
-                        android:text="answer_test"
-                        android:layout_width="0dp"
-                        android:layout_weight="3"
-                        android:layout_height="match_parent"
-                        android:id="@+id/answer" />
-
-
-                </LinearLayout>
 
                 <com.agsw.FabricView.FabricView
                     android:layout_width="match_parent"
@@ -130,6 +77,62 @@
                     android:layout_height="match_parent"
                     android:id="@+id/blind" />
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text=" ad"
+                        android:textSize="30dp"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/timer" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:layout_gravity="right"
+                        android:id="@+id/modify">
+
+
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="match_parent"
+                            android:entries="@array/draw_thick"
+                            android:id="@+id/choice_thick" />
+
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="match_parent"
+                            android:entries="@array/draw_color"
+                            android:id="@+id/choice_color" />
+
+                        <ImageButton
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/drawable_transparent_pattern"
+                            android:id="@+id/draworerase" />
+                        <TextView
+                            android:text="answe"
+                            android:textSize="30dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+                            android:id="@+id/answer" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
 

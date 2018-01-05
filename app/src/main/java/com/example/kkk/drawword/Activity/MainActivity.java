@@ -151,7 +151,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public class Login_fragment extends Fragment {
         @BindView(R.id.login) Button login;
         @BindView(R.id.ed_id) EditText id;
-        @BindView(R.id.ed_password) EditText pwd;
+        @BindView(R .id.ed_password) EditText pwd;
         String overlap = "";
         public Login_fragment(){}
         @Override

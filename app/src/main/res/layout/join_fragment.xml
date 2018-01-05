@@ -109,7 +109,7 @@
                         </FrameLayout>
 
                         <Button
-                            android:text="갤러리로"
+                            android:text="프로필로"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:id="@+id/join_photo_select"

@@ -3,6 +3,7 @@ package com.example.kkk.drawword;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -36,12 +37,36 @@ public class SocketGet{
         this.socket = socket;
     }
 
+
+
     public void setBufferedReader(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
     }
 
     public void setBufferedWriter(BufferedWriter bufferedWriter) {
         this.bufferedWriter = bufferedWriter;
+    }
+
+    public void disconnectSocket(){
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void disconnectWirter(){
+        try {
+            this.bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void disconnectReader(){
+        try {
+            this.bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getA() {

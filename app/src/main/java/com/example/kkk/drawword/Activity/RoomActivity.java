@@ -3,7 +3,6 @@ package com.example.kkk.drawword.Activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,8 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -24,37 +21,35 @@ import android.widget.Toast;
 
 import com.example.kkk.drawword.Adapter.ReadyAdapter;
 import com.example.kkk.drawword.Data.ChatData;
-import com.example.kkk.drawword.Data.DrawData;
 import com.example.kkk.drawword.Data.ReadyData;
-import com.example.kkk.drawword.Okhttp.TcpChat;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Adapter.RoomAdapter;
 import com.example.kkk.drawword.SocketGet;
 import com.example.kkk.drawword.Tcp_chat;
-import com.example.kkk.drawword.Tcp_connect;
+import com.example.kkk.drawword.Okhttp.Tcp_connect;
 //import com.example.kkk.drawword.Test2Activity;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Serializable;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 /**
  * Created by KKK on 2017-08-17.
  */
 public class RoomActivity extends Activity implements View.OnClickListener{
+    private UncaughtExceptionHandler androidDefaultUEH;
+    private UncaughtExceptionHandler mUncaughtExceptionHandler;
+    private UncaughtExceptionHandler unCatchExceptionHandler;
 
+    public UncaughtExceptionHandler getUncaughtExceptionHandler() {
+        return unCatchExceptionHandler;
+    }
     @BindView(R.id.fl_activity_main_container) FrameLayout frameLayout;
     @BindView(R.id.text_ment) EditText text;
     @BindView(R.id.ment_view) ListView listView;
@@ -72,7 +67,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
     ArrayList<String> ready_list;
-
+    ArrayList<String> to_array = new ArrayList<>();
+    ArrayList<String> ment_array = new ArrayList<>();
+    int flow =0;
     RoomAdapter room_adapter;
     ReadyAdapter readyAdapter;
 
@@ -82,13 +79,22 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     String push_content;
     Tcp_chat tcp_chat;
     boolean ready = true;
+    boolean update_protocal = true;
     String id,iden,room_name,room_num;
 
     SocketGet socketGet = SocketGet.getInstance();
-
+    Thread a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        androidDefaultUEH = Thread.getDefaultUncaughtExceptionHandler();
+//        unCatchExceptionHandler = new UncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(unCatchExceptionHandler);
+
         super.onCreate(savedInstanceState);
+        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        if (!(mUncaughtExceptionHandler instanceof UncaughtExceptionHandlerApplication)) {
+            Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
+        }
         setContentView(R.layout.room_layout);
         ButterKnife.bind(this);
         Intent get = getIntent();
@@ -110,6 +116,8 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         try {
             String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
             checkUpdate.start();
+//            new checkUpdate_test().start();
+            checkConnectSocket.start();
             Log.d("test","thread1");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -123,6 +131,24 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         back_btn.setOnClickListener(this);
         ready_btn.setOnClickListener(this);
         invate.setOnClickListener(this);
+        Toast.makeText(this, "oncreate", Toast.LENGTH_SHORT).show();
+    }
+
+    public class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            // 이곳에서 로그를 남기는 작업을 하면 된다.
+            Log.d("uncaught", "error 123123123123132123 ");
+            Toast.makeText(RoomActivity.this, "!!!!!!!!!!!비정상 종료", Toast.LENGTH_SHORT).show();
+            tcp_chat = new Tcp_chat();
+            tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            Log.d("uncaught", "error -----------------> ");
+            System.exit(2);
+            Log.d("uncaught", "error -----------------> ");
+            //androidDefaultUEH.uncaughtException(thread, ex);
+        }
     }
 
     @Override
@@ -131,15 +157,21 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             //채팅문자전송
             case R.id.submit_ment:
                 String chat_content = text.getText().toString();
-                push_content = "1《" + room_num + "《" + id + "》" + chat_content;
-                new Tcp_chat().execute(id, push_content);
-                text.setText("");
-                break;
-            //네비게이션드로어 열기
+                if (!chat_content.equals("")) {
+                    push_content = "1《" + room_num + "《" + id + "》" + chat_content;
+                    new Tcp_chat().execute(id, push_content);
+                    text.setText("");
+                    break;
+                }
+                //네비게이션드로어 열기
             case R.id.open_navigation:
                 drawerLayout.openDrawer(naviation);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+                /*socketGet.disconnectReader();
+                socketGet.disconnectWirter();
+                socketGet.disconnectSocket();
+                */
                 break;
             //채팅방 나오기
             case R.id.back_btn_game :
@@ -172,96 +204,252 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    /*@Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
+            Log.d("test","thread2");
+            checkUpdate.start();
+            Log.d("test","thread3");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.d("interr","thread2");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Log.d("execution","thread2");
+        }
+        tcp_chat = new Tcp_chat();
+        tcp_chat.execute(id ,"12《" + room_num + "《" + id + "》");
+        Toast.makeText(this, "onrestart", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        tcp_chat = new Tcp_chat();
+        try {
+            tcp_chat.execute(id ,"11《" + room_num + "《" + id + "》").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(this, "onstop", Toast.LENGTH_SHORT).show();
+
+    }*/
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(this, "ondestroy", Toast.LENGTH_SHORT).show();
+        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         tcp_chat = new Tcp_chat();
         tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
     }
+    Thread checkConnectSocket = new Thread(){
+        public void run(){
+            while(true) {
+//                Log.d("stream", "서버 연결 확인 쓰레드 시작");
+                boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
+//                boolean connected = socket.isConnected() && ! socket.isClosed();
+//                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
+                if (result) {
+                    Log.d("stream", "server connect complete~~~~~");
+                } else {
+                    Log.d("stream", "server connect fail~~~~~");
 
+                    try {
+                        String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id).get();
+//                        run = true;
+//                        checkUpdate.start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("stream", "서버 연결 확인 쓰레드 다시   시작");
+            }
+        }
+    };
+/*
+    public class checkUpdate_test extends Thread{
+        public checkUpdate_test(){
+            Toast.makeText(RoomActivity.this, "aaasdfasdfsdfasdfasdf", Toast.LENGTH_SHORT).show();
+            Log.d("iii",String.valueOf("Asdasdasd"));
+        }
+        @Override
+        public void run() {
+            int i = 1;
+            while(true){
+                Toast.makeText(RoomActivity.this, String.valueOf(i), Toast.LENGTH_SHORT).show();
+                Log.d("iii",String.valueOf(i));
+                i = i + 1;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    Handler chatting_test = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.d("test",String.valueOf(item.size()));
+            Log.d("chatting_test",ment_array.get(flow));
+            item.add(new ChatData(to_array.get(flow),"  " + ment_array.get(flow) + "  "));
+            flow = flow + 1;
+            room_adapter.notifyDataSetChanged();
+
+        }
+    };*/
 
     Thread checkUpdate = new Thread() {
 
         public void run() {
+            item.add(new ChatData("test start","  " + "bbbb" + "  "));
             String line = null;
-            Log.w("ChattingStart", "Start Thread");
+            Log.d("ChattingStart", "Start Thread1111");
             String tcp_type = null;
             content = null;
             boolean test = false;
-            try {
-                while ((line = socketGet.getBufferedReader().readLine()) != null) {
-                    Log.d("line", line);
-                    if (!line.contains("《") || !line.contains("》")){
-                        Log.w("Chatting is error" , "error");
-                        continue;
-                    }
+//            try {
+//                while (!socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()) {
+//                    Log.d("checksocket",String.valueOf(socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()));
 
-                    Log.w("Chatting is running" , "1");
-
-                    int idx_ment = line.indexOf("《");
-                    String real_ment = line.substring(idx_ment + 1);
-                    Log.d("made_line", real_ment);
-                    int idx = real_ment.indexOf("《");
-                    Log.d("chatting Test", String.valueOf(idx));
-                    tcp_type = real_ment.substring(0, idx);
-                    content = real_ment.substring(idx+1);
-                    Log.d("Chatting is content", content);
-                    Log.d("Chatting is tcp_type", tcp_type);
-
-                    //chatting
-                    if (tcp_type.equals("1")){
-                        idx = content.indexOf("《");
-                        content = content.substring(idx + 1);
-
-                        idx = content.indexOf("》");
-                        to = content.substring(0,idx);
-                        ment = content.substring(idx+1);
-                        chatting.sendEmptyMessage(0);
-                        Log.d("Chatting is to", to);
-                        Log.d("Chatting is ment", ment);
-                    }
-
-                    //user_list_status
-                    else if (tcp_type.equals("2")){
-                        int test_int = 1;
-                        ready_list = new ArrayList<>();
-                        while (true){
-                            if (content.contains("《")){
-                                idx = content.indexOf("《");
-                                ready_list.add(content.substring(0,idx));
-                                Log.d("list"+test_int,content.substring(0,idx));
-                                content = content.substring(idx+1);
-                            }
-                            else {
-//                                ready_list.add(content);
-                                Log.d("last"+test_int,content);
-                                break;
-                            }
-                            test_int = test_int + 1;
-
+            while (true) {
+                Log.d("ChattingStart", "ReStart Thread1111");
+                try {
+                    while ((line = socketGet.getBufferedReader().readLine()) != null) {
+                        Log.d("line", line);
+                        if (!line.contains("《") || !line.contains("》")) {
+                            Log.w("Chatting is error", "error");
+                            continue;
                         }
-                        Log.d("last"+test_int,content);
-                        user_list_status.sendEmptyMessage(0);
-                    }
-                    else if (tcp_type.equals("2.5")){
-                        all_start.sendEmptyMessage(0);
-                        break;
-                    }
-                    else if (tcp_type.equals("6.5")){
-                        master_start.sendEmptyMessage(0);
-                        break;
-                    }
 
-                    Log.d("Chatting is running", "2");
+                        Log.w("Chatting is running", "1");
+                        Log.d("ChattingStart", "Start Thread2222");
+                        int idx_ment = line.indexOf("《");
+                        String real_ment = line.substring(idx_ment + 1);
+                        Log.d("made_line", real_ment);
+                        int idx = real_ment.indexOf("《");
+                        Log.d("chatting Test", String.valueOf(idx));
+                        tcp_type = real_ment.substring(0, idx);
+                        content = real_ment.substring(idx + 1);
+                        Log.d("Chatting is content", content);
+                        Log.d("Chatting is tcp_type", tcp_type);
 
+                        //chatting
+                        if (tcp_type.equals("1")) {
+                            idx = content.indexOf("《");
+                            content = content.substring(idx + 1);
 
+                            idx = content.indexOf("》");
+                            to = content.substring(0, idx);
+                            ment = content.substring(idx + 1);
+                            to_array.add(to);
+                            ment_array.add(ment);
+                            chatting.sendEmptyMessage(0);
+                            Log.d("Chatting is to", to);
+                            Log.d("Chatting is ment", ment);
+                        }
+
+                        //user_list_status
+                        else if (tcp_type.equals("2")) {
+
+                            int test_int = 1;
+                            ready_list = new ArrayList<>();
+                            while (true) {
+                                if (content.contains("《")) {
+                                    idx = content.indexOf("《");
+                                    ready_list.add(content.substring(0, idx));
+                                    Log.d("list" + test_int, content.substring(0, idx));
+                                    content = content.substring(idx + 1);
+                                } else {
+                                    //                                ready_list.add(content);
+                                    Log.d("last" + test_int, content);
+                                    break;
+                                }
+                                test_int = test_int + 1;
+
+                            }
+                            Log.d("last" + test_int, content);
+                            user_list_status.sendEmptyMessage(0);
+                        } else if (tcp_type.equals("2.5")) {
+                            all_start.sendEmptyMessage(0);
+                            break;
+                        } else if (tcp_type.equals("6.5")) {
+                            master_start.sendEmptyMessage(0);
+                            break;
+                        } else if (tcp_type.equals("13")) {
+                            Log.d("1313", "13");
+                            still_connect.sendEmptyMessage(0);
+                        }
+
+                        Log.d("Chatting is running", "2");
+
+                        Log.d("ChattingStart", "Start Thread33333");
+                    }
+                } catch (SocketException e) {
+                    Log.d("Chatting is running", "error!!!!sicj");
+                    reconnect.sendEmptyMessage(0);
+//                        return;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("Chatting is running", "error!!!!");
                 }
-                Log.d("Chatting is running", "21");
-            } catch (IOException e) {
+
+//                }
+
+//                item.add(new ChatData("1111111","  " + "asdasdasd" + "  "));
+            /*} catch (IOException e) {
+                e.printStackTrace();
+                Log.d("Chatting is running", "error!!!!");
+            }*/
+//            item.add(new ChatData("2222222","  " + "asdasdasd" + "  "));
+            }
+        }
+    };
+
+    Handler reconnect = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id).get();
+//                        run = true;
+//                        checkUpdate.start();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            Log.d("Chatting is running", "2111");
+        }
+    };
 
+
+    Handler still_connect = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            tcp_chat = new Tcp_chat();
+            tcp_chat.execute(id ,"13《" + room_num + "《" + id + "");
         }
     };
 
@@ -270,8 +458,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Log.d("test",String.valueOf(item.size()));
-
-            item.add(new ChatData(to,"  " + ment + "  "));
+            Log.d("chatting_test",ment_array.get(flow));
+            item.add(new ChatData(to_array.get(flow),"  " + ment_array.get(flow) + "  "));
+            flow = flow + 1;
             room_adapter.notifyDataSetChanged();
 
         }

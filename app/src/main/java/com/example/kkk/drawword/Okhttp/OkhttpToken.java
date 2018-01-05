@@ -28,16 +28,26 @@ public class OkhttpToken extends AsyncTask<Object,Void,String>{
         ch = (String) params[0];
         user_iden = (String) params[1];
         user_name = (String) params[2];
-        token = (String) params[3];
+
         OkHttpClient client = new OkHttpClient();
         //join or login
-        requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("user_iden", user_iden)
-                .addFormDataPart("user_name", user_name)
-                .addFormDataPart("token", token)
-                .build();
-
-        url = "http://13.124.229.116/php/token.php";
+        if (ch.equals("1")) {
+            token = (String) params[3];
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
+                    .addFormDataPart("user_iden", user_iden)
+                    .addFormDataPart("user_name", user_name)
+                    .addFormDataPart("token", token)
+                    .build();
+        }
+        else if (ch.equals("2")){
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("choice", ch)
+                    .addFormDataPart("user_iden", user_iden)
+                    .addFormDataPart("user_name", user_name)
+                    .build();
+        }
+        url = "http://52.78.217.245/php/token.php";
 
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);

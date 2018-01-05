@@ -1,4 +1,4 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Okhttp;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.RoomActivity;
+import com.example.kkk.drawword.SocketGet;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,7 +32,7 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
         this.activity = activity;
     }
 
-    boolean status;
+    boolean status = true;
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -61,10 +62,10 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
         int port = Integer.parseInt(port_st);
         try {
             Log.d("stream","asdd123");
-            socket = new Socket("13.124.229.116",port);
+            socket = new Socket("52.78.217.245",port);
             Log.d("second",String.valueOf(port));
 //                "13.124.60.238",8007
-            boolean result = socket.isConnected();
+            /*boolean result = socket.isConnected() && ! socket.isClosed();
             if(result) {
                 Log.d("stream","서버에 연결됨");
                 status = true;
@@ -72,7 +73,7 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
             else {
                 Log.d("stream","서버에 연결안됨");
                 status = false;
-            }
+            }*/
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 

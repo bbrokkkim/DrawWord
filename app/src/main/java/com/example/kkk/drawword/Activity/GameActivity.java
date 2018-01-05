@@ -43,12 +43,14 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 /**
  * Created by KKK on 2017-08-16.
  */
 
 public class GameActivity extends Activity implements View.OnClickListener{
+    private UncaughtExceptionHandler mUncaughtExceptionHandler;
     @BindView(R.id.game_button) Button game_btn;
     @BindView(R.id.friend_button) Button friend_btn;
     @BindView(R.id.proto_test) TextView ment;
@@ -85,24 +87,9 @@ public class GameActivity extends Activity implements View.OnClickListener{
     IntentClass intentClass = new IntentClass(GameActivity.this);
     GameListGet gameListGet = GameListGet.getInstance();
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        Toast.makeText(this, "ondestroy", Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        Toast.makeText(this, "onpause", Toast.LENGTH_SHORT).show();
-    }
-    public static void modify(String user_name,String room_num,String room_name){
+    public static void modify(String user_name, String room_num, String room_name){
         invate.setVisibility(View.VISIBLE);
         invate_pocket_group.setVisibility(View.VISIBLE);
         invate_pocket_group.bringToFront();
@@ -124,6 +111,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
+        Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
         invate = (ImageButton) findViewById(R.id.invate);
         invate_pocket = (ImageView) findViewById(R.id.invate_pocket);
         invate_ment = (TextView) findViewById(R.id.invate_ment);
@@ -145,6 +133,9 @@ public class GameActivity extends Activity implements View.OnClickListener{
 //        Toast.makeText(this, user_iden_static, Toast.LENGTH_SHORT).show();
 
 
+        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
+        Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show();
 
         Log.d("test_iden",iden);
         if (!iden.equals(null)){
@@ -177,7 +168,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         
         fcm_token = intent.getBooleanExtra("first_login",false);
         if (fcm_token == true){
-            new OkhttpToken().execute("test",iden,id,refreshedToken);
+            new OkhttpToken().execute("1",iden,id,FirebaseInstanceId.getInstance().getToken());
             Toast.makeText(this, "로그인 됨!!!!", Toast.LENGTH_SHORT).show();
 //            new OkhttpToken().execute("choice", iden,FirebaseInstanceId.getInstance().getToken());
 
@@ -191,6 +182,19 @@ public class GameActivity extends Activity implements View.OnClickListener{
         logout.setOnClickListener(this);
         my_info.setOnClickListener(this);
         invate.setOnClickListener(this);
+    }
+    class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler{
+
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+
+            //예외상황이 발행 되는 경우 작업
+//            Log.e("Error", getStackTrace(ex));
+            Toast.makeText(GameActivity.this, "tetetetetetetet", Toast.LENGTH_SHORT).show();
+            //예외처리를 하지 않고 DefaultUncaughtException으로 넘긴다.
+            mUncaughtExceptionHandler.uncaughtException(thread, ex);
+        }
+
     }
     @Override
     public void onClick(View v) {
@@ -359,6 +363,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                new OkhttpToken().execute("2",iden,id);
                 Intent intent = new Intent(GameActivity.this,MainActivity.class);
                 intentClass.UserLogout(database,intent);
                 finish();
