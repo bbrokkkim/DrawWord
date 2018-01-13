@@ -140,12 +140,12 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             // 이곳에서 로그를 남기는 작업을 하면 된다.
             Log.d("uncaught", "error 123123123123132123 ");
             Toast.makeText(RoomActivity.this, "!!!!!!!!!!!비정상 종료", Toast.LENGTH_SHORT).show();
-            tcp_chat = new Tcp_chat();
-            tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");
+            /*tcp_chat = new Tcp_chat();
+            tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");*/
 
             android.os.Process.killProcess(android.os.Process.myPid());
             Log.d("uncaught", "error -----------------> ");
-            System.exit(2);
+            System.exit(0);
             Log.d("uncaught", "error -----------------> ");
             //androidDefaultUEH.uncaughtException(thread, ex);
         }
@@ -243,15 +243,15 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "ondestroy", Toast.LENGTH_SHORT).show();
-        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+        Toast.makeText(this, "room ondestroy", Toast.LENGTH_SHORT).show();
+//        tcp_chat.execute(id ,"15《" + room_num + "《" + id + "》");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        tcp_chat = new Tcp_chat();
-        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+/*        tcp_chat = new Tcp_chat();
+        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");*/
     }
     Thread checkConnectSocket = new Thread(){
         public void run(){
@@ -331,14 +331,14 @@ public class RoomActivity extends Activity implements View.OnClickListener{
 //            try {
 //                while (!socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()) {
 //                    Log.d("checksocket",String.valueOf(socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()));
-
+            boolean exit = false;
             while (true) {
                 Log.d("ChattingStart", "ReStart Thread1111");
                 try {
                     while ((line = socketGet.getBufferedReader().readLine()) != null) {
-                        Log.d("line", line);
+                        Log.d("line1", line);
                         if (!line.contains("《") || !line.contains("》")) {
-                            Log.w("Chatting is error", "error");
+                            Log.w("Chatting is error1", "error");
                             continue;
                         }
 
@@ -392,9 +392,12 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                             user_list_status.sendEmptyMessage(0);
                         } else if (tcp_type.equals("2.5")) {
                             all_start.sendEmptyMessage(0);
+                            exit = true;
                             break;
+
                         } else if (tcp_type.equals("6.5")) {
                             master_start.sendEmptyMessage(0);
+                            exit = true;
                             break;
                         } else if (tcp_type.equals("13")) {
                             Log.d("1313", "13");
@@ -423,6 +426,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 Log.d("Chatting is running", "error!!!!");
             }*/
 //            item.add(new ChatData("2222222","  " + "asdasdasd" + "  "));
+                if (exit == true){
+                    break;
+                }
             }
         }
     };
@@ -478,6 +484,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             intent.putExtra("status","2");
             startActivity(intent);
             finish();
+
         }
     };
     Handler master_start = new Handler(){
@@ -516,8 +523,11 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         }
     };
 
-
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Toast.makeText(this, "room stop", Toast.LENGTH_SHORT).show();
+    }
 
 
     void layout(){

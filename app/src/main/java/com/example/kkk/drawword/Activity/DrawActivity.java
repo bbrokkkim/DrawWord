@@ -230,10 +230,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             try {
                 while ((line = bufferedReader.readLine()) !=null) {
                     Log.w("Chatting is running" , "1");
-                    Log.d("line", line);
+                    Log.d("line2", line);
 
                     if (!line.contains("《")){
-                        Log.w("Chatting is error" , "error");
+                        Log.w("Chatting is error2" , "error");
                         continue;
                     }
 
@@ -348,7 +348,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     }
                     //게임 끝남
                     else if (tcp_type.equals("11")){
-                        finish();
+//                        finish();
                         finishment.sendEmptyMessage(0);
                     }
                     Log.d("Chatting is running", "2");

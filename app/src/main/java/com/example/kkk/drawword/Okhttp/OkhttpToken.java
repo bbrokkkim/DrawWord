@@ -47,7 +47,7 @@ public class OkhttpToken extends AsyncTask<Object,Void,String>{
                     .addFormDataPart("user_name", user_name)
                     .build();
         }
-        url = "http://52.78.217.245/php/token.php";
+        url = "http://13.125.6.46/php/token.php";
 
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);

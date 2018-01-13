@@ -46,12 +46,7 @@ dependencies {
     compile 'com.github.antwankakki:FabricView:latest'
 
 
-//    complie 'com.android.support:support-v4:25.1.0'
-/*
-<<<<<<< HEAD
-    compile 'com.google.firebase:firebase-core:11.0.4'
-=======
->>>>>>> origin/master*/
+
 }
 apply plugin: 'com.google.gms.google-services'
 

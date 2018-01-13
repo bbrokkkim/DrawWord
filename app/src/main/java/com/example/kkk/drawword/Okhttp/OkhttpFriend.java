@@ -86,13 +86,13 @@ public class OkhttpFriend extends AsyncTask<Object,Void,String>{
                     .addFormDataPart("friend_id", friend_id)
                     .build();
         }
-        url = "http://52.78.217.245/php/friend.php";
+        url = "http://13.125.6.46/php/friend.php";
 
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);
 
         Request request = new Request.Builder()
-                .url("http://52.78.217.245/php/friend.php")
+                .url(url)
                 .post(requestBody)
                 .build();
         try {
