@@ -78,7 +78,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     Socket socket;
     String push_content;
     Tcp_chat tcp_chat;
+    boolean exit = false;
     boolean ready = true;
+    boolean connect_check_thread = true;
     boolean update_protocal = true;
     String id,iden,room_name,room_num;
 
@@ -117,7 +119,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
             checkUpdate.start();
 //            new checkUpdate_test().start();
-            checkConnectSocket.start();
+//            checkConnectSocket.start();
             Log.d("test","thread1");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -142,7 +144,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             Toast.makeText(RoomActivity.this, "!!!!!!!!!!!비정상 종료", Toast.LENGTH_SHORT).show();
             /*tcp_chat = new Tcp_chat();
             tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");*/
-
+            exit = true;
             android.os.Process.killProcess(android.os.Process.myPid());
             Log.d("uncaught", "error -----------------> ");
             System.exit(0);
@@ -161,8 +163,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                     push_content = "1《" + room_num + "《" + id + "》" + chat_content;
                     new Tcp_chat().execute(id, push_content);
                     text.setText("");
-                    break;
+
                 }
+                break;
                 //네비게이션드로어 열기
             case R.id.open_navigation:
                 drawerLayout.openDrawer(naviation);
@@ -172,6 +175,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 socketGet.disconnectWirter();
                 socketGet.disconnectSocket();
                 */
+                socketGet.disconnectSocket();
                 break;
             //채팅방 나오기
             case R.id.back_btn_game :
@@ -250,8 +254,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-/*        tcp_chat = new Tcp_chat();
-        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");*/
+        tcp_chat = new Tcp_chat();
+        tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+        exit = true;
     }
     Thread checkConnectSocket = new Thread(){
         public void run(){
@@ -266,7 +271,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                     Log.d("stream", "server connect fail~~~~~");
 
                     try {
+                        Log.d("stream", "server connect room_num" + room_num);
+
                         String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id).get();
+//                        Toast.makeText(RoomActivity.this, room_num, Toast.LENGTH_SHORT).show();
 //                        run = true;
 //                        checkUpdate.start();
                     } catch (InterruptedException e) {
@@ -275,6 +283,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                         e.printStackTrace();
                     }
                 }
+                if (connect_check_thread = false){
+                    Toast.makeText(RoomActivity.this, "끝", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -282,6 +294,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 }
 
                 Log.d("stream", "서버 연결 확인 쓰레드 다시   시작");
+                if (connect_check_thread = false){
+                    Toast.makeText(RoomActivity.this, "끝", Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
         }
     };
@@ -331,91 +347,100 @@ public class RoomActivity extends Activity implements View.OnClickListener{
 //            try {
 //                while (!socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()) {
 //                    Log.d("checksocket",String.valueOf(socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()));
-            boolean exit = false;
+
             while (true) {
-                Log.d("ChattingStart", "ReStart Thread1111");
-                try {
-                    while ((line = socketGet.getBufferedReader().readLine()) != null) {
-                        Log.d("line1", line);
-                        if (!line.contains("《") || !line.contains("》")) {
-                            Log.w("Chatting is error1", "error");
-                            continue;
-                        }
+                Log.d("check","start");
+                boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
+//                boolean connected = socket.isConnected() && ! socket.isClosed();
+//                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
+                if (result) {
+                    Log.d("stream", "server connect complete~~~~~");
 
-                        Log.w("Chatting is running", "1");
-                        Log.d("ChattingStart", "Start Thread2222");
-                        int idx_ment = line.indexOf("《");
-                        String real_ment = line.substring(idx_ment + 1);
-                        Log.d("made_line", real_ment);
-                        int idx = real_ment.indexOf("《");
-                        Log.d("chatting Test", String.valueOf(idx));
-                        tcp_type = real_ment.substring(0, idx);
-                        content = real_ment.substring(idx + 1);
-                        Log.d("Chatting is content", content);
-                        Log.d("Chatting is tcp_type", tcp_type);
-
-                        //chatting
-                        if (tcp_type.equals("1")) {
-                            idx = content.indexOf("《");
-                            content = content.substring(idx + 1);
-
-                            idx = content.indexOf("》");
-                            to = content.substring(0, idx);
-                            ment = content.substring(idx + 1);
-                            to_array.add(to);
-                            ment_array.add(ment);
-                            chatting.sendEmptyMessage(0);
-                            Log.d("Chatting is to", to);
-                            Log.d("Chatting is ment", ment);
-                        }
-
-                        //user_list_status
-                        else if (tcp_type.equals("2")) {
-
-                            int test_int = 1;
-                            ready_list = new ArrayList<>();
-                            while (true) {
-                                if (content.contains("《")) {
-                                    idx = content.indexOf("《");
-                                    ready_list.add(content.substring(0, idx));
-                                    Log.d("list" + test_int, content.substring(0, idx));
-                                    content = content.substring(idx + 1);
-                                } else {
-                                    //                                ready_list.add(content);
-                                    Log.d("last" + test_int, content);
-                                    break;
-                                }
-                                test_int = test_int + 1;
-
+                    try {
+                        while ((line = socketGet.getBufferedReader().readLine()) != null) {
+                            Log.d("line1", line);
+                            if (!line.contains("《") || !line.contains("》")) {
+                                Log.w("Chatting is error1", "error");
+                                continue;
                             }
-                            Log.d("last" + test_int, content);
-                            user_list_status.sendEmptyMessage(0);
-                        } else if (tcp_type.equals("2.5")) {
-                            all_start.sendEmptyMessage(0);
-                            exit = true;
-                            break;
 
-                        } else if (tcp_type.equals("6.5")) {
-                            master_start.sendEmptyMessage(0);
-                            exit = true;
-                            break;
-                        } else if (tcp_type.equals("13")) {
-                            Log.d("1313", "13");
-                            still_connect.sendEmptyMessage(0);
+                            Log.w("Chatting is running", "1");
+                            Log.d("ChattingStart", "Start Thread2222");
+                            int idx_ment = line.indexOf("《");
+                            String real_ment = line.substring(idx_ment + 1);
+                            Log.d("made_line", real_ment);
+                            int idx = real_ment.indexOf("《");
+                            Log.d("chatting Test", String.valueOf(idx));
+                            tcp_type = real_ment.substring(0, idx);
+                            content = real_ment.substring(idx + 1);
+                            Log.d("Chatting is content", content);
+                            Log.d("Chatting is tcp_type", tcp_type);
+
+                            //chatting
+                            if (tcp_type.equals("1")) {
+                                idx = content.indexOf("《");
+                                content = content.substring(idx + 1);
+
+                                idx = content.indexOf("》");
+                                to = content.substring(0, idx);
+                                ment = content.substring(idx + 1);
+                                to_array.add(to);
+                                ment_array.add(ment);
+                                chatting.sendEmptyMessage(0);
+                                Log.d("Chatting is to", to);
+                                Log.d("Chatting is ment", ment);
+                            }
+
+                            //user_list_status
+                            else if (tcp_type.equals("2")) {
+
+                                int test_int = 1;
+                                ready_list = new ArrayList<>();
+                                while (true) {
+                                    if (content.contains("《")) {
+                                        idx = content.indexOf("《");
+                                        ready_list.add(content.substring(0, idx));
+                                        Log.d("list" + test_int, content.substring(0, idx));
+                                        content = content.substring(idx + 1);
+                                    } else {
+                                        //                                ready_list.add(content);
+                                        Log.d("last" + test_int, content);
+                                        break;
+                                    }
+                                    test_int = test_int + 1;
+
+                                }
+                                Log.d("last" + test_int, content);
+                                user_list_status.sendEmptyMessage(0);
+                            } else if (tcp_type.equals("2.5")) {
+                                all_start.sendEmptyMessage(0);
+                                exit = true;
+                                connect_check_thread = false;
+                                break;
+
+                            } else if (tcp_type.equals("6.5")) {
+                                master_start.sendEmptyMessage(0);
+                                exit = true;
+                                connect_check_thread = false;
+                                break;
+                            } else if (tcp_type.equals("13")) {
+                                Log.d("1313", "13");
+                                still_connect.sendEmptyMessage(0);
+                            }
+
+                            Log.d("Chatting is running", "2");
+
+                            Log.d("ChattingStart", "Start Thread33333");
                         }
-
-                        Log.d("Chatting is running", "2");
-
-                        Log.d("ChattingStart", "Start Thread33333");
-                    }
-                } catch (SocketException e) {
-                    Log.d("Chatting is running", "error!!!!sicj");
+                    } catch (SocketException e) {
+                        Log.d("xxxxx", "xxx");
                     reconnect.sendEmptyMessage(0);
 //                        return;
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("Chatting is running", "error!!!!");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+//                    Log.d("Chatting is running", "error!!!!");
+                    }
                 }
 
 //                }

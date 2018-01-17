@@ -111,7 +111,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
-        Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
         invate = (ImageButton) findViewById(R.id.invate);
         invate_pocket = (ImageView) findViewById(R.id.invate_pocket);
         invate_ment = (TextView) findViewById(R.id.invate_ment);
@@ -135,7 +135,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
         mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
-        Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show();
 
         Log.d("test_iden",iden);
         if (!iden.equals(null)){
@@ -169,13 +169,13 @@ public class GameActivity extends Activity implements View.OnClickListener{
         fcm_token = intent.getBooleanExtra("first_login",false);
         if (fcm_token == true){
             new OkhttpToken().execute("1",iden,id,FirebaseInstanceId.getInstance().getToken());
-            Toast.makeText(this, "로그인 됨!!!!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "로그인 됨!!!!", Toast.LENGTH_SHORT).show();
 //            new OkhttpToken().execute("choice", iden,FirebaseInstanceId.getInstance().getToken());
 
-        }
+        }/*
         else
             Toast.makeText(this, "아님", Toast.LENGTH_SHORT).show();
-
+*/
         //버튼
         friend_btn.setOnClickListener(this);
         game_btn.setOnClickListener(this);
@@ -190,7 +190,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
             //예외상황이 발행 되는 경우 작업
 //            Log.e("Error", getStackTrace(ex));
-            Toast.makeText(GameActivity.this, "tetetetetetetet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GameActivity.this, "에러", Toast.LENGTH_SHORT).show();
             //예외처리를 하지 않고 DefaultUncaughtException으로 넘긴다.
             mUncaughtExceptionHandler.uncaughtException(thread, ex);
         }
@@ -241,7 +241,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     };
     void GetJson(String json_list, boolean type) {
         Log.d("테스트", "not null");
-        if (!json_list.equals("nothing")) {
+         if (!json_list.equals("nothing")) {
             try {
                 JSONArray json = new JSONArray(json_list);
                 Log.d("json_length", String.valueOf(json.length()));
@@ -281,7 +281,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                 }
 //                Toast.makeText(getActivity(),status, Toast.LENGTH_SHORT).show();
                 if (status.equals("pass")) {
-                    Toast.makeText(GameActivity.this, "방에 들어갑니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(GameActivity.this, "방에 들어갑니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GameActivity.this, RoomActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("iden", iden);
@@ -323,7 +323,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                         e.printStackTrace();
                     }
                     switchfragment(1);
-                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
                     json_row = 1;
                 }
                 json_row = json_row + 1;
@@ -346,7 +346,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                         e.printStackTrace();
                     }
                     switchfragment(1);
-                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
                     json_row = 1;
                 }
                 json_row = json_row + 1;

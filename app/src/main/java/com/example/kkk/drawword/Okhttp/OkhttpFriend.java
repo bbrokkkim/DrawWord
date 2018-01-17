@@ -86,7 +86,7 @@ public class OkhttpFriend extends AsyncTask<Object,Void,String>{
                     .addFormDataPart("friend_id", friend_id)
                     .build();
         }
-        url = "http://13.125.6.46/php/friend.php";
+        url = "http://13.125.120.82/php/friend.php";
 
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);

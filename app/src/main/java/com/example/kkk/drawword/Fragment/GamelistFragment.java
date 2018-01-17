@@ -70,6 +70,8 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
     public GamelistFragment(){}
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gamelist_fragment,container,false);
@@ -136,6 +138,14 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
 
         return view;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
+        getOkhttp("0","1");
     }
 
     @Override
@@ -173,6 +183,8 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         super.onPause();
         refresh_stop = true;
     }
+
+
 
     @Override
     public void onDestroy() {

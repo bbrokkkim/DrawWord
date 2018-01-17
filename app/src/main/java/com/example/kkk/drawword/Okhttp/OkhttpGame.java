@@ -69,11 +69,11 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
                     .build();
         }
 
-        url = "http://13.125.6.46/php/gamelist.php";
+        url = "http://13.125.120.82/php/gamelist.php";
         Log.d("choice!!!!",ch);
 
         Request request = new Request.Builder()
-                .url("http://13.125.6.46/php/gamelist.php")
+                .url(url)
                 .post(requestBody)
                 .build();
         try {

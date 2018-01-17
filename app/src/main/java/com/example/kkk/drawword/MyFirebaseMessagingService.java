@@ -26,16 +26,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String user_name = "";
     String room_num = "";
     String room_name = "";
+    int idx = 0;
+    String type = "";
+    String getData = "";
+    String noti_string = "";
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d("testttttt","asdf----------------------");
 //        Log.d("output", remoteMessage.getNotification().getBody());
 //        fcm_ment = remoteMessage.getNotification().getBody();
+        noti_string = String.valueOf(remoteMessage.getData());
+/*        if (noti_string.contains("《")) {
+            idx = noti_string.indexOf("《");
+            type = noti_string.substring(0,idx);
+            getData = noti_string.substring(idx + 1);
+            Log.d(TAG, "Message data choice: " + remoteMessage.getData());
+            if (type.equals("1")) {
+                GetJson("[" + noti_string + "]");
+                handler.sendEmptyMessage(0);
+            }
+            else if (type.equals("2")){
 
-        Log.d(TAG, "Message data choice: " + remoteMessage.getData());
-        GetJson("["+String.valueOf(remoteMessage.getData()) + "]");
-        handler.sendEmptyMessage(0);
+            }
+        }*/
+        GetJson("[" + noti_string + "]");
+        if (type.equals("1")) {
+            handler.sendEmptyMessage(0);
+        }
+        else if (type.equals("2")){
+            socket.sendEmptyMessage(0);
+        }
 // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -59,7 +80,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             user_name = jsonObject.getString("user_name");
             room_num = jsonObject.getString("room_num");
             room_name = jsonObject.getString("room_name");
-            Log.d("id_num", user_name + "|||" + room_num);
+            type = jsonObject.getString("type");
+            Log.d("id_num", user_name + "|||" + room_num +"||"+ type);
 
         } catch (JSONException e1) {
             e1.printStackTrace();
@@ -80,6 +102,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             GameActivity.modify(user_name, room_num, room_name);
 
             Log.d("aaa11111111","testestestestest");
+        }
+    };
+    Handler socket = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(MyFirebaseMessagingService.this, "소켓!", Toast.LENGTH_SHORT).show();
+
         }
     };
 

@@ -93,7 +93,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                             .build();
                 }
                 Log.d("output", "2");
-                url = "http://13.125.6.46/php/join.php";
+                url = "http://13.125.120.82/php/join.php";
             }
 
             else if(ch.equals("2")){
@@ -101,7 +101,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                         .addFormDataPart("id",String.format("%s", URLEncoder.encode(id, "UTF-8")))
                         .addFormDataPart("pwd",String.format("%s", URLEncoder.encode(pwd, "UTF-8")))
                         .build();
-                url = "http://13.125.6.46/php/login.php";
+                url = "http://13.125.120.82/php/login.php";
             }
             Request request1 = new okhttp3.Request.Builder()
                     .url(url)
