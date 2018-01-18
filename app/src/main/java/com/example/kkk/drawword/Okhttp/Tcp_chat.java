@@ -1,7 +1,9 @@
-package com.example.kkk.drawword;
+package com.example.kkk.drawword.Okhttp;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.kkk.drawword.SocketGet;
 
 import java.io.PrintWriter;
 

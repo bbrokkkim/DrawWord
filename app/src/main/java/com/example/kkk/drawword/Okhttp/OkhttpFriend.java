@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.MainActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +31,7 @@ public class OkhttpFriend extends AsyncTask<Object,Void,String>{
     String output,ch,url;
     String user_iden,token,user_id,friend_id,friend_iden,type;
     RequestBody requestBody;
-
+    String server_ip;
     public OkhttpFriend( ){}
 
     @Override
@@ -86,8 +88,11 @@ public class OkhttpFriend extends AsyncTask<Object,Void,String>{
                     .addFormDataPart("friend_id", friend_id)
                     .build();
         }
-        url = "http://13.125.120.82/php/friend.php";
 
+/*        url = "http://13.125.120.82/php/friend.php";
+        url = MainActivity.server_url;*/
+        server_ip = MainActivity.server_url;
+        url = server_ip + "php/friend.php";
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);
 

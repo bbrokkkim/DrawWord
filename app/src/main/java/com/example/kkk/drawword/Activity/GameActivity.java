@@ -118,7 +118,6 @@ public class GameActivity extends Activity implements View.OnClickListener{
         invate_pocket_group = (FrameLayout) findViewById(R.id.invate_pocket_group);
 
         ButterKnife.bind(this);
-
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("TOKEN", "Refreshed token~~: " + refreshedToken);
         Intent intent = getIntent();

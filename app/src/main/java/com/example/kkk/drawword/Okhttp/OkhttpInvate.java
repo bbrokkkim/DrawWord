@@ -1,7 +1,11 @@
 package com.example.kkk.drawword.Okhttp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.kkk.drawword.Activity.GameActivity;
+import com.example.kkk.drawword.Activity.MainActivity;
 
 import java.io.IOException;
 
@@ -18,6 +22,7 @@ import okhttp3.Response;
 public class OkhttpInvate extends AsyncTask<Object,Void,String> {
     String output,ch,url;
     String user_name,room_name,room_num,user_list;
+    String server_ip;
     RequestBody requestBody;
 
 
@@ -39,12 +44,13 @@ public class OkhttpInvate extends AsyncTask<Object,Void,String> {
                 .addFormDataPart("user_list", user_list)
                 .build();
 
-        url = "http://13.125.120.82/php/push_noti.php";
-
+//        url = "http://13.125.120.82/php/push_noti.php";
+        server_ip = MainActivity.server_url;
+        url = server_ip + "php/push_noti.php";
         Log.d("choice",ch);
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(MainActivity.server_url)
                 .post(requestBody)
                 .build();
         try {

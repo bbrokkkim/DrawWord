@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Activity.GameActivity;
+import com.example.kkk.drawword.Activity.MainActivity;
 import com.example.kkk.drawword.Database;
 import com.example.kkk.drawword.IntentClass;
 
@@ -34,6 +35,7 @@ import okhttp3.Response;
 public class OkhttpUser extends AsyncTask<Object,Void,Void>{
     String output,id,pwd,name,phone,sex,write_certi,photo_uri;
     String ch;
+    String server_ip;
     Response response;
     Activity activity;
     Database database;
@@ -48,7 +50,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
         ch = (String) params[0];
         id = (String) params[1];
         pwd = (String) params[2];
-
+        server_ip = MainActivity.server_url;
         String url = null;
         RequestBody requestBody = null;
         Log.d("output","0");
@@ -93,7 +95,9 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                             .build();
                 }
                 Log.d("output", "2");
-                url = "http://13.125.120.82/php/join.php";
+
+                url = server_ip + "php/join.php";
+//                url = "http://13.125.120.82/php/join.php";
             }
 
             else if(ch.equals("2")){
@@ -101,7 +105,8 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                         .addFormDataPart("id",String.format("%s", URLEncoder.encode(id, "UTF-8")))
                         .addFormDataPart("pwd",String.format("%s", URLEncoder.encode(pwd, "UTF-8")))
                         .build();
-                url = "http://13.125.120.82/php/login.php";
+                url = server_ip + "php/login.php";
+//                url = "http://13.125.120.82/php/login.php";
             }
             Request request1 = new okhttp3.Request.Builder()
                     .url(url)

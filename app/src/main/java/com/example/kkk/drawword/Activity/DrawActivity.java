@@ -2,7 +2,6 @@ package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,11 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,16 +25,16 @@ import android.widget.Toast;
 import com.agsw.FabricView.FabricView;
 import com.example.kkk.drawword.Adapter.DrawAdapter;
 import com.example.kkk.drawword.Data.DrawData;
-import com.example.kkk.drawword.Dialog;
 import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.Okhttp.Tcp_connect;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.SocketGet;
-import com.example.kkk.drawword.Tcp_chat;
+import com.example.kkk.drawword.Okhttp.Tcp_chat;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -162,6 +159,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     fabricView.setColor(Color.rgb(255,224,193));
                     draw_or_erase_boolean = false;
                     draw_erase = "2";
+                    socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -169,6 +167,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     FabricSetColor(color);
                     draw_or_erase_boolean = true;
                     draw_erase = "1";
+                    socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -409,7 +408,12 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
                     }
 //                    Log.d("Chatting is running", "end");
-                } catch (IOException e) {
+                }
+                catch (SocketException e) {
+                    Log.d("xxxxx", "xxx");
+                    reconnect.sendEmptyMessage(0);
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (exit == true){
@@ -418,6 +422,21 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             }
             Log.d("Chatting is running", "2111");
 
+        }
+    };
+    Handler reconnect = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                String test = new Tcp_connect(DrawActivity.this).execute("8000",room_num + "《" + id).get();
+//                        run = true;
+//                        checkUpdate.start();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     };
     Handler still_connect = new Handler(){

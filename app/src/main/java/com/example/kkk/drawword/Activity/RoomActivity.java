@@ -25,7 +25,7 @@ import com.example.kkk.drawword.Data.ReadyData;
 import com.example.kkk.drawword.R;
 import com.example.kkk.drawword.Adapter.RoomAdapter;
 import com.example.kkk.drawword.SocketGet;
-import com.example.kkk.drawword.Tcp_chat;
+import com.example.kkk.drawword.Okhttp.Tcp_chat;
 import com.example.kkk.drawword.Okhttp.Tcp_connect;
 //import com.example.kkk.drawword.Test2Activity;
 
@@ -175,7 +175,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 socketGet.disconnectWirter();
                 socketGet.disconnectSocket();
                 */
-                socketGet.disconnectSocket();
+//                socketGet.disconnectSocket();
                 break;
             //채팅방 나오기
             case R.id.back_btn_game :
@@ -533,6 +533,8 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             super.handleMessage(msg);
             int idx;
             String other_id,other_status;
+            ArrayList<String> check_id = new ArrayList<>();
+            boolean check_id_boolean = true;
             item_ready.clear();
 //            Log.d("check",ready_list.get(0));
             for (int i = 0; i < ready_list.size(); i++) {
@@ -540,8 +542,24 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 idx = ready_list.get(i).indexOf("》");
                 other_id = ready_list.get(i).substring(0,idx);
                 other_status = ready_list.get(i).substring(idx+1);
-                Log.d("status_",other_status);
-                item_ready.add(new ReadyData(other_id,other_status));
+                check_id.add(other_id);
+//                Log.d("status_",other_status);
+                if (i > 0){
+                    for (int j = 0; j < check_id.size()-1; j++) {
+                        if (other_id.equals(check_id.get(j))){
+
+                            Log.d("overlap!!!!!",other_id + " || " + check_id.get(j));
+                            check_id_boolean = false;
+
+                        }
+                        else
+                            Log.d("non_overlap!!!!!",other_id + " || " + check_id.get(j));
+                    }
+                }
+                if (check_id_boolean == true) {
+                    item_ready.add(new ReadyData(other_id, other_status));
+                }
+                check_id_boolean = true;
             }
             readyAdapter.notifyDataSetChanged();
 

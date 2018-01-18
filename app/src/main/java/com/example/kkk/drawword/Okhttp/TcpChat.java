@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.MainActivity;
 import com.example.kkk.drawword.Activity.RoomActivity;
 
 import java.io.BufferedReader;
@@ -26,6 +27,7 @@ public class TcpChat extends AsyncTask<Object,Void,String> {
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
     String ch;
+    String socket_ip = MainActivity.sokcet_url;
     Activity activity;
     public TcpChat (Activity activity,Socket socket,BufferedReader bufferedReader,BufferedWriter bufferedWriter){
         this.activity = activity;
@@ -41,7 +43,7 @@ public class TcpChat extends AsyncTask<Object,Void,String> {
         String info = (String) params[2];
         try {
             Log.d("stream","asdd123");
-            socket = new Socket("13.125.120.82",port);
+            socket = new Socket(socket_ip,port);
             Log.d("second",String.valueOf(port));
 //                "13.124.60.238",8007
             boolean result = socket.isConnected();

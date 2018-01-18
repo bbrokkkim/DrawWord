@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.MainActivity;
 import com.example.kkk.drawword.Activity.RoomActivity;
 import com.example.kkk.drawword.SocketGet;
 
@@ -28,6 +29,7 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
     BufferedWriter bufferedWriter = null;
     BufferedReader bufferedReader = null;
     Activity activity;
+    String socket_ip = MainActivity.sokcet_url;
     public Tcp_connect(Activity activity){
         this.activity = activity;
     }
@@ -62,7 +64,7 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
         int port = Integer.parseInt(port_st);
         try {
             Log.d("stream","asdd123");
-            socket = new Socket("13.125.120.82",port);
+            socket = new Socket(socket_ip,port);
             Log.d("second",String.valueOf(port));
 //                "13.124.60.238",8007
             /*boolean result = socket.isConnected() && ! socket.isClosed();

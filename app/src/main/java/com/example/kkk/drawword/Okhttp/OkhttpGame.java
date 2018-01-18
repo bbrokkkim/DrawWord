@@ -3,6 +3,8 @@ package com.example.kkk.drawword.Okhttp;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.kkk.drawword.Activity.MainActivity;
+
 import java.io.IOException;
 
 import okhttp3.MultipartBody;
@@ -18,6 +20,7 @@ import okhttp3.Response;
 public class OkhttpGame extends AsyncTask<Object,Void,String> {
     String output, ch, url;
     String user_iden, token, user_id, friend_id, friend_iden, type,room_name,limit;
+    String server_ip;
     int room_num;
     RequestBody requestBody;
 
@@ -69,7 +72,9 @@ public class OkhttpGame extends AsyncTask<Object,Void,String> {
                     .build();
         }
 
-        url = "http://13.125.120.82/php/gamelist.php";
+//        url = "http://13.125.120.82/php/gamelist.php";
+        server_ip = MainActivity.server_url;
+        url = server_ip + "php/gamelist.php";
         Log.d("choice!!!!",ch);
 
         Request request = new Request.Builder()
