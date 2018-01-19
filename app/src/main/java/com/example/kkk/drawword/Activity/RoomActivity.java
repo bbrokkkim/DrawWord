@@ -349,12 +349,12 @@ public class RoomActivity extends Activity implements View.OnClickListener{
 //                    Log.d("checksocket",String.valueOf(socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed()));
 
             while (true) {
-                Log.d("check","start");
+                Log.d("check","start111111");
                 boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
 //                boolean connected = socket.isConnected() && ! socket.isClosed();
 //                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
                 if (result) {
-                    Log.d("stream", "server connect complete~~~~~");
+                    Log.d("stream", "server connect complete~~~~~1111111");
 
                     try {
                         while ((line = socketGet.getBufferedReader().readLine()) != null) {

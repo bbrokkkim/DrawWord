@@ -120,7 +120,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         bufferedReader = socketGet.getBufferedReader();
         bufferedWriter = socketGet.getBufferedWriter();
         checkUpdate.start();
-        checkConnectSocket.start();
+//        checkConnectSocket.start();
 
         if (status.equals("1")) {
             blind.setVisibility(View.GONE);
@@ -226,44 +226,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         super.onResume();
     }
 
-    Thread checkConnectSocket = new Thread(){
-        public void run(){
-            while(true) {
-//                Log.d("stream", "서버 연결 확인 쓰레드 시작");
-                boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
-//                boolean connected = socket.isConnected() && ! socket.isClosed();
-//                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
-                if (result) {
-                    Log.d("stream", "server connect complete~~~~~");
-                } else {
-                    Log.d("stream", "server connect fail~~~~~");
 
-                    try {
-                        String test = new Tcp_connect(DrawActivity.this).execute("8000",room_num + "《" + id).get();
-//                        run = true;
-//                        checkUpdate.start();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (connect_check_thread = false){
-                    break;
-                }
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("stream", "서버 연결 확인 쓰레드 다시   시작");
-                if (connect_check_thread = false){
-                    break;
-                }
-            }
-        }
-    };
 
     private Thread checkUpdate = new Thread() {
         public void run() {
@@ -272,156 +235,173 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
             content = null;
             boolean test = false;
-
             while (true) {
-//                Log.d("ChattingStart", "ReStart Thread1111");
-                try {
-                    while ((line = bufferedReader.readLine()) !=null) {
-                        Log.w("Chatting is running" , "1");
-                        Log.d("line2", line);
+                Log.d("check", "start22222222222");
+                boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
+//                boolean connected = socket.isConnected() && ! socket.isClosed();
+//                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
+                if (result) {
+                    Log.d("stream", "server connect complete~~~~~22222222222");
 
-                        if (!line.contains("《")){
-                            Log.w("Chatting is error2" , "error");
-                            continue;
-                        }
+                    try {
+                        while ((line = socketGet.getBufferedReader().readLine()) != null) {
+                            Log.w("Chatting is running", "1");
+                            Log.d("line2", line);
 
-                        int idx_ment = line.indexOf("《");
-                        String real_ment = line.substring(idx_ment + 1);
-                        Log.d("made_line", real_ment);
-                        int idx = real_ment.indexOf("《");
-                        Log.d("chatting Test", String.valueOf(idx));
-                        tcp_type = real_ment.substring(0, idx);
-                        content = real_ment.substring(idx+1);
-                        Log.d("Chatting is content", content);
-                        Log.d("Chatting is tcp_type", tcp_type);
-                        Log.d("idx_1___",String.valueOf(line));
-                        //chatting
-                        if (tcp_type.equals("1")){
+                            if (!line.contains("《")) {
+                                Log.w("Chatting is error2", "error");
+                                continue;
+                            }
+
+                            int idx_ment = line.indexOf("《");
+                            String real_ment = line.substring(idx_ment + 1);
+                            Log.d("made_line", real_ment);
+                            int idx = real_ment.indexOf("《");
+                            Log.d("chatting Test", String.valueOf(idx));
+                            tcp_type = real_ment.substring(0, idx);
+                            content = real_ment.substring(idx + 1);
+                            Log.d("Chatting is content", content);
+                            Log.d("Chatting is tcp_type", tcp_type);
+                            Log.d("idx_1___", String.valueOf(line));
+                            //chatting
+                            if (tcp_type.equals("1")) {
     /*                        idx = content.indexOf("》");
                             to = content.substring(0,idx);
                             content = content.substring(idx+1);
                             chatting.sendEmptyMessage(0);
                             Log.d("Chatting is to", to);
                             Log.d("Chatting is ment", content);*/
-                        }
+                            }
 
-                        //user_list_status
-                        else if (tcp_type.equals("2")) {
-    //                        game_chatting.sendEmptyMessage(0);
-                        }
-                        //그리기
-                        else if (tcp_type.equals("3")){
+                            //user_list_status
+                            else if (tcp_type.equals("2")) {
+                                //                        game_chatting.sendEmptyMessage(0);
+                            }
+                            //그리기
+                            else if (tcp_type.equals("3")) {
 
-                            Log.d("Chatting is tcp_type", tcp_type);
-                            Log.d("bb",String.valueOf(draw_type));
-                            drawing.sendEmptyMessage(0);
-                        }
-                        //그리기
-                        else if (tcp_type.equals("4")){
-                            drawing.sendEmptyMessage(0);
-                            Log.d("Chatting is tcp_type", tcp_type);
-                            Log.d("bb",String.valueOf(draw_type));
-                        }
-                        //그리기
-                        else if (tcp_type.equals("5")){
-                            drawing.sendEmptyMessage(0);
-                            Log.d("Chatting is tcp_type", tcp_type);
-                            Log.d("bb",String.valueOf(draw_type));
-                        }
-                        //술래
-                        else if (tcp_type.equals("6")){
-                            //유저네임
-                            idx = content.indexOf("《");
-                            answer = content.substring(idx + 1);
-                            user_name = content.substring(0,idx);
-                            //답
-                            idx = answer.indexOf("《");
-                            answer = answer.substring(0,idx);
-                            drawing_form.sendEmptyMessage(0);
-                            Log.d("Chatting is tcp_type", tcp_type);
-                        }
-                        //도전자
-                        else if (tcp_type.equals("6.1")){
-                            try_get_answer.sendEmptyMessage(0);
-                        }
-                        //턴 컨트롤
-                        else if (tcp_type.equals("6.5")){
-                            //다이얼로그 띄우고 타입 6으로 보내기
-                            dialoghandler.sendEmptyMessage(0);
-                            Log.d("Chatting_tcp_type", tcp_type);
-                        }
-                        else if (tcp_type.equals("0")){
-                            dialogend.sendEmptyMessage(0);
-                            Log.d("Chatting_tcp_type", tcp_type);
-                        }
-                        //도전자
-                        else if (tcp_type.equals("7")){
-                            idx = content.indexOf("《");
-                            to = content.substring(0,idx);
-                            content = content.substring(idx+1);
-                            Log.d("Chatting is to", to);
-                            Log.d("Chatting is ment", content);
-                            Log.d("Chatting is tcp_type", tcp_type);
-                            chatting.sendEmptyMessage(0);
-                        }
-                        //맞춤
-                        else if (tcp_type.equals("7.5")){
-                            idx = content.indexOf("《");
-                            to = content.substring(0,idx);
-                            content = content.substring(idx+1);
-                            idx = content.indexOf("《");
-                            cassandra_answer = content.substring(idx+1);
-                            content = content.substring(0,idx);
-                            Log.d("Chatting is to", to);
-                            Log.d("Chatting is ment", content);
-                            Log.d("Chatting is tcp_type", tcp_type);
-                            answer_chatting.sendEmptyMessage(0);
-                        }
-                        //게임 끝
+                                Log.d("Chatting is tcp_type", tcp_type);
+                                Log.d("bb", String.valueOf(draw_type));
+                                drawing.sendEmptyMessage(0);
+                            }
+                            //그리기
+                            else if (tcp_type.equals("4")) {
+                                drawing.sendEmptyMessage(0);
+                                Log.d("Chatting is tcp_type", tcp_type);
+                                Log.d("bb", String.valueOf(draw_type));
+                            }
+                            //그리기
+                            else if (tcp_type.equals("5")) {
+                                drawing.sendEmptyMessage(0);
+                                Log.d("Chatting is tcp_type", tcp_type);
+                                Log.d("bb", String.valueOf(draw_type));
+                            }
+                            //술래
+                            else if (tcp_type.equals("6")) {
+                                //유저네임
+                                idx = content.indexOf("《");
+                                answer = content.substring(idx + 1);
+                                user_name = content.substring(0, idx);
+                                //답
+                                idx = answer.indexOf("《");
+                                answer = answer.substring(0, idx);
+                                drawing_form.sendEmptyMessage(0);
+                                Log.d("Chatting is tcp_type", tcp_type);
+                            }
+                            //도전자
+                            else if (tcp_type.equals("6.1")) {
+                                try_get_answer.sendEmptyMessage(0);
+                            }
+                            //턴 컨트롤
+                            else if (tcp_type.equals("6.5")) {
+                                //다이얼로그 띄우고 타입 6으로 보내기
+                                dialoghandler.sendEmptyMessage(0);
+                                Log.d("Chatting_tcp_type", tcp_type);
+                            } else if (tcp_type.equals("0")) {
+                                dialogend.sendEmptyMessage(0);
+                                Log.d("Chatting_tcp_type", tcp_type);
+                            }
+                            //도전자
+                            else if (tcp_type.equals("7")) {
+                                idx = content.indexOf("《");
+                                to = content.substring(0, idx);
+                                content = content.substring(idx + 1);
+                                Log.d("Chatting is to", to);
+                                Log.d("Chatting is ment", content);
+                                Log.d("Chatting is tcp_type", tcp_type);
+                                chatting.sendEmptyMessage(0);
+                            }
+                            //맞춤
+                            else if (tcp_type.equals("7.5")) {
+                                idx = content.indexOf("《");
+                                to = content.substring(0, idx);
+                                content = content.substring(idx + 1);
+                                idx = content.indexOf("《");
+                                cassandra_answer = content.substring(idx + 1);
+                                content = content.substring(0, idx);
+                                Log.d("Chatting is to", to);
+                                Log.d("Chatting is ment", content);
+                                Log.d("Chatting is tcp_type", tcp_type);
+                                answer_chatting.sendEmptyMessage(0);
+                            }
+                            //게임 끝
                        /* else if (tcp_type.equals("7.8")){
 
                             answer_chatting.sendEmptyMessage(0);
                         }*/
-                        //제한시간
-                        else if (tcp_type.equals("8")){
-                            idx = content.indexOf("《");
-                            time = content.substring(0,idx);
-                            Log.d("timeout",time);
-                            Log.d("idx_time"+tcp_type,String.valueOf(content));
+                            //제한시간
+                            else if (tcp_type.equals("8")) {
+                                idx = content.indexOf("《");
+                                time = content.substring(0, idx);
+                                Log.d("timeout", time);
+                                Log.d("idx_time" + tcp_type, String.valueOf(content));
 
-                            if (time.equals("65")){
-                                Log.d("timeout","next");
+                                if (time.equals("65")) {
+                                    Log.d("timeout", "next");
+                                }
+                                timer.sendEmptyMessage(0);
                             }
-                            timer.sendEmptyMessage(0);
-                        }
-                        //게임 끝남
-                        else if (tcp_type.equals("11")){
-    //                        finish();
-                            finishment.sendEmptyMessage(0);
-                            exit = true;
-                        }
-                        else if (tcp_type.equals("13")) {
-                            Log.d("1313", "13");
-                            still_connect.sendEmptyMessage(0);
-                        }
-                        Log.d("Chatting is running", "2");
+                            //게임 끝남
+                            else if (tcp_type.equals("11")) {
+                                //                        finish();
+                                finishment.sendEmptyMessage(0);
+                                exit = true;
+                            } else if (tcp_type.equals("13")) {
+                                Log.d("1313", "13");
+                                still_connect.sendEmptyMessage(0);
+                            } else if (tcp_type.equals("14")) {
+                                Log.d("방장이 소켓 끊김", "ㄹㅇ");
+                                taggerdisconnect.sendEmptyMessage(0);
+                            }
+                            Log.d("Chatting is running", "2");
 
-                    }
+                        }
 //                    Log.d("Chatting is running", "end");
+                    } catch (SocketException e) {
+                        Log.d("xxxxx", "xxx");
+                        reconnect.sendEmptyMessage(0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (exit == true) {
+                        Log.d("asd","tetetet");
+                        break;
+                    }
                 }
-                catch (SocketException e) {
-                    Log.d("xxxxx", "xxx");
-                    reconnect.sendEmptyMessage(0);
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (exit == true){
-                    break;
+                else {
+                    Log.d("socket","disconnect");
                 }
             }
             Log.d("Chatting is running", "2111");
 
+        }
+    };
+    Handler taggerdisconnect = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            item.add(new DrawData(content + "님이 그림을 그리다 말고 방을 나가셨습니다." , "aa"));
+            drawAdapter.notifyDataSetChanged();
         }
     };
     Handler reconnect = new Handler(){

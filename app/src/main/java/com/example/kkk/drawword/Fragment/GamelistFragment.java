@@ -144,7 +144,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
         getOkhttp("0","1");
     }
 

@@ -45,8 +45,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     Login_fragment login = new Login_fragment();
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
-    public static String server_url = "http://13.124.7.18/";
-    public static String sokcet_url = "13.124.7.18";
+    public static String server_url = "http://52.78.129.235/";
+    public static String sokcet_url = "52.78.129.235";
     public MainActivity (){
     }
     @Override

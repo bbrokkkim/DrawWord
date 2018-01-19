@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.kkk.drawword.Adapter.FriendAdapter;
 import com.example.kkk.drawword.Data.FriendData;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
+import com.example.kkk.drawword.Okhttp.Tcp_chat;
 import com.example.kkk.drawword.R;
 import com.squareup.picasso.Picasso;
 
@@ -83,19 +84,8 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 FriendData fr_data = (FriendData) listView.getItemAtPosition(position);
                 String friend_iden = fr_data.getIden();
-                OkhttpFriend okhttpFriend = new OkhttpFriend();
-                String del_json = null;
-                try {
-                    del_json = okhttpFriend.execute("3",iden,friend_iden).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                Log.d("testesetset",del_json);
-                item.clear();
-                friend_adapter.notifyDataSetChanged();
-                GetJson(del_json,true);
+                String friend_name = fr_data.getUser_name();
+                Dialog("친구삭제",friend_name+ "님을 삭제하겠습니까?",friend_iden);
                 return false;
             }
         });
@@ -199,6 +189,39 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                 break;
 
         }
+    }
+
+    public void Dialog(String title, String message, final String friend_iden){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                OkhttpFriend okhttpFriend = new OkhttpFriend();
+                String del_json = null;
+                try {
+                    del_json = okhttpFriend.execute("3",iden,friend_iden).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                Log.d("testesetset",del_json);
+                item.clear();
+                friend_adapter.notifyDataSetChanged();
+                GetJson(del_json,true);
+            }
+        });
+        dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 }
