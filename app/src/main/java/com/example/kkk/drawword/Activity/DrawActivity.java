@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.agsw.FabricView.FabricView;
 import com.example.kkk.drawword.Adapter.DrawAdapter;
 import com.example.kkk.drawword.Data.DrawData;
+import com.example.kkk.drawword.Dialog;
 import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.Okhttp.Tcp_connect;
 import com.example.kkk.drawword.R;
@@ -90,6 +91,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     String time = "";
     String draw_erase = "1";
     String status = "";
+    String tagger_or_not = "2";
     SocketGet socketGet = SocketGet.getInstance();
     boolean draw_type;
     boolean exit = false;
@@ -209,7 +211,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         super.onDestroy();
 //        Toast.makeText(this, "destroy", Toast.LENGTH_SHORT).show();
 //        new Tcp_chat().execute(id ,"10《" + room_num + "《" + id + "》");
-
+        exit = true;
     }
 
     @Override
@@ -264,21 +266,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             Log.d("Chatting is tcp_type", tcp_type);
                             Log.d("idx_1___", String.valueOf(line));
                             //chatting
-                            if (tcp_type.equals("1")) {
-    /*                        idx = content.indexOf("》");
-                            to = content.substring(0,idx);
-                            content = content.substring(idx+1);
-                            chatting.sendEmptyMessage(0);
-                            Log.d("Chatting is to", to);
-                            Log.d("Chatting is ment", content);*/
-                            }
-
-                            //user_list_status
-                            else if (tcp_type.equals("2")) {
-                                //                        game_chatting.sendEmptyMessage(0);
-                            }
                             //그리기
-                            else if (tcp_type.equals("3")) {
+                            if (tcp_type.equals("3")) {
 
                                 Log.d("Chatting is tcp_type", tcp_type);
                                 Log.d("bb", String.valueOf(draw_type));
@@ -317,7 +306,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                                 //다이얼로그 띄우고 타입 6으로 보내기
                                 dialoghandler.sendEmptyMessage(0);
                                 Log.d("Chatting_tcp_type", tcp_type);
-                            } else if (tcp_type.equals("0")) {
+                            }
+                            //게임이 끝났을때
+                            else if (tcp_type.equals("0")) {
                                 dialogend.sendEmptyMessage(0);
                                 Log.d("Chatting_tcp_type", tcp_type);
                             }
@@ -363,15 +354,21 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             }
                             //게임 끝남
                             else if (tcp_type.equals("11")) {
-                                //                        finish();
                                 finishment.sendEmptyMessage(0);
-                                exit = true;
-                            } else if (tcp_type.equals("13")) {
+                            }
+                            //하트비트
+                            else if (tcp_type.equals("13")) {
                                 Log.d("1313", "13");
                                 still_connect.sendEmptyMessage(0);
-                            } else if (tcp_type.equals("14")) {
+                            }
+                            //술래가 소켓이 끊김
+                            else if (tcp_type.equals("14")) {
                                 Log.d("방장이 소켓 끊김", "ㄹㅇ");
                                 taggerdisconnect.sendEmptyMessage(0);
+                            }
+                            //방에 혼자 남았을 떄
+                            else if (tcp_type.equals("15")){
+                                breakroom.sendEmptyMessage(0);
                             }
                             Log.d("Chatting is running", "2");
 
@@ -396,6 +393,14 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
         }
     };
+    Handler breakroom = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            exit = true;
+            Dialog("방에 나 혼자 남았습니다", "방을 나갑니다    ",2);
+        }
+    };
     Handler taggerdisconnect = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -409,7 +414,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             try {
-                String test = new Tcp_connect(DrawActivity.this).execute("8000",room_num + "《" + id).get();
+                String test = new Tcp_connect(DrawActivity.this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
 //                        run = true;
 //                        checkUpdate.start();
             } catch (InterruptedException e) {
@@ -443,6 +448,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            exit = true;
             Toast.makeText(DrawActivity.this, "게임이 끝났습니다.", Toast.LENGTH_SHORT).show();
         }
     };
@@ -602,6 +608,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 //            blind.setVisibility(View.GONE);
+            tagger_or_not = "3";
             modify.setVisibility(View.VISIBLE);
             blind.setVisibility(View.GONE);
             insert.setVisibility(View.GONE);
@@ -713,6 +720,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     fabricView.cleanPage();
                 }
                 else if (type == 3){
+                    new Tcp_chat().execute(id ,"10《" + room_num + "《" + id + "》");
+                    finish();
+                }
+                else if (type == 2){
                     new Tcp_chat().execute(id ,"10《" + room_num + "《" + id + "》");
                     finish();
                 }

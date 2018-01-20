@@ -77,6 +77,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     String content;
     Socket socket;
     String push_content;
+    String tagger_or_not = "1";
     Tcp_chat tcp_chat;
     boolean exit = false;
     boolean ready = true;
@@ -116,7 +117,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         readylist.setAdapter(readyAdapter);
 
         try {
-            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
+            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
             checkUpdate.start();
 //            new checkUpdate_test().start();
 //            checkConnectSocket.start();
@@ -273,7 +274,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                     try {
                         Log.d("stream", "server connect room_num" + room_num);
 
-                        String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id).get();
+                        String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
 //                        Toast.makeText(RoomActivity.this, room_num, Toast.LENGTH_SHORT).show();
 //                        run = true;
 //                        checkUpdate.start();
@@ -463,7 +464,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             try {
-                String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id).get();
+                String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
 //                        run = true;
 //                        checkUpdate.start();
             } catch (InterruptedException e) {
