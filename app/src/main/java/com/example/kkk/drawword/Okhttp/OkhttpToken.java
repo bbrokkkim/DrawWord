@@ -55,7 +55,7 @@ public class OkhttpToken extends AsyncTask<Object,Void,String>{
         url = server_ip + "php/token.php";
         Log.d("choice",ch);
         Log.d("user_iden",user_iden);
-
+        Log.d("url",url);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)

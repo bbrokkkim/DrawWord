@@ -110,6 +110,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.gc();
         setContentView(R.layout.game_layout);
 //        Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
         invate = (ImageButton) findViewById(R.id.invate);

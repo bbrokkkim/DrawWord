@@ -54,6 +54,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     @BindView(R.id.textView2) TextView textView;
     @BindView(R.id.textView1) TextView textView2;*/
     @BindView(R.id.timer) TextView timer_view;
+    @BindView(R.id.room_name) TextView room_name;
 //    @BindView(R.id.lin) LinearLayout linearLayout;
     @BindView(R.id.blind) Button blind;
     @BindView(R.id.faricView) FabricView fabricView;
@@ -108,6 +109,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         id = intent.getStringExtra("id");
         room_num = intent.getStringExtra("room_num");
         status = intent.getStringExtra("status");
+
+        room_name.setText(room_num + " 번방");
 //        Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
         item = new ArrayList<>();
         draw_or_erase.setImageResource(R.mipmap.ic_launcher_erase);
@@ -129,7 +132,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //            Dialog("술래입니다.","준비되셧나요?",1);
         }
         else if (status.equals("2")){
-            blind.setVisibility(View.VISIBLE);
+//            blind.setVisibility(View.VISIBLE); //비지블
         }
 
         fabricView.setBackgroundColor(Color.rgb(255,224,193));
@@ -589,7 +592,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     FabricSetThick(thick);
                     FabricsetDrawMode(draw_erase,color);
                     if (tcp_type.equals("3")) {
-//                        Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
                         event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
                     } else if (tcp_type.equals("4")) {
                         event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, 0);
@@ -607,7 +609,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-//            blind.setVisibility(View.GONE);
+//            blind.setVisibility(View.GONE);   //비지블
             tagger_or_not = "3";
             modify.setVisibility(View.VISIBLE);
             blind.setVisibility(View.GONE);
@@ -629,7 +631,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 timer_view.setText("over");
                 fabricView.cleanPage();
                 Toast.makeText(DrawActivity.this, "제한시간 끝", Toast.LENGTH_SHORT).show();
-                blind.setVisibility(View.VISIBLE);
+//                blind.setVisibility(View.VISIBLE);
             }
             else {
                 timer_view.setText("0:"+time);

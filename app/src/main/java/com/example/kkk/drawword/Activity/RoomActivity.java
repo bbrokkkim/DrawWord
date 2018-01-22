@@ -145,6 +145,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             Toast.makeText(RoomActivity.this, "!!!!!!!!!!!비정상 종료", Toast.LENGTH_SHORT).show();
             /*tcp_chat = new Tcp_chat();
             tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");*/
+            //서버소켓에서 내려오는 스레드 중지 시키기 위한
             exit = true;
             android.os.Process.killProcess(android.os.Process.myPid());
             Log.d("uncaught", "error -----------------> ");
@@ -189,14 +190,13 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 String ready_content;
                 if (ready == true){
                     ready_content = "wait";
-                    ready_btn.setText("wait");
                     ready = false;
                 }
                 else {
                     ready_content = "ready";
-                    ready_btn.setText("ready");
                     ready = true;
                 }
+                ready_btn.setText(ready_content);
                 push_content = "2《" + room_num + "《" + id + "》" + ready_content;
                 new Tcp_chat().execute(id ,push_content);
                 break;
@@ -209,41 +209,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    /*@Override
-    protected void onRestart() {
-        super.onRestart();
-        try {
-            String test = new Tcp_connect(this).execute("8000",room_num + "《" + id).get();
-            Log.d("test","thread2");
-            checkUpdate.start();
-            Log.d("test","thread3");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Log.d("interr","thread2");
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            Log.d("execution","thread2");
-        }
-        tcp_chat = new Tcp_chat();
-        tcp_chat.execute(id ,"12《" + room_num + "《" + id + "》");
-        Toast.makeText(this, "onrestart", Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        tcp_chat = new Tcp_chat();
-        try {
-            tcp_chat.execute(id ,"11《" + room_num + "《" + id + "》").get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        Toast.makeText(this, "onstop", Toast.LENGTH_SHORT).show();
-
-    }*/
 
     @Override
     protected void onDestroy() {
@@ -259,82 +225,8 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
         exit = true;
     }
-    Thread checkConnectSocket = new Thread(){
-        public void run(){
-            while(true) {
-//                Log.d("stream", "서버 연결 확인 쓰레드 시작");
-                boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
-//                boolean connected = socket.isConnected() && ! socket.isClosed();
-//                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
-                if (result) {
-                    Log.d("stream", "server connect complete~~~~~");
-                } else {
-                    Log.d("stream", "server connect fail~~~~~");
 
-                    try {
-                        Log.d("stream", "server connect room_num" + room_num);
 
-                        String test = new Tcp_connect(RoomActivity.this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
-//                        Toast.makeText(RoomActivity.this, room_num, Toast.LENGTH_SHORT).show();
-//                        run = true;
-//                        checkUpdate.start();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (connect_check_thread = false){
-                    Toast.makeText(RoomActivity.this, "끝", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("stream", "서버 연결 확인 쓰레드 다시   시작");
-                if (connect_check_thread = false){
-                    Toast.makeText(RoomActivity.this, "끝", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            }
-        }
-    };
-/*
-    public class checkUpdate_test extends Thread{
-        public checkUpdate_test(){
-            Toast.makeText(RoomActivity.this, "aaasdfasdfsdfasdfasdf", Toast.LENGTH_SHORT).show();
-            Log.d("iii",String.valueOf("Asdasdasd"));
-        }
-        @Override
-        public void run() {
-            int i = 1;
-            while(true){
-                Toast.makeText(RoomActivity.this, String.valueOf(i), Toast.LENGTH_SHORT).show();
-                Log.d("iii",String.valueOf(i));
-                i = i + 1;
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-    Handler chatting_test = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Log.d("test",String.valueOf(item.size()));
-            Log.d("chatting_test",ment_array.get(flow));
-            item.add(new ChatData(to_array.get(flow),"  " + ment_array.get(flow) + "  "));
-            flow = flow + 1;
-            room_adapter.notifyDataSetChanged();
-
-        }
-    };*/
 
     Thread checkUpdate = new Thread() {
 
@@ -443,6 +335,14 @@ public class RoomActivity extends Activity implements View.OnClickListener{
 //                    Log.d("Chatting is running", "error!!!!");
                     }
                 }
+                //무한루프가 돌아감..
+                else {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 //                }
 
@@ -452,6 +352,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 Log.d("Chatting is running", "error!!!!");
             }*/
 //            item.add(new ChatData("2222222","  " + "asdasdasd" + "  "));
+                //액티비티 죽으면 thread도 같이 죽게
                 if (exit == true){
                     break;
                 }

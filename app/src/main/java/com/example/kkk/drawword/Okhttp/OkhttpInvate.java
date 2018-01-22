@@ -48,7 +48,11 @@ public class OkhttpInvate extends AsyncTask<Object,Void,String> {
         server_ip = MainActivity.server_url;
         url = server_ip + "php/push_noti.php";
         Log.d("choice",ch);
-
+        Log.d("url",url);
+        Log.d("user_name", user_name);
+        Log.d("room_num", room_num);
+        Log.d("room_name", room_name);
+        Log.d("user_list", user_list);
         Request request = new Request.Builder()
                 .url(MainActivity.server_url)
                 .post(requestBody)
