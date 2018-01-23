@@ -284,9 +284,11 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         if (json_list.equals("nothing")){
             Log.d("test","return");
             Toast.makeText(getActivity(), "더 이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+            gamelistadapter.notifyDataSetChanged();
             return;
         }
         try {
+
             gamelistadapter.notifyDataSetChanged();
             JSONArray json = new JSONArray(json_list);
             Log.d("json_length", String.valueOf(json.length()));

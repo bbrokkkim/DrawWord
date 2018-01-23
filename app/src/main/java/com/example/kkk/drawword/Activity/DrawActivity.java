@@ -268,7 +268,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             Log.d("Chatting is content", content);
                             Log.d("Chatting is tcp_type", tcp_type);
                             Log.d("idx_1___", String.valueOf(line));
-                            //chatting
                             //그리기
                             if (tcp_type.equals("3")) {
 
@@ -425,6 +424,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            draw_color = (String) choice_color.getSelectedItem();
+            FabricSetColor(draw_color);
+            FabricSetThick(thick);
         }
     };
     Handler still_connect = new Handler(){
@@ -515,6 +517,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     Handler drawing = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            draw_color = (String) choice_color.getSelectedItem();
+            FabricSetColor(draw_color);
+            thick = (String) choice_thick.getSelectedItem();
+            FabricSetThick(thick);
             Log.d("idx_111",String.valueOf(content));
             idx = content.indexOf("《");
             color = content.substring(idx + 1);
