@@ -65,6 +65,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     private int page = 0;                           // 페이징변수. 초기 값은 0 이다.
     private final int OFFSET = 20;
     private boolean mLockListView;
+    boolean enter_in_gameroom = true;
     ArrayList<String> game_list_json_array;
     GameListGet gameListGet = GameListGet.getInstance();
 
@@ -118,6 +119,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                     intent.putExtra("room_num", room_num);
                     intent.putExtra("room_name", item.get(position).getRoom_name());
                     startActivity(intent);
+                    enter_in_gameroom = false;
                 }
                 else if (status.equals("nothing")){
                     Toast.makeText(getActivity(), "이미 게임을 시작하고있습니다.", Toast.LENGTH_SHORT).show();
@@ -146,6 +148,8 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         super.onResume();
 //        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
         getOkhttp("0","1");
+        enter_in_gameroom = true;
+        Toast.makeText(getActivity(), "resume", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -226,6 +230,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                         intent.putExtra("room_num", room_iden);
                         intent.putExtra("room_name", room_name);
                         startActivity(intent);
+                        enter_in_gameroom = false;
                     }
                 });
                 buider.setNegativeButton("취소", new DialogInterface.OnClickListener() {

@@ -152,6 +152,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     drawAdapter.notifyDataSetChanged();
                     answer_ed.setText("");
                 }
+                FabricSetColor(color);
+                FabricSetThick(thick);
             }
         });
 
@@ -161,17 +163,17 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //                Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 if (draw_or_erase_boolean == true){
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher);
-                    fabricView.setColor(Color.rgb(255,224,193));
-                    draw_or_erase_boolean = false;
-                    draw_erase = "2";
+//                    fabricView.setColor(Color.rgb(255,224,193));
+//                    draw_or_erase_boolean = false;
+//                    draw_erase = "2";
                     socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher_erase);
-                    FabricSetColor(color);
-                    draw_or_erase_boolean = true;
-                    draw_erase = "1";
+//                    FabricSetColor(color);
+//                    draw_or_erase_boolean = true;
+//                    draw_erase = "1";
                     socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
                 }
@@ -444,7 +446,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);
             */
-            blind.setVisibility(View.VISIBLE);
+//            blind.setVisibility(View.VISIBLE);
+            // 비지블
             insert.setVisibility(View.VISIBLE);
             modify.setVisibility(View.GONE);
         }
@@ -619,7 +622,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             tagger_or_not = "3";
             modify.setVisibility(View.VISIBLE);
             blind.setVisibility(View.GONE);
-            insert.setVisibility(View.GONE);
+//            insert.setVisibility(View.GONE); //비지블
             fabricView.cleanPage();
             answer_view.setText(answer);
             fabricView.refreshDrawableState();
@@ -724,7 +727,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     blind.setVisibility(View.GONE);
                     /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);*/
-                    insert.setVisibility(View.GONE);
+//                    insert.setVisibility(View.GONE); //비지블
                     fabricView.cleanPage();
                 }
                 else if (type == 3){
