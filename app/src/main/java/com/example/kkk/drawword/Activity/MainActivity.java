@@ -45,8 +45,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     Login_fragment login = new Login_fragment();
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
-    public static String server_url = "http://52.78.238.174/";
-    public static String sokcet_url = "52.78.238.174";
+    public static String server_url = "http://13.124.118.187/";
+    public static String sokcet_url = "13.124.118.187";
     public MainActivity (){
     }
     @Override
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         //회원가입 유효성 검사
         void JoinMent(String id,String pwd1, String pwd2, String name,String sex){
-            if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("선택")) {
+            if (name.equals("") || pwd1.equals("") || id.equals("") || sex.equals("남/녀")) {
                 Toast.makeText(getActivity(), "정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
             } else if (!pwd1.equals(pwd2)) {
                 Toast.makeText(getActivity(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();

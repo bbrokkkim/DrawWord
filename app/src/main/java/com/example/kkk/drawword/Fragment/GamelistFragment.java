@@ -110,7 +110,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                     e.printStackTrace();
                 }
 //                Toast.makeText(getActivity(),status, Toast.LENGTH_SHORT).show();
-                if (status.equals("pass")) {
+                if ((status.equals("pass")) && (enter_in_gameroom == true)) {
                     String room_num = String.valueOf(item.get(position).getRoom_num());
                     Toast.makeText(getActivity(), "방에 들어갑니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), RoomActivity.class);
@@ -120,6 +120,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                     intent.putExtra("room_name", item.get(position).getRoom_name());
                     startActivity(intent);
                     enter_in_gameroom = false;
+                    new Overlap_enter_room().start();
                 }
                 else if (status.equals("nothing")){
                     Toast.makeText(getActivity(), "이미 게임을 시작하고있습니다.", Toast.LENGTH_SHORT).show();
@@ -143,12 +144,14 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
 //        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
         getOkhttp("0","1");
-        enter_in_gameroom = true;
+//        enter_in_gameroom = true;
         Toast.makeText(getActivity(), "resume", Toast.LENGTH_SHORT).show();
     }
 
@@ -214,23 +217,26 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                 buider.setPositiveButton("생성", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String room_name = room.getText().toString();
-                        String room_iden = null;
-                        OkhttpGame okhttpGame = new OkhttpGame();
-                        try {
-                            room_iden = okhttpGame.execute("1",room_name).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
+                        if (enter_in_gameroom == true) {
+                            String room_name = room.getText().toString();
+                            String room_iden = null;
+                            OkhttpGame okhttpGame = new OkhttpGame();
+                            try {
+                                room_iden = okhttpGame.execute("1", room_name).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(getActivity(), RoomActivity.class);
+                            intent.putExtra("id", id);
+                            intent.putExtra("iden", iden);
+                            intent.putExtra("room_num", room_iden);
+                            intent.putExtra("room_name", room_name);
+                            startActivity(intent);
+                            enter_in_gameroom = false;
+                            new Overlap_enter_room().start();
                         }
-                        Intent intent = new Intent(getActivity(), RoomActivity.class);
-                        intent.putExtra("id", id);
-                        intent.putExtra("iden", iden);
-                        intent.putExtra("room_num", room_iden);
-                        intent.putExtra("room_name", room_name);
-                        startActivity(intent);
-                        enter_in_gameroom = false;
                     }
                 });
                 buider.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -371,6 +377,19 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    class Overlap_enter_room extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            enter_in_gameroom = true;
         }
     }
 

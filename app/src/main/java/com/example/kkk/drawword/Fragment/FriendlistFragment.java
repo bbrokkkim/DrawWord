@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.MainActivity;
 import com.example.kkk.drawword.Adapter.FriendAdapter;
 import com.example.kkk.drawword.Data.FriendData;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
@@ -46,12 +47,13 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     FriendAdapter friend_adapter;
     ArrayList<FriendData> item = new ArrayList<>();
     public static ArrayList<FriendData> item_static = new ArrayList<>();
-
+    //버튼 중복으로 누르는거 방지
+    boolean enter_in_gameroom = true;
     public static int a  = 12;
     public static int b;
     String iden,id,ment,photo_uri,token,friend_list_json,check_json;
     String friend_iden,friend_id,friend_photo_uri,friend_ment;
-    String default_photo_url = "http://13.124.229.116/user_photo/";
+    String default_photo_url;
     public FriendlistFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,13 +66,14 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         friend_list_json = getArguments().getString("friend_list_json");
         check_json = getArguments().getString("check_json");
 
+        default_photo_url = MainActivity.server_url + "user_photo/";
         //user_info
         myname.setText(id);
         myment.setText("아직 준비 모함");
         if (photo_uri.equals("null")){
             photo_uri = "default/default.jpg";
         }
-        String photo_backUri = "http://13.124.229.116/user_photo/";
+        String photo_backUri = MainActivity.server_url+"user_photo/";
         Picasso.with(getActivity()).load(photo_backUri+photo_uri).into(myphoto);
         Log.d("photo_uri",photo_backUri+photo_uri);
         Log.d("photo_uri",id+ iden);
@@ -142,6 +145,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_friend:
+                enter_in_gameroom = true;
                /* OkhttpFriend okhttpFriend = new OkhttpFriend();
                 okhttpFriend.execute("2");*/
                 final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -154,28 +158,29 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                 buider.setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String friend = friend_name.getText().toString();
-                        String friend_output = null;
-                        OkhttpFriend okhttpFriend = new OkhttpFriend();
-                        try {
-                            friend_output = okhttpFriend.execute("2",iden,id,friend).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("output_json",friend_output);
-                        if (friend_output.equals("already")){
-                            Toast.makeText(getActivity(), "이미 친구사이입니다.", Toast.LENGTH_SHORT).show();
-                        }
-                        else if (friend_output.equals("cantfind")){
-                            Toast.makeText(getActivity(), "그런 아이디는 없습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                        
-                        else if (friend_output.equals("already") || !friend_output.equals("cantfind")) {
-                            item.clear();
-                            friend_adapter.notifyDataSetChanged();
-                            GetJson(friend_output,true);
+                        if (enter_in_gameroom == true) {
+                            String friend = friend_name.getText().toString();
+                            String friend_output = null;
+                            OkhttpFriend okhttpFriend = new OkhttpFriend();
+                            try {
+                                friend_output = okhttpFriend.execute("2", iden, id, friend).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("output_json", friend_output);
+                            if (friend_output.equals("already")) {
+                                Toast.makeText(getActivity(), "이미 친구사이입니다.", Toast.LENGTH_SHORT).show();
+                            } else if (friend_output.equals("cantfind")) {
+                                Toast.makeText(getActivity(), "그런 아이디는 없습니다.", Toast.LENGTH_SHORT).show();
+                            } else if (friend_output.equals("already") || !friend_output.equals("cantfind")) {
+                                item.clear();
+                                friend_adapter.notifyDataSetChanged();
+                                GetJson(friend_output, true);
+                            }
+
+                            enter_in_gameroom = false;
                         }
                     }
                 });

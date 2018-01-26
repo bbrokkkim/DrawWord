@@ -3,7 +3,7 @@
 
 <string-array name="sex"
     layout_width="wrap_content">
-    <item>선택</item>
+    <item>남/녀</item>
     <item>male</item>
     <item>female</item>
 </string-array>

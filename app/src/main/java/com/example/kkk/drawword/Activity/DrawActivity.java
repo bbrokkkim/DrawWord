@@ -132,7 +132,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //            Dialog("술래입니다.","준비되셧나요?",1);
         }
         else if (status.equals("2")){
-//            blind.setVisibility(View.VISIBLE); //비지블
+            blind.setVisibility(View.VISIBLE); //비지블
         }
 
         fabricView.setBackgroundColor(Color.rgb(255,224,193));
@@ -243,12 +243,12 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             content = null;
             boolean test = false;
             while (true) {
-                Log.d("check", "start22222222222");
+//                Log.d("check", "start22222222222");
                 boolean result = socketGet.getSocket().isConnected() && ! socketGet.getSocket().isClosed();
 //                boolean connected = socket.isConnected() && ! socket.isClosed();
 //                Log.d("stream", "서버 연결 확인 쓰레드 시작2");
                 if (result) {
-                    Log.d("stream", "server connect complete~~~~~22222222222");
+//                    Log.d("stream", "server connect complete~~~~~22222222222");
 
                     try {
                         while ((line = socketGet.getBufferedReader().readLine()) != null) {
@@ -410,6 +410,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             item.add(new DrawData(content + "님이 그림을 그리다 말고 방을 나가셨습니다." , "aa"));
+            fabricView.cleanPage();
+            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");
             drawAdapter.notifyDataSetChanged();
         }
     };
@@ -446,7 +450,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);
             */
-//            blind.setVisibility(View.VISIBLE);
+            blind.setVisibility(View.VISIBLE);
             // 비지블
             insert.setVisibility(View.VISIBLE);
             modify.setVisibility(View.GONE);
@@ -520,109 +524,119 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     Handler drawing = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            draw_color = (String) choice_color.getSelectedItem();
-            FabricSetColor(draw_color);
-            thick = (String) choice_thick.getSelectedItem();
-            FabricSetThick(thick);
+//            draw_color = (String) choice_color.getSelectedItem();
+//            FabricSetColor(draw_color);
+//            thick = (String) choice_thick.getSelectedItem();
+//            FabricSetThick(thick);
             Log.d("idx_111",String.valueOf(content));
-            idx = content.indexOf("《");
-            color = content.substring(idx + 1);
-            user_name = content.substring(0,idx);
-            //색깔
-            idx = color.indexOf("《");
-            Log.d("idx_1", String.valueOf(idx));
-            Log.d("idx_1color",String.valueOf(color));
 
-            if (!color.contains(("《"))){
-                Log.d("error","this protocal has an erraor");
-            }
-            else {
-                thick = color.substring(idx + 1);
-                color = color.substring(0, idx);
-                //두께
-                idx = thick.indexOf("《");
-                draw_erase = thick.substring(idx + 1);
-                thick = thick.substring(0, idx);
-                Log.d("aaaa", draw_erase);
-                //타입
-                if (!draw_erase.contains(("《"))){
+            int data_length = getStringNumber(content);
+            Log.d("data_length","aa");
+            Log.d("data_length",String.valueOf(data_length));
+            if (data_length >= 8){
+                idx = content.indexOf("《");
+                color = content.substring(idx + 1);
+                user_name = content.substring(0,idx);
+                //색깔
+                idx = color.indexOf("《");
+                Log.d("idx_1", String.valueOf(idx));
+                Log.d("idx_1color",String.valueOf(color));
+
+                if (!color.contains(("《"))){
                     Log.d("error","this protocal has an erraor");
                 }
                 else {
-                    idx = draw_erase.indexOf("《");
-                    a1 = draw_erase.substring(idx + 1);
-                    draw_erase = draw_erase.substring(0, idx);
-                    //술래 사이즈 x 크기
-                    idx = a1.indexOf("《");
-                    b1 = a1.substring(idx + 1);
-                    a1 = a1.substring(0, idx);
-                    //술래 사이즈 y 크기
-                    idx = b1.indexOf("《");
-                    x1 = b1.substring(idx + 1);
-                    b1 = b1.substring(0, idx);
-                    //X좌표
-                    idx = x1.indexOf("《");
-                    y1 = x1.substring(idx + 1);
-                    x1 = x1.substring(0, idx);
-                    //Y좌표
-                    idx = y1.indexOf("《");
-                    y1 = y1.substring(0, idx);
+                    thick = color.substring(idx + 1);
+                    color = color.substring(0, idx);
+                    //두께
+                    idx = thick.indexOf("《");
+                    draw_erase = thick.substring(idx + 1);
+                    thick = thick.substring(0, idx);
+                    Log.d("aaaa", draw_erase);
+                    //타입
+                    if (!draw_erase.contains(("《"))){
+                        Log.d("error","this protocal has an erraor");
+                    }
+                    else {
+                        idx = draw_erase.indexOf("《");
+                        a1 = draw_erase.substring(idx + 1);
+                        draw_erase = draw_erase.substring(0, idx);
+                        //술래 사이즈 x 크기
+                        idx = a1.indexOf("《");
+                        b1 = a1.substring(idx + 1);
+                        a1 = a1.substring(0, idx);
+                        //술래 사이즈 y 크기
+                        idx = b1.indexOf("《");
+                        x1 = b1.substring(idx + 1);
+                        b1 = b1.substring(0, idx);
+                        //X좌표
+                        idx = x1.indexOf("《");
+                        y1 = x1.substring(idx + 1);
+                        x1 = x1.substring(0, idx);
+                        //Y좌표
+                        idx = y1.indexOf("《");
+                        y1 = y1.substring(0, idx);
+                    }
+                    Log.d("info", room_num + " " + user_name + " " + color + " " + thick + " " + draw_erase + " " + a1 + " " + b1 + " " + x1 + " " + y1 + "||");
+                    Log.d("1111111tcp_type", tcp_type);
+                    Log.d("x,y", x1 + " ||| " + y1);
+                    if (!user_name.equals(id)) {
+                        //그림좌표
+                        x = Float.parseFloat(x1);
+                        y = Float.parseFloat(y1);
+                        //그림크기
+                        c = Float.parseFloat(a1);
+                        d = Float.parseFloat(b1);
+
+                        x = (a/c) * x;
+                        y = (b/d) * y;
+                        long downTime = SystemClock.uptimeMillis();
+                        long eventTime = SystemClock.uptimeMillis();
+
+                        switch (color){
+                            case "BLACK":
+                                fabricView.setColor(Color.BLACK);
+                                break;
+                            case "BLUE":
+                                fabricView.setColor(Color.BLUE);
+                                break;
+                            case "RED":
+                                fabricView.setColor(Color.RED);
+                                break;
+                            case "GREEN":
+                                fabricView.setColor(Color.GREEN);
+                                break;
+                        }
+                        FabricSetThick(thick);
+                        FabricsetDrawMode(draw_erase,color);
+                        if (tcp_type.equals("3")) {
+                            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
+                        } else if (tcp_type.equals("4")) {
+                            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, 0);
+                        } else if (tcp_type.equals("5")) {
+                            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
+                        }
+                        fabricView.onTouchDrawMode(event);
+                        Log.d("boolean", tcp_type);
+                    } else
+                        Log.d("info", "dksemfdjrksek");
                 }
-                Log.d("info", room_num + " " + user_name + " " + color + " " + thick + " " + draw_erase + " " + a1 + " " + b1 + " " + x1 + " " + y1 + "||");
-                Log.d("1111111tcp_type", tcp_type);
-                Log.d("x,y", x1 + " ||| " + y1);
-                if (!user_name.equals(id)) {
-                    //그림좌표
-                    x = Float.parseFloat(x1);
-                    y = Float.parseFloat(y1);
-                    //그림크기
-                    c = Float.parseFloat(a1);
-                    d = Float.parseFloat(b1);
-
-                    x = (a/c) * x;
-                    y = (b/d) * y;
-                    long downTime = SystemClock.uptimeMillis();
-                    long eventTime = SystemClock.uptimeMillis();
-
-                    switch (color){
-                        case "BLACK":
-                            fabricView.setColor(Color.BLACK);
-                            break;
-                        case "BLUE":
-                            fabricView.setColor(Color.BLUE);
-                            break;
-                        case "RED":
-                            fabricView.setColor(Color.RED);
-                            break;
-                        case "GREEN":
-                            fabricView.setColor(Color.GREEN);
-                            break;
-                    }
-                    FabricSetThick(thick);
-                    FabricsetDrawMode(draw_erase,color);
-                    if (tcp_type.equals("3")) {
-                        event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
-                    } else if (tcp_type.equals("4")) {
-                        event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, 0);
-                    } else if (tcp_type.equals("5")) {
-                        event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
-                    }
-                    fabricView.onTouchDrawMode(event);
-                    Log.d("boolean", tcp_type);
-                } else
-                    Log.d("info", "dksemfdjrksek");
             }
+            else
+                Log.d("length_draw", String.valueOf(data_length));
+
+
         }
     };
     Handler drawing_form = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-//            blind.setVisibility(View.GONE);   //비지블
+            blind.setVisibility(View.GONE);   //비지블
             tagger_or_not = "3";
             modify.setVisibility(View.VISIBLE);
             blind.setVisibility(View.GONE);
-//            insert.setVisibility(View.GONE); //비지블
+            insert.setVisibility(View.GONE); //비지블
             fabricView.cleanPage();
             answer_view.setText(answer);
             fabricView.refreshDrawableState();
@@ -639,6 +653,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             if (time.equals("65")){
                 timer_view.setText("over");
                 fabricView.cleanPage();
+                FabricSetColor("BLACK");
+                FabricSetThick("1");
+                FabricsetDrawMode("BLACK","1");
                 Toast.makeText(DrawActivity.this, "제한시간 끝", Toast.LENGTH_SHORT).show();
 //                blind.setVisibility(View.VISIBLE);
             }
@@ -647,6 +664,26 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             }
         }
     };
+    int getStringNumber(String str){
+        int count = 0;
+        int idx = 0;
+        while(true){
+            Log.d("satrrr",String.valueOf(count));
+
+            if (str.contains("《")){
+                count = count + 1;
+                idx = str.indexOf("《");
+                str = str.substring(idx + 1);
+            }
+            else {
+                break;
+            }
+
+        }
+
+        return count;
+    }
+
 
 
 
@@ -727,7 +764,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     blind.setVisibility(View.GONE);
                     /*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);*/
-//                    insert.setVisibility(View.GONE); //비지블
+                    insert.setVisibility(View.GONE); //비지블
                     fabricView.cleanPage();
                 }
                 else if (type == 3){

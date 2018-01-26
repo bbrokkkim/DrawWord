@@ -83,6 +83,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     boolean ready = true;
     boolean connect_check_thread = true;
     boolean update_protocal = true;
+
+    //중복으로 버튼 누르는 걸 방지
+    boolean enter_in_gameroom = true;
+
     String id,iden,room_name,room_num;
 
     SocketGet socketGet = SocketGet.getInstance();
@@ -94,10 +98,10 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         Thread.setDefaultUncaughtExceptionHandler(unCatchExceptionHandler);
 
         super.onCreate(savedInstanceState);
-        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+/*        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         if (!(mUncaughtExceptionHandler instanceof UncaughtExceptionHandlerApplication)) {
             Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
-        }
+        }*/
         setContentView(R.layout.room_layout);
         ButterKnife.bind(this);
         Intent get = getIntent();
@@ -137,14 +141,14 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         Toast.makeText(this, "oncreate", Toast.LENGTH_SHORT).show();
     }
 
-    public class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler {
+/*    public class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler {
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
             // 이곳에서 로그를 남기는 작업을 하면 된다.
             Log.d("uncaught", "error 123123123123132123 ");
             Toast.makeText(RoomActivity.this, "!!!!!!!!!!!비정상 종료", Toast.LENGTH_SHORT).show();
-            /*tcp_chat = new Tcp_chat();
-            tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");*/
+            *//*tcp_chat = new Tcp_chat();
+            tcp_chat.execute(id ,"14《" + room_num + "《" + id + "》");*//*
             //서버소켓에서 내려오는 스레드 중지 시키기 위한
             exit = true;
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -153,7 +157,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             Log.d("uncaught", "error -----------------> ");
             //androidDefaultUEH.uncaughtException(thread, ex);
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -187,18 +191,20 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 break;
             //게임준비하기
             case R.id.ready_btn :
-                String ready_content;
-                if (ready == true){
-                    ready_content = "wait";
-                    ready = false;
+                if (enter_in_gameroom == true) {
+                    String ready_content;
+                    if (ready == true) {
+                        ready_content = "wait";
+                        ready = false;
+                    } else {
+                        ready_content = "ready";
+                        ready = true;
+                    }
+                    ready_btn.setText(ready_content);
+                    push_content = "2《" + room_num + "《" + id + "》" + ready_content;
+                    new Tcp_chat().execute(id, push_content);
+                    enter_in_gameroom = false;
                 }
-                else {
-                    ready_content = "ready";
-                    ready = true;
-                }
-                ready_btn.setText(ready_content);
-                push_content = "2《" + room_num + "《" + id + "》" + ready_content;
-                new Tcp_chat().execute(id ,push_content);
                 break;
             case R.id.invate :
                 Intent intent = new Intent(RoomActivity.this,InvateActivity.class);
@@ -231,7 +237,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     Thread checkUpdate = new Thread() {
 
         public void run() {
-            item.add(new ChatData("test start","  " + "bbbb" + "  "));
+//            item.add(new ChatData("test start","  " + "bbbb" + "  "));
             String line = null;
             Log.d("ChattingStart", "Start Thread1111");
             String tcp_type = null;
@@ -411,7 +417,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             intent.putExtra("status","2");
             startActivity(intent);
             finish();
-
+            enter_in_gameroom = true;
         }
     };
     Handler master_start = new Handler(){
@@ -464,7 +470,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 check_id_boolean = true;
             }
             readyAdapter.notifyDataSetChanged();
-
+            enter_in_gameroom = true;
         }
     };
 

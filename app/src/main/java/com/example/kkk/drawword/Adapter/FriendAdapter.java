@@ -88,7 +88,7 @@ public class FriendAdapter extends BaseAdapter {
         }
 
         Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).into(viewHolder.photo);
-        Log.d("postion","pos "+ pos );
+        Log.d("PHOTO", item.get(pos).getUser_photo());
         return convertView;
     }
     public int getItemPosition(Object object) {
