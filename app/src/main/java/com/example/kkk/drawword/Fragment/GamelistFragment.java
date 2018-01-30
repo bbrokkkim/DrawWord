@@ -294,7 +294,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         gameListGet.resetFouce();
         if (json_list.equals("nothing")){
             Log.d("test","return");
-            Toast.makeText(getActivity(), "더 이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
             gamelistadapter.notifyDataSetChanged();
             return;
         }

@@ -51,12 +51,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         }*/
         GetJson("[" + noti_string + "]");
-        if (type.equals("1")) {
             handler.sendEmptyMessage(0);
-        }
-        else if (type.equals("2")){
+
+        /*else if (type.equals("2")){
             socket.sendEmptyMessage(0);
-        }
+        }*/
 // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());

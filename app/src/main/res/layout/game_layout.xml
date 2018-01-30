@@ -66,6 +66,9 @@
                     android:id="@+id/invate_pocket"
                     />
                 <TextView
+                    android:text="왼쪽에 초대 메세지 버튼을 누르세요"
+                    android:textSize="20dp"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/invate_ment"/>

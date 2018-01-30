@@ -26,7 +26,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
 // Get updated InstanceID token.
         refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.d(TAG, "Refreshed token~~~~: " + refreshedToken);
         Log.d("iden1111~~!","asdf");
         Log.d("iden~~!",String.valueOf(iden)+"asdf");
         Log.d("TOKEN~~!",refreshedToken);
@@ -35,6 +35,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private void sendRegistrationToServer(String token) {
 // TODO: Implement this method to send token to your app server.
 
-        okhttpToken.execute("choice", iden,id,token);
+        okhttpToken.execute("1", iden,id,token);
     }
 }

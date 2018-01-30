@@ -33,9 +33,12 @@ public class OkhttpToken extends AsyncTask<Object,Void,String>{
         user_name = (String) params[2];
 
         OkHttpClient client = new OkHttpClient();
+        Log.d("choice",ch);
+
         //join or login
         if (ch.equals("1")) {
             token = (String) params[3];
+            Log.d("token",token);
             requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("choice", ch)
                     .addFormDataPart("user_iden", user_iden)

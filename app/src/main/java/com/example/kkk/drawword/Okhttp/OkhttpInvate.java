@@ -54,7 +54,7 @@ public class OkhttpInvate extends AsyncTask<Object,Void,String> {
         Log.d("room_name", room_name);
         Log.d("user_list", user_list);
         Request request = new Request.Builder()
-                .url(MainActivity.server_url)
+                .url(url)
                 .post(requestBody)
                 .build();
         try {

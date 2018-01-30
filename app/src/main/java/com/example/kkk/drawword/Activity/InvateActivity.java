@@ -84,6 +84,7 @@ public class InvateActivity extends Activity {
                     e.printStackTrace();
                 }
                 new OkhttpInvate().execute("2",id,room_num,room_name,jsonObject.toString());
+//                new OkhttpInvate().execute("2","1","1aa");
                 Log.d("json array",jsonObject.toString());
                 finish();
             }

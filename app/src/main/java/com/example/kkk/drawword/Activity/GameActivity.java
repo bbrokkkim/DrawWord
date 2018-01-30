@@ -103,7 +103,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        invate_time.start();
+        new Invate_time().start();
     }
 
 
@@ -168,7 +168,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         
         fcm_token = intent.getBooleanExtra("first_login",false);
         if (fcm_token == true){
-            new OkhttpToken().execute("1",iden,id,FirebaseInstanceId.getInstance().getToken());
+            new OkhttpToken().execute("1",iden,id,refreshedToken);
 //            Toast.makeText(this, "로그인 됨!!!!", Toast.LENGTH_SHORT).show();
 //            new OkhttpToken().execute("choice", iden,FirebaseInstanceId.getInstance().getToken());
 
@@ -222,8 +222,10 @@ public class GameActivity extends Activity implements View.OnClickListener{
                 break;
         }
     }
-    private static Thread invate_time = new Thread() {
+    static class Invate_time extends Thread {
+        @Override
         public void run() {
+            super.run();
             try {
                 sleep(3000);
             } catch (InterruptedException e) {
@@ -231,12 +233,13 @@ public class GameActivity extends Activity implements View.OnClickListener{
             }
             invate_view.sendEmptyMessage(0);
         }
-    };
+    }
     static Handler invate_view = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            invate_pocket.setVisibility(View.GONE);
+//            invate_pocket.setVisibility(View.GONE);
+            invate_pocket_group.setVisibility(View.GONE);
         }
     };
     void GetJson(String json_list, boolean type) {

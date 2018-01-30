@@ -4,13 +4,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/friend_row"
-        android:background="@drawable/list"
-        android:orientation="horizontal">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/list"
+            android:id="@+id/friend_row"
+            android:orientation="horizontal">
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1.5"

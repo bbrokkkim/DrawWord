@@ -187,6 +187,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
             case R.id.back_btn_game :
                 tcp_chat = new Tcp_chat();
                 tcp_chat.execute(id ,"10《" + room_num + "《" + id + "》");
+                exit = true;
                 finish();
                 break;
             //게임준비하기
@@ -343,6 +344,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
                 }
                 //무한루프가 돌아감..
                 else {
+                    Log.d("disconnect","!!!!!");
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
