@@ -72,7 +72,7 @@ public class TcpChat extends AsyncTask<Object,Void,String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(activity, "소켓 연결중..", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(activity, "소켓 연결중..", Toast.LENGTH_SHORT).show();
     }
 
     @Override

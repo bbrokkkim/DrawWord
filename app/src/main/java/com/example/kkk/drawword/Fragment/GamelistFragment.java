@@ -152,7 +152,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 //        Toast.makeText(getActivity(), "onresume", Toast.LENGTH_SHORT).show();
         getOkhttp("0","1");
 //        enter_in_gameroom = true;
-        Toast.makeText(getActivity(), "resume", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "resume", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -209,8 +209,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                 final LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.add_friend_dialog, null);
                 final EditText room= (EditText)dialogView.findViewById(R.id.friend_name);
-                TextView title = (TextView) dialogView.findViewById(R.id.ment);
-                title.setText("방의 이름을 적어주세요");
+                room.setHint("방 제목을 적어주세요");
                 final AlertDialog.Builder buider= new AlertDialog.Builder(getActivity());
                 buider.setTitle("방 만들기"); //Dialog 제목
                 buider.setView(dialogView);

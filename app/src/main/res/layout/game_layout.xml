@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:background="#ffe0c1">
+    android:background="#ffece4">
 
     <android.support.v7.widget.Toolbar
         android:title="게임"
@@ -48,7 +48,7 @@
                 android:layout_gravity="right"
                 android:background="#754d27"
                 android:src="@drawable/ic_stat_invate"
-                android:id="@+id/invate"
+                android:id="@+id/invate_btn"
                 android:visibility="gone"/>
 
             <FrameLayout

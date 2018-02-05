@@ -113,7 +113,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         System.gc();
         setContentView(R.layout.game_layout);
 //        Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
-        invate = (ImageButton) findViewById(R.id.invate);
+        invate = (ImageButton) findViewById(R.id.invate_btn);
         invate_pocket = (ImageView) findViewById(R.id.invate_pocket);
         invate_ment = (TextView) findViewById(R.id.invate_ment);
         invate_pocket_group = (FrameLayout) findViewById(R.id.invate_pocket_group);
@@ -216,7 +216,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
 //                Toast.makeText(this, "구현 안해", Toast.LENGTH_SHORT).show();
                 Dialog_logout();
                 break;
-            case R.id.invate :
+            case R.id.invate_btn :
+//                Toast.makeText(this, "초대", Toast.LENGTH_SHORT).show();
                 Dialog_invate(friend_name,friend_room_num,friend_room_name);
                 invate.setVisibility(View.GONE);
                 break;

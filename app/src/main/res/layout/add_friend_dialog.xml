@@ -8,16 +8,9 @@
         android:layout_height="130dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:paddingTop="30dp"
         android:orientation="vertical">
 
-
-        <TextView
-            android:text="추가할 친구의 아이디를 입력해주세요"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ment" />
 
         <EditText
             android:layout_width="match_parent"
@@ -25,7 +18,8 @@
             android:layout_height="50dp"
             android:inputType="textPersonName"
             android:gravity="center"
-            android:hint="user id"
+            android:hint="방 제목을 적어주세요"
+            android:imeOptions="actionDone"
             android:ems="10"
             android:id="@+id/friend_name" />
 

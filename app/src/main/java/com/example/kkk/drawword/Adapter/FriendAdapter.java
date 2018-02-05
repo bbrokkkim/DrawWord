@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.kkk.drawword.Data.FriendData;
 import com.example.kkk.drawword.R;
+import com.example.kkk.drawword.view.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class FriendAdapter extends BaseAdapter {
     ArrayList<FriendData> item;
     Context context;
     int inflater;
-
+    CircleTransform circleTransform;
     public FriendAdapter(int inflater, Context context, ArrayList<FriendData> item){
 
         this.context = context;
@@ -86,8 +87,9 @@ public class FriendAdapter extends BaseAdapter {
         else {
             viewHolder.friend_row.setBackgroundColor(Color.rgb(255,236,228));
         }
-
-        Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).into(viewHolder.photo);
+        circleTransform = new CircleTransform();
+        viewHolder.photo.setScaleType(ImageView.ScaleType.FIT_XY);
+        Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).transform(circleTransform).into(viewHolder.photo);
 //        Log.d("PHOTO", item.get(pos).getUser_photo());
         return convertView;
     }

@@ -145,7 +145,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             @Override
             public void onClick(View v) {
                 String answer = answer_ed.getText().toString();
-                Toast.makeText(DrawActivity.this, answer+"tttteest", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(DrawActivity.this, answer+"tttteest", Toast.LENGTH_SHORT).show();
                 if (!answer.equals("")) {
                     String push_content = "7《" + room_num + "《" + id + "《" + answer;
                     new Tcp_chat().execute(id, push_content);
@@ -163,18 +163,18 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //                Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 if (draw_or_erase_boolean == true){
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher);
-//                    fabricView.setColor(Color.rgb(255,224,193));
-//                    draw_or_erase_boolean = false;
-//                    draw_erase = "2";
-                    socketGet.disconnectSocket(); //테스트를 위하여
+                    fabricView.setColor(Color.rgb(255,224,193));
+                    draw_or_erase_boolean = false;
+                    draw_erase = "2";
+//                    socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher_erase);
-//                    FabricSetColor(color);
-//                    draw_or_erase_boolean = true;
-//                    draw_erase = "1";
-                    socketGet.disconnectSocket(); //테스트를 위하여
+                    FabricSetColor(color);
+                    draw_or_erase_boolean = true;
+                    draw_erase = "1";
+//                    socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -224,7 +224,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         super.onWindowFocusChanged(hasFocus);
         a = fabricView.getWidth();
         b = fabricView.getHeight();
-        Toast.makeText(this, "" + a + " : " + b, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "" + a + " : " + b, Toast.LENGTH_SHORT).show();
         Log.d("xy","" + a + " : " + b);
     }
 
@@ -481,7 +481,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 idx = content.indexOf("《");
             }*/
             String result = content.replace("《", "\n");
-            Toast.makeText(DrawActivity.this, "게임오버", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(DrawActivity.this, "게임오버", Toast.LENGTH_SHORT).show();
             Dialog("게임이 끝났습니다.",result + "감사합니다",3);
         }
     };
@@ -500,7 +500,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Toast.makeText(DrawActivity.this, to + "님이 [" + cassandra_answer +"]를 맞추었습니다", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(DrawActivity.this, to + "님이 [" + cassandra_answer +"]를 맞추었습니다", Toast.LENGTH_SHORT).show();
 //            Dialog("정답입니다.",to + "님이 맞추었습니다.",2);
             item.add(new DrawData(to + "님이 [" + cassandra_answer +"]를 맞추었습니다",""));
             drawAdapter.notifyDataSetChanged();
@@ -656,7 +656,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 FabricSetColor("BLACK");
                 FabricSetThick("1");
                 FabricsetDrawMode("BLACK","1");
-                Toast.makeText(DrawActivity.this, "제한시간 끝", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(DrawActivity.this, "제한시간 끝", Toast.LENGTH_SHORT).show();
 //                blind.setVisibility(View.VISIBLE);
             }
             else {

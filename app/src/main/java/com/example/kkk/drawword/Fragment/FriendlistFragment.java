@@ -22,6 +22,7 @@ import com.example.kkk.drawword.Data.FriendData;
 import com.example.kkk.drawword.Okhttp.OkhttpFriend;
 import com.example.kkk.drawword.Okhttp.Tcp_chat;
 import com.example.kkk.drawword.R;
+import com.example.kkk.drawword.view.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     String iden,id,ment,photo_uri,token,friend_list_json,check_json;
     String friend_iden,friend_id,friend_photo_uri,friend_ment;
     String default_photo_url;
+    CircleTransform circleTransform;
     public FriendlistFragment(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +76,9 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
             photo_uri = "default/default.jpg";
         }
         String photo_backUri = MainActivity.server_url+"user_photo/";
-        Picasso.with(getActivity()).load(photo_backUri+photo_uri).into(myphoto);
+        circleTransform = new CircleTransform();
+        myphoto.setScaleType(ImageView.ScaleType.FIT_XY);
+        Picasso.with(getActivity()).load(photo_backUri+photo_uri).transform(circleTransform).into(myphoto);
         Log.d("photo_uri",photo_backUri+photo_uri);
         Log.d("photo_uri",id+ iden);
         Log.d("fr_list",friend_list_json);
@@ -152,6 +156,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                 final View dialogView = inflater.inflate(R.layout.add_friend_dialog, null);
                 final EditText friend_name= (EditText)dialogView.findViewById(R.id.friend_name);
                 final AlertDialog.Builder buider= new AlertDialog.Builder(getActivity());
+                friend_name.setHint("친구의 이름을 적어주세요");
                 buider.setTitle("친구추가"); //Dialog 제목
                 buider.setIcon(android.R.drawable.ic_menu_add); //제목옆의 아이콘 이미지(원하는 이미지 설정)
                 buider.setView(dialogView);

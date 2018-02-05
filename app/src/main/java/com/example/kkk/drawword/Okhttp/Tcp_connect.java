@@ -46,15 +46,14 @@ public class Tcp_connect extends AsyncTask<String ,String,String >{
         super.onPostExecute(s);
 
         if (status == true) {
-            Toast.makeText(activity, "연결됨", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "연결됨", Toast.LENGTH_SHORT).show();
             socketGet.setSocket(socket);
             socketGet.setBufferedReader(bufferedReader);
             socketGet.setBufferedWriter(bufferedWriter);
 
 
         }
-        else
-            Toast.makeText(activity, "실패", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "실패", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -138,7 +138,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         back_btn.setOnClickListener(this);
         ready_btn.setOnClickListener(this);
         invate.setOnClickListener(this);
-        Toast.makeText(this, "oncreate", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "oncreate", Toast.LENGTH_SHORT).show();
     }
 
 /*    public class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler {
@@ -221,7 +221,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "room ondestroy", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "room ondestroy", Toast.LENGTH_SHORT).show();
 //        tcp_chat.execute(id ,"15《" + room_num + "《" + id + "》");
     }
 
@@ -479,7 +479,7 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onStop() {
         super.onStop();
-        Toast.makeText(this, "room stop", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "room stop", Toast.LENGTH_SHORT).show();
     }
 
 
