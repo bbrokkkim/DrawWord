@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kkk.drawword.Activity.GameActivity;
 import com.example.kkk.drawword.Activity.MainActivity;
 import com.example.kkk.drawword.Adapter.FriendAdapter;
 import com.example.kkk.drawword.Data.FriendData;
@@ -44,7 +46,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     @BindView(R.id.my_photo) ImageView myphoto;
     @BindView(R.id.my_name) TextView myname;
     @BindView(R.id.my_ment) TextView myment;
-    @BindView(R.id.add_friend) Button add_friend;
+    @BindView(R.id.add_friend) ImageButton add_friend;
     FriendAdapter friend_adapter;
     ArrayList<FriendData> item = new ArrayList<>();
     public static ArrayList<FriendData> item_static = new ArrayList<>();
@@ -179,12 +181,15 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                                 Toast.makeText(getActivity(), "이미 친구사이입니다.", Toast.LENGTH_SHORT).show();
                             } else if (friend_output.equals("cantfind")) {
                                 Toast.makeText(getActivity(), "그런 아이디는 없습니다.", Toast.LENGTH_SHORT).show();
-                            } else if (friend_output.equals("already") || !friend_output.equals("cantfind")) {
+                            }
+                            //친구 실시간 추가
+                            else if (friend_output.equals("already") || !friend_output.equals("cantfind")) {
                                 item.clear();
                                 friend_adapter.notifyDataSetChanged();
                                 GetJson(friend_output, true);
                             }
 
+                            GameActivity.friend_list_json = friend_output;
                             enter_in_gameroom = false;
                         }
                     }
@@ -223,6 +228,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                 item.clear();
                 friend_adapter.notifyDataSetChanged();
                 GetJson(del_json,true);
+                GameActivity.friend_list_json = del_json;
             }
         });
         dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {

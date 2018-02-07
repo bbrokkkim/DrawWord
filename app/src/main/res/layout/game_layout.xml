@@ -36,12 +36,6 @@
                 android:src="@drawable/ic_back_photo"
                 android:id="@+id/back_btn"/>
 
-            <TextView
-                android:text="친구목록"
-                android:gravity="center"
-                android:id="@+id/proto_test"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
@@ -74,6 +68,13 @@
                     android:id="@+id/invate_ment"/>
 
             </FrameLayout>
+
+            <TextView
+                android:text="친구목록"
+                android:gravity="center"
+                android:id="@+id/proto_test"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </FrameLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -97,12 +98,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:text="친구목록"
                         android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_marginRight="2.5dp"
                         android:layout_height="match_parent"
                         android:background="@drawable/brawn_btn"
                         android:id="@+id/friend_button" />
@@ -111,6 +116,8 @@
                         android:text="게임목록"
                         android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
                         android:layout_height="match_parent"
                         android:background="@drawable/brawn_btn"
                         android:id="@+id/game_button" />
@@ -119,6 +126,7 @@
                         android:text="로그아웃"
                         android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_marginLeft="2.5dp"
                         android:background="@drawable/brawn_btn"
                         android:layout_height="match_parent"
                         android:id="@+id/my_info" />
@@ -131,6 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="8"
+                    android:layout_margin="5dp"
                     android:id="@+id/fragmentfriendorgame">
 
                 </FrameLayout>

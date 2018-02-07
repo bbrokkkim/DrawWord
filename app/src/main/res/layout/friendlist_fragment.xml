@@ -13,24 +13,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/list"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal">
-
-
-
         <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="1.5"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            app:srcCompat="@mipmap/ic_launcher"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/photo_background"
             android:id="@+id/my_photo" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical">
+
+            <TextView
+                android:text="iden"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/iden" />
 
             <TextView
                 android:text="bbrotherkk"
@@ -42,11 +46,13 @@
                 android:id="@+id/my_name" />
 
             <TextView
-                android:text="my condition"
+                android:text="my condition  "
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:id="@+id/my_ment" />
+
 
         </LinearLayout>
 
@@ -68,16 +74,18 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
             android:id="@+id/friend_list"/>
 
-        <Button
+        <ImageButton
             android:text="+"
             android:textSize="50dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="bottom|end"
-            android:layout_margin="15dp"
             android:background="@drawable/brawn_btn"
+            android:src="@mipmap/add_friend_ic_launcher"
             android:id="@+id/add_friend" />
 
 

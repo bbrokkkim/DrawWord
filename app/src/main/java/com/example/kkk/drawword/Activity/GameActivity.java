@@ -60,7 +60,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
     static FrameLayout invate_pocket_group;
     @BindView(R.id.my_info) Button my_info;
     @BindView(R.id.back_btn) ImageButton logout;
-    String friend_list_json;
+    public static String friend_list_json;
     public String game_list_json = "";
     public int game_list_focus = 0;
     static ArrayList<InvateList> invateArrayList = new ArrayList<>();
@@ -208,6 +208,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
             case R.id.game_button:
                 switchfragment(2);
                 ment.setText("게임목록");
+
                 break;
             case R.id.back_btn:
                 super.onBackPressed();

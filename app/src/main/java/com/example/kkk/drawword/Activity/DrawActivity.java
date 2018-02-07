@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -93,6 +94,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     String draw_erase = "1";
     String status = "";
     String tagger_or_not = "2";
+    String my_status = "challenger";
     SocketGet socketGet = SocketGet.getInstance();
     boolean draw_type;
     boolean exit = false;
@@ -292,6 +294,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             //술래
                             else if (tcp_type.equals("6")) {
                                 //유저네임
+                                my_status = "tagger";
                                 idx = content.indexOf("《");
                                 answer = content.substring(idx + 1);
                                 user_name = content.substring(0, idx);
@@ -638,6 +641,13 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             blind.setVisibility(View.GONE);
             insert.setVisibility(View.GONE); //비지블
             fabricView.cleanPage();
+            if (answer.length() > 4){
+                answer_view.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
+            }
+            else {
+                answer_view.setTextSize(TypedValue.COMPLEX_UNIT_DIP,30);
+            }
+
             answer_view.setText(answer);
             fabricView.refreshDrawableState();
             Dialog("술래입니다.","준비되셧나요?",1);
@@ -651,6 +661,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 timer_view.setText("1:00");
             }
             if (time.equals("65")){
+                my_status = "challenger";
                 timer_view.setText("over");
                 fabricView.cleanPage();
                 FabricSetColor("BLACK");
@@ -692,26 +703,31 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
         String str = null;
         String content;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x = event.getX();
-                y = event.getY();
-                str = "Coordinate1 : ( " + (int) x + ", " + (int) y + " )";
-                Log.d("bb",String.valueOf(draw_type));
-                content = "3《"+room_num+"《"+id+"《"+draw_color+"《"+thick+"《"+draw_erase+"《"+a+"《"+b+"《"+x+"《"+y+"《";
-                new Tcp_chat().execute(id,content);
-                draw_type = true;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                x = event.getX();
-                y = event.getY();
-                content = "4《"+room_num+"《"+id+"《"+draw_color+"《"+thick+"《"+draw_erase+"《"+a+"《"+b+"《"+x+"《"+y+"《";
-                new Tcp_chat().execute(id,content);
-                break;
-            case MotionEvent.ACTION_UP:
-                content = "5《"+room_num+"《"+id+"《"+draw_color+"《"+thick+"《"+draw_erase+"《"+a+"《"+b+"《"+x+"《"+y+"《";
-                new Tcp_chat().execute(id,content);
-                break;
+        if (my_status.equals("tagger")) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x = event.getX();
+                    y = event.getY();
+                    str = "Coordinate1 : ( " + (int) x + ", " + (int) y + " )";
+                    Log.d("bb", String.valueOf(draw_type));
+                    content = "3《" + room_num + "《" + id + "《" + draw_color + "《" + thick + "《" + draw_erase + "《" + a + "《" + b + "《" + x + "《" + y + "《";
+                    new Tcp_chat().execute(id, content);
+                    draw_type = true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    x = event.getX();
+                    y = event.getY();
+                    content = "4《" + room_num + "《" + id + "《" + draw_color + "《" + thick + "《" + draw_erase + "《" + a + "《" + b + "《" + x + "《" + y + "《";
+                    new Tcp_chat().execute(id, content);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    content = "5《" + room_num + "《" + id + "《" + draw_color + "《" + thick + "《" + draw_erase + "《" + a + "《" + b + "《" + x + "《" + y + "《";
+                    new Tcp_chat().execute(id, content);
+                    break;
+            }
+        }
+        else {
+            Toast.makeText(this, ",,,,", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
