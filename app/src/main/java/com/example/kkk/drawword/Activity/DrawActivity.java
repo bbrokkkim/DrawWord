@@ -306,6 +306,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             }
                             //도전자
                             else if (tcp_type.equals("6.1")) {
+                                my_status = "challenger";
                                 try_get_answer.sendEmptyMessage(0);
                             }
                             //턴 컨트롤
@@ -393,6 +394,11 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     }
                 }
                 else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Log.d("socket","disconnect");
                 }
             }
@@ -457,6 +463,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             // 비지블
             insert.setVisibility(View.VISIBLE);
             modify.setVisibility(View.GONE);
+            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");
         }
     };
     Handler finishment = new Handler(){
@@ -507,6 +516,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //            Dialog("정답입니다.",to + "님이 맞추었습니다.",2);
             item.add(new DrawData(to + "님이 [" + cassandra_answer +"]를 맞추었습니다",""));
             drawAdapter.notifyDataSetChanged();
+            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");
             
         }
     };
@@ -641,7 +653,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             blind.setVisibility(View.GONE);
             insert.setVisibility(View.GONE); //비지블
             fabricView.cleanPage();
-            if (answer.length() > 4){
+            if (answer.length() > 3){
                 answer_view.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
             }
             else {
@@ -703,6 +715,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 
         String str = null;
         String content;
+        Log.d("my status", my_status);
         if (my_status.equals("tagger")) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:

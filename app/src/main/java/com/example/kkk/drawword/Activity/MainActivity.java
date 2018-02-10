@@ -37,17 +37,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
     @BindView(R.id.other_frag) Button join_btn;
-    boolean where = true;
+    public static boolean where = true;
     boolean active = false;
-    Database database;
+    public static Database database;
     IntentClass intentClass;
     Join_fragment join = new Join_fragment();
     Login_fragment login = new Login_fragment();
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
-    public static String server_url = "http://13.125.163.62/";
-    public static String sokcet_url = "13.125.163.62";
+    public static String server_url = "http://13.125.101.76/";
+    public static String sokcet_url = "13.125.101.76";
     public MainActivity (){
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

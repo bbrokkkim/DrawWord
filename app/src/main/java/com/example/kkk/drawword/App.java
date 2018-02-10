@@ -17,4 +17,8 @@ public class App extends Application {
         System.gc();
         Log.d("TAG", "_----------------------p GC");
     }
+
+    public String getServerUrl() {
+        return getString(R.string.project_id);
+    }
 }

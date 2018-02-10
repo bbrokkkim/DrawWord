@@ -74,6 +74,7 @@ public class InvateActivity extends Activity {
                     if (item.get(i).getChoice() == true){
                         Log.d("list",item.get(i).getUser_name());
                         list.put(item.get(i).getUser_name());
+                        item.get(i).setChoice();
 
 
                     }
