@@ -55,7 +55,8 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     public static int a  = 12;
     public static int b;
     String iden,id,ment,photo_uri,token,friend_list_json,check_json;
-    String friend_iden,friend_id,friend_photo_uri,friend_ment;
+    String friend_iden,friend_id,friend_photo_uri,friend_ment,rotate;
+    int rotate_int;
     String default_photo_url;
     CircleTransform circleTransform;
     public FriendlistFragment(){}
@@ -69,8 +70,9 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         photo_uri = getArguments().getString("uri");
         friend_list_json = getArguments().getString("friend_list_json");
         check_json = getArguments().getString("check_json");
-
+        rotate_int = getArguments().getInt("rotate");
         default_photo_url = MainActivity.server_url + "user_photo/";
+        Toast.makeText(getActivity(), String.valueOf(rotate_int), Toast.LENGTH_SHORT).show();
         //user_info
         myname.setText(id);
         myment.setText("아직 준비 모함");
@@ -80,7 +82,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         String photo_backUri = MainActivity.server_url+"user_photo/";
         circleTransform = new CircleTransform();
         myphoto.setScaleType(ImageView.ScaleType.FIT_XY);
-        Picasso.with(getActivity()).load(photo_backUri+photo_uri).transform(circleTransform).into(myphoto);
+        Picasso.with(getActivity()).load(photo_backUri+photo_uri).rotate(rotate_int*-1).transform(circleTransform).into(myphoto);
         Log.d("photo_uri",photo_backUri+photo_uri);
         Log.d("photo_uri",id+ iden);
         Log.d("fr_list",friend_list_json);
@@ -101,7 +103,6 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
 
         friend_adapter = new FriendAdapter(android.R.layout.activity_list_item,getActivity(),item);
         listView.setAdapter(friend_adapter);
-
         return view;
     }
 
@@ -120,6 +121,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                     friend_id = jsonObject.getString("id");
                     friend_photo_uri = jsonObject.getString("photo_uri");
                     friend_ment = jsonObject.getString("ment");
+                    rotate = jsonObject.getString("rotate");
                     if (friend_ment.equals("null")) {
                         friend_ment = "멘트가 없습니다.";
                     }
@@ -128,7 +130,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                     }
                     if (type == true) {
                         friend_photo_uri = default_photo_url + friend_photo_uri;
-                        item.add(new FriendData(friend_id, friend_ment, friend_photo_uri, friend_iden));
+                        item.add(new FriendData(friend_id, friend_ment, friend_photo_uri, friend_iden,rotate));
                     }
                 }
                 item_static = item;

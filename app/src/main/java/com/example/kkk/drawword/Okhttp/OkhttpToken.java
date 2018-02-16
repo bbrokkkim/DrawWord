@@ -76,7 +76,7 @@ public class OkhttpToken extends AsyncTask<Object,Void,String>{
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.d("httpoutput_token",output);
+//        Log.d("httpoutput_token",output);
 
     }
 

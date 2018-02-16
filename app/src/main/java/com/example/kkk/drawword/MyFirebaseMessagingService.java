@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "TEST";
-    Database database = new Database(this, "user_db", null,1);
+    Database database = new Database(this, "user_db", null,2);
     String fcm_ment = "";
     String user_name = "";
     String room_num = "";

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 
 import com.example.kkk.drawword.Database;
+import com.example.kkk.drawword.Fragment.Join_fragment;
 import com.example.kkk.drawword.IntentClass;
 import com.example.kkk.drawword.ModelLogin;
 import com.example.kkk.drawword.Okhttp.OkhttpUser;
@@ -55,7 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         ButterKnife.bind(this);
-        database = new Database(getApplicationContext(), "user_db", null,1);
+        database = new Database(getApplicationContext(), "user_db", null,2);
 
         join_btn.setText("회원가입으로");
         final String check_login_info = "uncorrect";
@@ -151,7 +152,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
     //로그인 프레그먼트
-    public class Login_fragment extends Fragment {
+    public static class Login_fragment extends Fragment {
         @BindView(R.id.login) Button login;
         @BindView(R.id.ed_id) EditText id;
         @BindView(R .id.ed_password) EditText pwd;
@@ -168,7 +169,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 public void onClick(View v) {
                     String id_btn = id.getText().toString();
                     String pwd_btn = pwd.getText().toString();
-                    OkhttpUser okhttpUser = new OkhttpUser(MainActivity.this,database);
+                    OkhttpUser okhttpUser = new OkhttpUser(getActivity(),database);
                     okhttpUser.execute("2",id_btn,pwd_btn);
                 }
             });
@@ -185,7 +186,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    //가입 프레그먼트
+    /*//가입 프레그먼트
     public class Join_fragment extends Fragment implements View.OnClickListener{
         @BindView(R.id.id) EditText user_id;
         @BindView(R.id.password1) EditText user_pwd1;
@@ -340,7 +341,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 }
                 return;
         }
-    }
+    }*/
 }
 
 

@@ -28,6 +28,7 @@ public class FriendAdapter extends BaseAdapter {
     ArrayList<FriendData> item;
     Context context;
     int inflater;
+    int rotate;
     CircleTransform circleTransform;
     public FriendAdapter(int inflater, Context context, ArrayList<FriendData> item){
 
@@ -87,9 +88,12 @@ public class FriendAdapter extends BaseAdapter {
         else {
             viewHolder.friend_row.setBackgroundColor(Color.rgb(255,236,228));
         }
+
+        rotate = Integer.parseInt(item.get(pos).getRotate());
+
         circleTransform = new CircleTransform();
         viewHolder.photo.setScaleType(ImageView.ScaleType.FIT_XY);
-        Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).transform(circleTransform).into(viewHolder.photo);
+        Picasso.with(context).load(String.valueOf(item.get(pos).getUser_photo())).rotate(rotate*-1).transform(circleTransform).into(viewHolder.photo);
 //        Log.d("PHOTO", item.get(pos).getUser_photo());
         return convertView;
     }

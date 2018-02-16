@@ -23,7 +23,8 @@ public class Database extends SQLiteOpenHelper {
                 "server_iden TEXT, " +
                 "name TEXT," +
                 "server_token TEXT," +
-                "photo_uri TEXT);");
+                "photo_uri TEXT," +
+                "rotate TEXT);");
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

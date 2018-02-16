@@ -37,8 +37,8 @@ public class IntentClass {
         context.startActivity(intent);
     }
 
-    public void InsertUserInfo(Database database,String iden,String user_id,String user_token,String uri){
-        database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "','"+ uri + "');");
+    public void InsertUserInfo(Database database,String iden,String user_id,String user_token,String uri,String rotate){
+        database.insert("INSERT INTO user_token VALUES(null,'" + iden + "','" + user_id + "','" + user_token + "','"+ uri +"','"+rotate+ "');");
     }
     public String GetIden(Database database) {
         String iden = database.show_id("select * from user_token", 0, 1);
@@ -56,6 +56,10 @@ public class IntentClass {
     public String GetUri(Database database){
         String uri = database.show_id("select * from user_token", 0, 4);
         return uri;
+    }
+    public String Getrotate(Database database){
+        String rotate = database.show_id("select * from user_token", 0, 5);
+        return rotate;
     }
 
 

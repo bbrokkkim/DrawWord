@@ -1,8 +1,14 @@
 package com.example.kkk.drawword.Okhttp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -34,13 +42,19 @@ import okhttp3.Response;
 
 public class OkhttpUser extends AsyncTask<Object,Void,Void>{
     String output,id,pwd,name,phone,sex,write_certi,photo_uri;
+    String file_uri = null;
+    String exifDegree_String = "0";
+    int exifDegree;
     String ch;
     String server_ip;
+    String rotate;
     Response response;
     Activity activity;
     Database database;
     String iden,user_id,user_pwd,user_token,uri;
     IntentClass intentClass = new IntentClass(activity);
+    File file;
+    Bitmap image_bitmap;
     public OkhttpUser(Activity activity, Database database){
         this.activity = activity;
         this.database = database;
@@ -69,6 +83,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                 write_certi = (String) params[5];
                 sex = (String) params[6];
                 photo_uri = (String) params[7];
+                exifDegree_String = (String) params[8];
                 Log.d("uri", photo_uri);
                 if (photo_uri.equals("null")) {
                     Log.d("type", "1");
@@ -80,8 +95,41 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                             .addFormDataPart("phone", String.format("%s", URLEncoder.encode(phone, "UTF-8")))
                             .addFormDataPart("sex", String.format("%s", URLEncoder.encode(sex, "UTF-8")))
                             .addFormDataPart("photo_uri", String.format("%s", URLEncoder.encode(photo_uri, "UTF-8")))
+                            .addFormDataPart("rotate", exifDegree_String)
                             .build();
                 } else {
+                    /*file = new File(photo_uri+ "1");*/
+
+//      Uri = url = new Uri();
+                    image_bitmap= (Bitmap) params[9];
+                    ExifInterface exif = new ExifInterface(photo_uri);
+
+                    int orientation = exif.getAttributeInt(
+                            ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.ORIENTATION_NORMAL);
+                    exifDegree = exifOrientationToDegrees(orientation);
+                    int width = image_bitmap.getWidth();
+                    int height = image_bitmap.getHeight();
+
+                    if (exifDegree != 0){
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(exifDegree);
+                        image_bitmap = Bitmap.createBitmap(image_bitmap, 0, 0, width, height, matrix, true);
+//                        Toast.makeText(activity, ""+ exifDegree + "1", Toast.LENGTH_SHORT).show();
+                        Log.d("a","1");
+                    }
+                    else {
+                        Log.d("a","2");
+//                        Toast.makeText(getActivity(), ""+ exifDegree+ "2", Toast.LENGTH_SHORT).show();
+                    }
+                    file_uri = saveBitmapToJpeg(activity,image_bitmap, id + ".jpg");
+                    Log.d("file_uri", file_uri);
+//                    matrix.postRotate(-90);
+
+//                    Bitmap resizedBitmap = Bitmap.createBitmap(image_bitmap, 0, 0, width, height, matrix, true);
+
+
+
                     Log.d("type", "2");
                     requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                             .addFormDataPart("choice", String.format("%s", URLEncoder.encode(ch, "UTF-8")))
@@ -91,7 +139,8 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
                             .addFormDataPart("phone", String.format("%s", URLEncoder.encode(phone, "UTF-8")))
                             .addFormDataPart("sex", String.format("%s", URLEncoder.encode(sex, "UTF-8")))
                             .addFormDataPart("photo_uri", photo_uri)
-                            .addFormDataPart("uploadedfile", id + ".jpg", RequestBody.create(MediaType.parse("image/jpg"), new File(photo_uri)))
+                            .addFormDataPart("uploadedfile", id + ".jpg", RequestBody.create(MediaType.parse("image/jpg"), new File(file_uri)))
+                            .addFormDataPart("rotate", exifDegree_String)
                             .build();
                 }
                 Log.d("output", "2");
@@ -145,7 +194,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
             if (iden.equals("wrong")) {
                 Toast.makeText(activity, "아이디나 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                intentClass.InsertUserInfo(database, iden, user_id, user_token, uri);
+                intentClass.InsertUserInfo(database, iden, user_id, user_token, uri,rotate);
                 Intent intent = new Intent(activity, GameActivity.class);
                 intent.putExtra("first_login",true);
 
@@ -156,6 +205,43 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
 
     }
 
+
+    public static String saveBitmapToJpeg(Context context, Bitmap bitmap, String name){
+
+        File storage = context.getCacheDir(); // 이 부분이 임시파일 저장 경로
+
+        String fileName = name + ".jpg";  // 파일이름은 마음대로!
+
+        File tempFile = new File(storage,fileName);
+
+        try{
+            tempFile.createNewFile();  // 파일을 생성해주고
+
+            FileOutputStream out = new FileOutputStream(tempFile);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90 , out);  // 넘거 받은 bitmap을 jpeg(손실압축)으로 저장해줌
+
+            out.close(); // 마무리로 닫아줍니다.
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return tempFile.getAbsolutePath();   // 임시파일 저장경로를 리턴해주면 끝!
+    }
+
+    public int exifOrientationToDegrees(int exifOrientation){
+        if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        } return 0;
+    }
+
     void GetJson(){
         try {
             JSONArray json = new JSONArray(output);
@@ -164,6 +250,7 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
             user_id = json_ob.getString("id");
             user_token = json_ob.getString("token");
             uri = json_ob.getString("photo_uri");
+            rotate = json_ob.getString("rotate");
 //            Intent intent = new Intent(activity, GameActivity.class);
             //회원가입 했을 시
             if (ch.equals("1")) {
@@ -172,12 +259,15 @@ public class OkhttpUser extends AsyncTask<Object,Void,Void>{
             //GameActivity로
             if (iden.equals("wrong")) {
                 Toast.makeText(activity, "틀림", Toast.LENGTH_SHORT).show();
-            } else if (!iden.equals("wrong")) {
-                intentClass.InsertUserInfo(database,iden,user_id,user_token,uri);
+            }
+            else if (!iden.equals("wrong")) {
+                intentClass.InsertUserInfo(database,iden,user_id,user_token,uri,rotate);
                 database.insert("INSERT INTO user_token VALUES(null,'"
-                        + iden + "','" + user_id + "','" + user_token + "','"+ uri + "');");
-//                Toast.makeText(context, user_id, Toast.LENGTH_SHORT).show();
-
+                        + iden + "','" + user_id + "','" + user_token + "','"+ uri +"','"+ rotate +"');");
+//                Toast.makeText(activity, "INSERT INTO user_token VALUES(null,'"
+//                        + iden + "','" + user_id + "','" + user_token + "','"+ uri +"','"+ rotate +"');", Toast.LENGTH_SHORT).show();
+                Log.d("query" , "INSERT INTO user_token VALUES(null,'"
+                        + iden + "','" + user_id + "','" + user_token + "','"+ uri +"','"+ rotate +"');");
             }
 
         } catch (JSONException e) {

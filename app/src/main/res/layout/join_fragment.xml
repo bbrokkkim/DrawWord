@@ -85,6 +85,8 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
+                            android:maxWidth="128dp"
+                            android:maxHeight="200dp"
                             android:layout_weight="3">
 
                             <Button
@@ -92,15 +94,15 @@
                                 android:layout_gravity="right"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-
                                 android:background="@drawable/brawn_btn"
                                 android:id="@+id/back_photo" />
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:maxHeight="200dp"
+                                android:layout_width="128dp"
+                                android:layout_height="200dp"
                                 android:maxWidth="128dp"
+                                android:maxHeight="200dp"
+                                android:layout_gravity="center"
                                 app:srcCompat="@mipmap/ic_launcher"
                                 android:id="@+id/join_photo" />
                         </FrameLayout>

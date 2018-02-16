@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity android:name=".Activity.MainActivity"
-            android:configChanges="orientation|keyboard" >
+            android:configChanges="orientation|keyboard"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

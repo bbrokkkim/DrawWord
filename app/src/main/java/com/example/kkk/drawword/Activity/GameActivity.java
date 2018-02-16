@@ -74,6 +74,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
     String iden;
     String id;
     String token;
+    String rotate_string;
+    int rotate;
     boolean fcm_token;
     String uri;
     String friend_iden;
@@ -123,11 +125,15 @@ public class GameActivity extends Activity implements View.OnClickListener{
         Log.d("TOKEN", "Refreshed token~~: " + refreshedToken);
         Intent intent = getIntent();
         invate_pocket_group.setVisibility(View.GONE);
-        database = new Database(GameActivity.this,"user_db", null,1);
+        database = new Database(GameActivity.this,"user_db", null,2);
         iden = intentClass.GetIden(database);
         id = intentClass.GetId(database);
         token = intentClass.GetToken(database);
         uri = intentClass.GetUri(database);
+        rotate_string = intentClass.Getrotate(database);
+        rotate = Integer.parseInt(rotate_string);
+//        Toast.makeText(this, rotate_string, Toast.LENGTH_SHORT).show();
+//        rotate = Integer.parseInt(rotate_string);
         user_iden_static = iden;
         user_name_static = id;
 //        Toast.makeText(this, user_iden_static, Toast.LENGTH_SHORT).show();
@@ -403,6 +409,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         bundle.putString("iden",iden);
         bundle.putString("id",id);
         bundle.putString("uri", uri);
+        bundle.putInt("rotate",rotate);
         Log.d("switch",iden + id + uri);
         fr.setArguments(bundle);
         fm = getFragmentManager();
