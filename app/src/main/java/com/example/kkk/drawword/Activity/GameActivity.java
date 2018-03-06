@@ -3,24 +3,33 @@ package com.example.kkk.drawword.Activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kkk.drawword.Database;
 import com.example.kkk.drawword.Dialog;
+
+import com.example.kkk.drawword.Fragment.FriendlistFragment;
 import com.example.kkk.drawword.Fragment.GamelistFragment;
 import com.example.kkk.drawword.GameListGet;
 import com.example.kkk.drawword.IntentClass;
@@ -30,7 +39,6 @@ import com.example.kkk.drawword.Okhttp.OkhttpGame;
 import com.example.kkk.drawword.Okhttp.OkhttpToken;
 import com.example.kkk.drawword.Okhttp.OkhttpUser;
 import com.example.kkk.drawword.R;
-import com.example.kkk.drawword.Fragment.FriendlistFragment;
 //import com.example.kkk.drawword.Test2Activity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -49,42 +57,50 @@ import java.lang.Thread.UncaughtExceptionHandler;
  * Created by KKK on 2017-08-16.
  */
 
-public class GameActivity extends Activity implements View.OnClickListener{
+public class GameActivity extends AppCompatActivity implements View.OnClickListener{
     private UncaughtExceptionHandler mUncaughtExceptionHandler;
     @BindView(R.id.game_button) Button game_btn;
     @BindView(R.id.friend_button) Button friend_btn;
     @BindView(R.id.proto_test) TextView ment;
+    @BindView(R.id.game) ImageView game;
+    @BindView(R.id.friend) ImageView friend;
+    @BindView(R.id.main_tab) TabLayout tabLayout;
+    @BindView(R.id.toolbarframelayout)
+    FrameLayout frameLayout;
+    @BindView(R.id.viewpager)
+    LinearLayout fragment_zone;
     static ImageButton invate;
     static ImageView invate_pocket;
     static TextView invate_ment;
     static FrameLayout invate_pocket_group;
+    ViewPager vp;
     @BindView(R.id.my_info) Button my_info;
     @BindView(R.id.back_btn) ImageButton logout;
     public static String friend_list_json;
-    public String game_list_json = "";
-    public int game_list_focus = 0;
+    public static String game_list_json = "";
+    public static int game_list_focus = 0;
     static ArrayList<InvateList> invateArrayList = new ArrayList<>();
     static InvateList invateList;
     public static String user_iden_static = "";
     public static String user_name_static = "";
+    public static int size;
     static String friend_name;
     static String friend_room_num;
     static String friend_room_name;
-    String check_json;
-    String iden;
-    String id;
+    public static String check_json;
+    public static String iden;
+    public static String id;
     String token;
-    String rotate_string;
-    int rotate;
+    public static String rotate_string;
+    public static int rotate;
     boolean fcm_token;
-    String uri;
+    public static String uri;
     String friend_iden;
     String friend_id;
     int json_length = 0;
     int json_row = 1;
     int testint = 0;
     Fragment fr;
-    FragmentManager fm;
     Database database;
     IntentClass intentClass = new IntentClass(GameActivity.this);
     GameListGet gameListGet = GameListGet.getInstance();
@@ -92,7 +108,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
 
     public static void modify(String user_name, String room_num, String room_name){
-        invate.setVisibility(View.VISIBLE);
+        invate.bringToFront();
         invate_pocket_group.setVisibility(View.VISIBLE);
         invate_pocket_group.bringToFront();
         invateList = new InvateList(user_name,room_num);
@@ -107,7 +123,13 @@ public class GameActivity extends Activity implements View.OnClickListener{
         }*/
         new Invate_time().start();
     }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        size = frameLayout.getHeight();
+        Toast.makeText(this, String.valueOf(size), Toast.LENGTH_SHORT).show();
+        fragment_zone.setMinimumHeight(size);
 
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +143,11 @@ public class GameActivity extends Activity implements View.OnClickListener{
         invate_pocket_group = (FrameLayout) findViewById(R.id.invate_pocket_group);
 
         ButterKnife.bind(this);
+        vp = (ViewPager)findViewById(R.id.fragmentfriendorgame);
+        tabLayout.setupWithViewPager(vp);
+
+        hideActionBar();
+
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("TOKEN", "Refreshed token~~: " + refreshedToken);
         Intent intent = getIntent();
@@ -136,9 +163,9 @@ public class GameActivity extends Activity implements View.OnClickListener{
 //        rotate = Integer.parseInt(rotate_string);
         user_iden_static = iden;
         user_name_static = id;
-//        Toast.makeText(this, user_iden_static, Toast.LENGTH_SHORT).show();
 
-
+        vp.setAdapter(new pagerAdapter(getSupportFragmentManager()));
+        vp.setCurrentItem(0);
         mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
 //        Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show();
@@ -159,7 +186,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                     e.printStackTrace();
                 }
                 Log.d("friend_json22",friend_list_json);
-                switchfragment(1);
+//                switchfragment(1);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -183,12 +210,104 @@ public class GameActivity extends Activity implements View.OnClickListener{
             Toast.makeText(this, "아님", Toast.LENGTH_SHORT).show();
 */
         //버튼
-        friend_btn.setOnClickListener(this);
-        game_btn.setOnClickListener(this);
+        friend_btn.setOnClickListener(movePageListener);
+        friend_btn.setTag(0);
+        game_btn.setOnClickListener(movePageListener);
+        game_btn.setTag(1);
         logout.setOnClickListener(this);
         my_info.setOnClickListener(this);
         invate.setOnClickListener(this);
+        vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        friend.setImageResource(R.mipmap.ic_launcher_friend);
+                        game.setImageResource(R.mipmap.ic_launcher_game_cancel);
+                        break;
+                    case 1:
+                        friend.setImageResource(R.mipmap.ic_launcher_friend_cancel);
+                        game.setImageResource(R.mipmap.ic_launcher_game);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
+
+    private void hideActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
+    View.OnClickListener movePageListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            
+            int tag = (int) v.getTag();
+//            Toast.makeText(GameActivity.this, String.valueOf(tag), Toast.LENGTH_SHORT).show();
+            /*if (tag == 0){
+                friend.setImageResource(R.mipmap.ic_launcher_friend);
+                game.setImageResource(R.mipmap.ic_launcher_game_cancel);
+            }
+            else if (tag == 1){
+                friend.setImageResource(R.mipmap.ic_launcher_friend_cancel);
+                game.setImageResource(R.mipmap.ic_launcher_game);
+            }*/
+            vp.setCurrentItem(tag);
+
+        }
+    };
+
+    private class pagerAdapter extends FragmentStatePagerAdapter
+    {
+        public pagerAdapter(android.support.v4.app.FragmentManager fm)
+        {
+            super(fm);
+        }
+        @Override
+        public android.support.v4.app.Fragment getItem(int position)
+        {
+            Bundle bundle = new Bundle();
+            switch(position)
+            {
+
+
+                case 0:
+                    return new FriendlistFragment();
+
+                case 1:
+                    return new GamelistFragment();
+
+                default:
+                    return null;
+            }
+        }
+        @Override
+        public int getCount()
+        {
+            return 2;
+        }
+    }
+
+
+
+
     class UncaughtExceptionHandlerApplication implements Thread.UncaughtExceptionHandler{
 
         @Override
@@ -226,7 +345,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
             case R.id.invate_btn :
 //                Toast.makeText(this, "초대", Toast.LENGTH_SHORT).show();
                 Dialog_invate(friend_name,friend_room_num,friend_room_name);
-                invate.setVisibility(View.GONE);
+                my_info.bringToFront();
                 break;
         }
     }
@@ -333,7 +452,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }
-                    switchfragment(1);
+//                    switchfragment(1);
 //                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
                     json_row = 1;
                 }
@@ -394,7 +513,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
         Bundle bundle = new Bundle();
         if (type == 1){
-            fr = new FriendlistFragment();
+//            fr = new FriendlistFragment();
             bundle.putString("friend_list_json",friend_list_json);
             bundle.putString("check_json",check_json);
             Log.d("listlistlist", friend_list_json);
@@ -404,17 +523,17 @@ public class GameActivity extends Activity implements View.OnClickListener{
             bundle.putString("game_list_json",game_list_json);
             bundle.putInt("game_list_focus",game_list_focus);
 */
-            fr = new GamelistFragment();
+//            fr = new GamelistFragment();
         }
-        bundle.putString("iden",iden);
+        /*bundle.putString("iden",iden);
         bundle.putString("id",id);
         bundle.putString("uri", uri);
         bundle.putInt("rotate",rotate);
         Log.d("switch",iden + id + uri);
-        fr.setArguments(bundle);
+        fr.setArguments(bundle)*/;/*
         fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentfriendorgame,fr);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 }

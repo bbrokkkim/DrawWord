@@ -3,13 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:background="#ffece4">
+    android:background="#EBECED">
 
     <android.support.v7.widget.Toolbar
         android:title="게임"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="55dp"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -18,13 +18,14 @@
         android:contentInsetEnd="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
-        android:background="#b4836d"
+        android:background="#3E3E3B"
         android:weightSum="10"
         >
 
         <FrameLayout
             android:layout_margin="0dp"
             android:padding="0dp"
+            android:id="@+id/toolbarframelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
@@ -32,18 +33,30 @@
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="#754d27"
+                android:background="#3E3E3B"
                 android:src="@drawable/ic_back_photo"
                 android:id="@+id/back_btn"/>
+
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:background="#754d27"
+                android:background="#3E3E3B"
                 android:src="@drawable/ic_stat_invate"
                 android:id="@+id/invate_btn"
                 android:visibility="gone"/>
+
+            <Button
+                android:text="Log
+                out"
+                android:textSize="12dp"
+                android:textColor="#EBECED"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:background="#3E3E3B"
+                android:id="@+id/my_info" />
 
             <FrameLayout
                 android:layout_width="180dp"
@@ -61,6 +74,7 @@
                     />
                 <TextView
                     android:text="왼쪽에 초대 메세지 버튼을 누르세요"
+                    android:textColor="#EBECED"
                     android:textSize="20dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
@@ -72,6 +86,7 @@
             <TextView
                 android:text="친구목록"
                 android:gravity="center"
+                android:textColor="#EBECED"
                 android:id="@+id/proto_test"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -96,53 +111,75 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="55dp"
+                    android:background="#CBC5C1"
+                    android:id="@+id/viewpager"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:text="친구목록"
+                    <FrameLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginRight="2.5dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/brawn_btn"
-                        android:id="@+id/friend_button" />
+                        android:layout_weight="1">
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginRight="2.5dp"
+                            android:layout_height="match_parent"
+                            android:background="#00000000"
+                            android:id="@+id/friend_button" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/friend"
+                            android:background="@mipmap/ic_launcher_friend"/>
 
-                    <Button
-                        android:text="게임목록"
+                    </FrameLayout>
+
+                    <FrameLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/brawn_btn"
-                        android:id="@+id/game_button" />
+                        android:layout_weight="1">
 
-                    <Button
-                        android:text="로그아웃"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="2.5dp"
-                        android:background="@drawable/brawn_btn"
-                        android:layout_height="match_parent"
-                        android:id="@+id/my_info" />
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="2.5dp"
+                            android:layout_marginRight="2.5dp"
+                            android:layout_height="match_parent"
+                            android:background="#00000000"
+                            android:id="@+id/game_button" />
 
+                        <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/game"
+                        android:background="@mipmap/ic_launcher_game_cancel"/>
+                    </FrameLayout>
                 </LinearLayout>
 
 
+                <android.support.design.widget.TabLayout
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    android:id="@+id/main_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentTop="true"
+                    android:minHeight="?attr/actionBarSize"
+                    app:tabIndicatorColor="#3E3E3B"
+                    app:tabSelectedTextColor="#ffffff"
+                    />
 
-                <FrameLayout
+
+                <android.support.v4.view.ViewPager
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="8"
                     android:layout_margin="5dp"
                     android:id="@+id/fragmentfriendorgame">
 
-                </FrameLayout>
+                </android.support.v4.view.ViewPager>
 
 
             </LinearLayout>

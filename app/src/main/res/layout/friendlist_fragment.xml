@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="2dp"
+        android:background="#EBECED"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="50dp"
@@ -74,6 +75,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#EBECED"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:id="@+id/friend_list"/>
@@ -81,11 +83,11 @@
         <ImageButton
             android:text="+"
             android:textSize="50dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="bottom|end"
-            android:background="@drawable/brawn_btn"
-            android:src="@mipmap/add_friend_ic_launcher"
+            android:background="@drawable/blue_btn"
+            android:src="@mipmap/ic_launcher"
             android:id="@+id/add_friend" />
 
 

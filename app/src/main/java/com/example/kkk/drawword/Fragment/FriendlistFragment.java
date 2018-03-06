@@ -1,9 +1,11 @@
 package com.example.kkk.drawword.Fragment;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,14 +67,20 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.friendlist_fragment, container,false);
         ButterKnife.bind(this,view);
 
-        iden = getArguments().getString("iden");
-        id = getArguments().getString("id");
-        photo_uri = getArguments().getString("uri");
-        friend_list_json = getArguments().getString("friend_list_json");
-        check_json = getArguments().getString("check_json");
-        rotate_int = getArguments().getInt("rotate");
+        iden = GameActivity.iden;
+        id = GameActivity.id;
+        photo_uri = GameActivity.uri;
+        friend_list_json = GameActivity.friend_list_json;
+        check_json = GameActivity.check_json;
+        rotate_int = GameActivity.rotate;
         default_photo_url = MainActivity.server_url + "user_photo/";
-        Toast.makeText(getActivity(), String.valueOf(rotate_int), Toast.LENGTH_SHORT).show();
+/*        iden = "1";
+        id = "2";
+        photo_uri="1";*/
+//        friend_list_json = "";
+//        check_json = "";
+//        rotate_int = 1;
+//        Toast.makeText(getActivity(), String.valueOf(rotate_int), Toast.LENGTH_SHORT).show();
         //user_info
         myname.setText(id);
         myment.setText("아직 준비 모함");
@@ -87,8 +95,8 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         Log.d("photo_uri",id+ iden);
         Log.d("fr_list",friend_list_json);
 
-        GetJson(friend_list_json,true);
-
+//        GetJson(friend_list_json,true);
+        
         add_friend.setOnClickListener(this);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -103,6 +111,10 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
 
         friend_adapter = new FriendAdapter(android.R.layout.activity_list_item,getActivity(),item);
         listView.setAdapter(friend_adapter);
+//        Toast.makeText(getActivity(), friend_list_json, Toast.LENGTH_SHORT).show();
+        friend_adapter.notifyDataSetChanged();
+        GetJson(friend_list_json,true);
+
         return view;
     }
 
@@ -131,7 +143,9 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
                     if (type == true) {
                         friend_photo_uri = default_photo_url + friend_photo_uri;
                         item.add(new FriendData(friend_id, friend_ment, friend_photo_uri, friend_iden,rotate));
+                        Log.d("friend_list",friend_id);
                     }
+
                 }
                 item_static = item;
             } catch (JSONException e) {
@@ -241,5 +255,7 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         });
         dialog.show();
     }
+
+
 
 }

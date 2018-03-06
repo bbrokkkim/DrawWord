@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffe0c1">
+    android:background="#EBECED"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:title="회원가입"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="55dp"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -18,7 +18,7 @@
         android:contentInsetEnd="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
-        android:background="#b4836d"
+        android:background="#3E3E3B"
         android:weightSum="10">
 
         <FrameLayout
@@ -28,6 +28,7 @@
 
             <TextView
                 android:text="채팅"
+                android:textColor="#EBECED"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,6 +43,7 @@
 
                 <TextView
                     android:text=" ad"
+                    android:textColor="#EBECED"
                     android:gravity="center"
                     android:textSize="30dp"
                     android:layout_width="70dp"
@@ -68,7 +70,6 @@
                             android:layout_weight="2"
                             android:layout_height="0dp"
                             android:entries="@array/draw_thick"
-
                             android:id="@+id/choice_thick" />
 
                         <Spinner
@@ -90,10 +91,11 @@
                         android:id="@+id/draworerase" />
                     <TextView
                         android:text="answe"
+                        android:textColor="#EBECED"
                         android:textSize="30dp"
                         android:gravity="center"
                         android:layout_width="0dp"
-                        android:layout_weight="2.5"
+                        android:layout_weight="3"
                         android:layout_height="match_parent"
                         android:id="@+id/answer" />
 
@@ -109,7 +111,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#ffe0c1"
+        android:background="#EBECED"
         android:layout_weight="9">
 
         <LinearLayout
@@ -138,7 +140,7 @@
 
 
                 <Button
-                    android:text="맞춰보세요"
+                    android:text=""
                     android:textSize="10dp"
                     android:gravity="bottom"
                     android:background="#00000000"
@@ -167,13 +169,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#a0522d" />
+        android:background="#3E3E3B" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="#ffe0c1"
+        android:background="#EBECED"
         android:listSelector="@android:color/transparent"
         android:id="@+id/draw_listview"
         />
@@ -194,10 +196,11 @@
 
         <Button
             android:text="전송"
+            android:textColor="#EBECED"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@drawable/brawn_btn"
+            android:background="@drawable/blue_btn"
             android:id="@+id/game_submit" />
 
     </LinearLayout>

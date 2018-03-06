@@ -2,6 +2,7 @@ package com.example.kkk.drawword.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -137,7 +139,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             blind.setVisibility(View.VISIBLE); //비지블
         }
 
-        fabricView.setBackgroundColor(Color.rgb(255,224,193));
+        fabricView.setBackgroundColor(Color.rgb(235,236,237));
 //        fabricView = new FabricView(this,);
 //        fabricView.setBackground();
         fabricView.setOnTouchListener(this);
@@ -147,7 +149,6 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             @Override
             public void onClick(View v) {
                 String answer = answer_ed.getText().toString();
-//                Toast.makeText(DrawActivity.this, answer+"tttteest", Toast.LENGTH_SHORT).show();
                 if (!answer.equals("")) {
                     String push_content = "7《" + room_num + "《" + id + "《" + answer;
                     new Tcp_chat().execute(id, push_content);
@@ -164,8 +165,8 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onClick(View v) {
 //                Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 if (draw_or_erase_boolean == true){
-                    draw_or_erase.setImageResource(R.mipmap.ic_launcher);
-                    fabricView.setColor(Color.rgb(255,224,193));
+                    draw_or_erase.setImageResource(R.mipmap.ic_launcher_write);
+                    fabricView.setColor(Color.rgb(235,236,237));
                     draw_or_erase_boolean = false;
                     draw_erase = "2";
 //                    socketGet.disconnectSocket(); //테스트를 위하여
@@ -334,10 +335,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             else if (tcp_type.equals("7.5")) {
                                 idx = content.indexOf("《");
                                 to = content.substring(0, idx);
-                                content = content.substring(idx + 1);
-                                idx = content.indexOf("《");
-                                cassandra_answer = content.substring(idx + 1);
-                                content = content.substring(0, idx);
+                                cassandra_answer  = content.substring(idx + 1);
+//                                idx = content.indexOf("《");
+//                                cassandra_answer = content.substring(idx + 1);
+//                                content = content.substring(0, idx);
                                 Log.d("Chatting is to", to);
                                 Log.d("Chatting is ment", content);
                                 Log.d("Chatting is tcp_type", tcp_type);
@@ -439,6 +440,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            Toast.makeText(DrawActivity.this, "소켓 잠깐 끊김", Toast.LENGTH_SHORT).show();
             draw_color = (String) choice_color.getSelectedItem();
             FabricSetColor(draw_color);
             FabricSetThick(thick);
@@ -463,6 +465,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             // 비지블
             insert.setVisibility(View.VISIBLE);
             modify.setVisibility(View.GONE);
+            fabricView.cleanPage();
             FabricSetColor("BLACK");
             FabricSetThick("1");
             FabricsetDrawMode("BLACK","1");
@@ -482,6 +485,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             super.handleMessage(msg);
             Toast.makeText(DrawActivity.this, "그릴 준비 하세요", Toast.LENGTH_SHORT).show();
             Dialog("술래입니다.","준비되셧나요?",1);
+            fabricView.cleanPage();
+            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");
         }
     };
     Handler dialogend = new Handler(){
@@ -516,6 +523,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //            Dialog("정답입니다.",to + "님이 맞추었습니다.",2);
             item.add(new DrawData(to + "님이 [" + cassandra_answer +"]를 맞추었습니다",""));
             drawAdapter.notifyDataSetChanged();
+/*            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");*/
+            fabricView.cleanPage();
             FabricSetColor("BLACK");
             FabricSetThick("1");
             FabricsetDrawMode("BLACK","1");
@@ -653,13 +664,18 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             blind.setVisibility(View.GONE);
             insert.setVisibility(View.GONE); //비지블
             fabricView.cleanPage();
+            FabricSetColor("BLACK");
+            FabricSetThick("1");
+            FabricsetDrawMode("BLACK","1");
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(answer_ed.getWindowToken(), 0);
             if (answer.length() > 3){
                 answer_view.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
             }
             else {
                 answer_view.setTextSize(TypedValue.COMPLEX_UNIT_DIP,30);
             }
-
+//            Toast.makeText(DrawActivity.this, answer, Toast.LENGTH_SHORT).show();
             answer_view.setText(answer);
             fabricView.refreshDrawableState();
             Dialog("술래입니다.","준비되셧나요?",1);
@@ -775,7 +791,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                 FabricSetColor(color);
                 break;
             case "2":
-                fabricView.setColor(Color.rgb(255,224,193));
+                fabricView.setColor(Color.rgb(235,236,237));
                 break;
         }
     }

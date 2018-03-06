@@ -63,7 +63,7 @@ public class ReadyAdapter extends BaseAdapter {
             status.setImageResource(0);
         }
         else
-            status.setImageResource(R.mipmap.ic_launcher);
+            status.setImageResource(R.mipmap.ic_launcher_check);
 
         return convertView;
     }

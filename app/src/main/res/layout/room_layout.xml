@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/dl_activity_main_drawer"
-        android:background="#ffe0c1"
+        android:background="#EBECED"
         tools:context=".Activity.GameActivity" >
 
 
@@ -22,7 +22,7 @@
             android:title="회원가입"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="55dp"
             android:contentInsetLeft="0dp"
             android:contentInsetStart="0dp"
             app:contentInsetLeft="0dp"
@@ -31,7 +31,7 @@
             android:contentInsetEnd="0dp"
             app:contentInsetRight="0dp"
             app:contentInsetEnd="0dp"
-            android:background="#b4836d"
+            android:background="#3E3E3B"
             android:weightSum="10">
 
             <FrameLayout
@@ -40,13 +40,14 @@
                 <ImageButton
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:background="#754d27"
+                    android:background="#3E3E3B"
                     android:src="@drawable/ic_back_photo"
                     android:id="@+id/back_btn_game"/>
 
                 <TextView
                     android:text="채팅"
                     android:gravity="center"
+                    android:textColor="#EBECED"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/room_name"/>
@@ -54,7 +55,7 @@
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:background="#754d27"
+                    android:background="#3E3E3B"
                     android:src="@drawable/ic_action_name_ready_drawer"
                     android:id="@+id/open_navigation"/>
 
@@ -71,7 +72,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:orientation="vertical">
 
                 <ListView
@@ -109,10 +110,11 @@
 
             <Button
                 android:text="전송"
+                android:textColor="#EBECED"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="match_parent"
-                android:background="@drawable/brawn_btn"
+                android:background="@drawable/blue_btn"
                 android:id="@+id/submit_ment" />
 
 
@@ -122,63 +124,90 @@
 
 
     <LinearLayout
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:orientation="vertical"
-        android:background="#fac794"
+        android:background="#3E3E3B"
         android:id="@+id/navigation">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#fac794">
-            <TextView
-                android:text="방 대기 리스트"
-                android:textSize="25dp"
+            android:layout_weight="2">
+
+
+
+            <ImageView
                 android:paddingLeft="10dp"
                 android:gravity="center_vertical"
+                android:layout_margin="10dp"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/my_ready"
                 android:layout_weight="3.5"
-                android:background="#fac794"/>
+                android:layout_height="match_parent"
+                android:id="@+id/profile"/>
 
 
-
-            <Button
-                android:text="초대"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/invate"
-                android:background="@drawable/brawn_btn"
-                android:layout_weight="1.5"/>
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:text="초대"
+                    android:layout_gravity="center_vertical|right"
+                    android:textColor="#EBECED"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:id="@+id/invate"
+                    android:background="@drawable/blue_btn"/>
+                <TextView
+                    android:text="유저 네임"
+
+                    android:layout_margin="5dp"
+                    android:textSize="25dp"
+                    android:textColor="#EBECED"
+                    android:paddingLeft="10dp"
+                    android:gravity="center"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/user_name"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
 
         <Button
             android:text="ready"
+            android:textColor="#EBECED"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="60dp"
             android:id="@+id/ready_btn"
-            android:background="@drawable/brawn_btn"
-            android:layout_weight="1"/>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/blue_btn"/>
 
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"
+            android:layout_weight="6"
             android:id="@+id/ready_list"
             android:layout_gravity="right"
             android:choiceMode="singleChoice"
             android:listSelector="@android:color/transparent"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
-            android:background="#fac794"/>
+            android:background="#EBECED"/>
 
 
     </LinearLayout>

@@ -15,11 +15,13 @@
         <EditText
             android:layout_width="match_parent"
             android:textSize="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:layout_height="50dp"
             android:inputType="textPersonName"
-            android:gravity="center"
-            android:hint="방 제목을 적어주세요"
+            android:textColorHint="#3E3E3B88"
             android:imeOptions="actionDone"
+            android:background="@drawable/edittext_design"
             android:ems="10"
             android:id="@+id/friend_name" />
 

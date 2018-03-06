@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffe0c1">
+    android:background="#EBECED">
 
 
     <android.support.v7.widget.Toolbar
-        android:title="회원가입"
+        android:title="로그인/회원가입"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="55dp"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -22,8 +22,9 @@
         android:contentInsetEnd="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
-        android:background="#b4836d"
-        android:weightSum="10">
+        android:background="#3E3E3B"
+        android:weightSum="10"
+        >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -31,13 +32,13 @@
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="#754d27"
+                android:background="#3E3E3B"
                 android:src="@drawable/ic_back_photo"
                 android:id="@+id/back_btn"/>
 
             <TextView
                 android:text="회원가입"
-                android:textColor="#ffffff"
+                android:textColor="#EBECED"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -48,24 +49,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9"
+            android:layout_weight="8"
             android:id="@+id/fragmentloginorjoin" />
 
         <Button
             android:text="Button"
             android:textColor="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
             android:id="@+id/other_frag"
-            android:background="@drawable/brawn_btn"
-            android:layout_weight="2" />
-
+            android:background="@drawable/blue_btn" />
 
 
     </LinearLayout>

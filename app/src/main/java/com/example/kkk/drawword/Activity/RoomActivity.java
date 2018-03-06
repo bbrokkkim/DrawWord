@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +28,8 @@ import com.example.kkk.drawword.Adapter.RoomAdapter;
 import com.example.kkk.drawword.SocketGet;
 import com.example.kkk.drawword.Okhttp.Tcp_chat;
 import com.example.kkk.drawword.Okhttp.Tcp_connect;
+import com.example.kkk.drawword.view.CircleTransform;
+import com.squareup.picasso.Picasso;
 //import com.example.kkk.drawword.Test2Activity;
 
 import java.io.IOException;
@@ -56,13 +59,14 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.ready_list) ListView readylist;
     @BindView(R.id.room_name) TextView roomname;
     @BindView(R.id.ready_btn) Button ready_btn;
-    @BindView(R.id.my_ready) TextView my_ready;
+    @BindView(R.id.user_name) TextView user_name;
     @BindView(R.id.back_btn_game) ImageButton back_btn;
     @BindView(R.id.open_navigation) ImageButton open_navigation;
     @BindView(R.id.navigation) LinearLayout naviation;
     @BindView(R.id.dl_activity_main_drawer) DrawerLayout drawerLayout;
     @BindView(R.id.submit_ment) Button submit;
     @BindView(R.id.invate) Button invate;
+    @BindView(R.id.profile) ImageView profile;
 
     ArrayList<ChatData> item= new ArrayList();
     ArrayList<ReadyData> item_ready = new ArrayList<>();
@@ -93,15 +97,9 @@ public class RoomActivity extends Activity implements View.OnClickListener{
     Thread a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        androidDefaultUEH = Thread.getDefaultUncaughtExceptionHandler();
-//        unCatchExceptionHandler = new UncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(unCatchExceptionHandler);
 
         super.onCreate(savedInstanceState);
-/*        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        if (!(mUncaughtExceptionHandler instanceof UncaughtExceptionHandlerApplication)) {
-            Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandlerApplication());
-        }*/
         setContentView(R.layout.room_layout);
         ButterKnife.bind(this);
         Intent get = getIntent();
@@ -110,8 +108,18 @@ public class RoomActivity extends Activity implements View.OnClickListener{
         room_name = get.getStringExtra("room_name");
         room_num = get.getStringExtra("room_num");
         roomname.setText(room_num + ".  " + room_name);
+        user_name.setText(id);
+        String photo_backUri = MainActivity.server_url+"user_photo/";
+        CircleTransform circleTransform = new CircleTransform();
+        profile.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Toast.makeText(this, photo_backUri+GameActivity.uri, Toast.LENGTH_SHORT).show();
+        String uri = GameActivity.uri;
+        if (uri.equals("null")){
+            uri= "default/default.jpg";
+        }
+        Picasso.with(this).load(photo_backUri+uri).rotate(GameActivity.rotate*-1).transform(circleTransform).into(profile);
         Log.d("asdfas",id);
-
+//        my_name.setText(id  );
         layout();
 
         //정보 가지고오기

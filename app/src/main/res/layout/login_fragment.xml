@@ -1,56 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffe0c1"
+
     android:orientation="vertical"
     >
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="4"
-        android:weightSum="8">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/title1"
+            android:id="@+id/imageView" />
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:inputType="textPersonName"
-            android:paddingLeft="20dp"
-            android:hint="ID"
-            android:ems="10"
-            android:id="@+id/ed_id" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:inputType="textPassword"
-            android:paddingLeft="20dp"
-            android:hint="PASSWORD"
-            android:id="@+id/ed_password" />
-
-        <Button
-            android:text="로그인"
-            android:textColor="#ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_weight="3"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/login"
-            android:background="@drawable/brawn_btn"/>
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:weightSum="8">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="10dp"
+                android:textColorHint="#3E3E3B88"
+                android:paddingLeft="20dp"
+                android:hint="ID"
+                android:ems="10"
+                android:background="@drawable/edittext_design"
+                android:id="@+id/ed_id"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:inputType="textPassword"
+                android:textColorHint="#3E3E3Baa"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="20dp"
+                android:hint="PASSWORD"
+                android:background="@drawable/edittext_design"
+                android:id="@+id/ed_password"/>
+
+            <Button
+                android:text="로그인"
+                android:textColor="#EBECED"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:id="@+id/login"
+                android:background="@drawable/blue_btn"/>
 
 
-    </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

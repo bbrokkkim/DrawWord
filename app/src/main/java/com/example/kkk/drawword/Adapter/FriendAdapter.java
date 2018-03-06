@@ -83,10 +83,10 @@ public class FriendAdapter extends BaseAdapter {
         viewHolder.user_iden.setText(item.get(pos).getIden());
 
         if (item.get(pos).getChoice() == true) {
-            viewHolder.friend_row.setBackgroundColor(Color.rgb(250,188,162));
+            viewHolder.friend_row.setBackgroundColor(Color.rgb(154,168,182));
         }
         else {
-            viewHolder.friend_row.setBackgroundColor(Color.rgb(255,236,228));
+            viewHolder.friend_row.setBackgroundColor(Color.rgb(235,236,237));
         }
 
         rotate = Integer.parseInt(item.get(pos).getRotate());

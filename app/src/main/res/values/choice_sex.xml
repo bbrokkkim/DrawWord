@@ -9,7 +9,8 @@
 </string-array>
 
 <string-array name="draw_color"
-    layout_width="wrap_content">
+    layout_width="wrap_content"
+    color="#EBECED">
     <item>BLACK</item>
     <item>BLUE</item>
     <item>RED</item>
@@ -17,7 +18,8 @@
 </string-array>
 
 <string-array name="draw_thick"
-    layout_width="wrap_content">
+    layout_width="wrap_content"
+    color="#EBECED">
     <item>1</item>
     <item>2</item>
     <item>3</item>

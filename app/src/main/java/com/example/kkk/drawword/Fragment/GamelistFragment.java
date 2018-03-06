@@ -1,7 +1,7 @@
 package com.example.kkk.drawword.Fragment;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,21 +79,25 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         ButterKnife.bind(this,view);
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swype_layout);
         progressBar.setVisibility(View.GONE);
-        id = getArguments().getString("id");
-        iden = getArguments().getString("iden");
+//        Toast.makeText(getActivity(), "create", Toast.LENGTH_SHORT).show();
+//        id = getArguments().getString("id");
+//        iden = getArguments().getString("iden");
+        iden = GameActivity.iden;
+        id = GameActivity.id;
         game_list_json_array = new ArrayList<>();
         //리스트 구현
         gamelistadapter = new GamelistAdapter(inflater,getActivity(),item);
 //        item.add(new GamelistData(1,"테스트방입니다","2/4"));
         listView.setOnScrollListener(this);
         listView.setAdapter(gamelistadapter);
-
+        create_room.setMinHeight(GameActivity.size);
         //리스트 아이템
-        check_json = getArguments().getString("game_list_json");
+//        check_json = );
+        check_json = GameActivity.game_list_json;
         game_list_json_array.add(check_json);
-        game_list_facus = getArguments().getInt("game_list_focus");
-
-//        getOkhttp("2","0");
+        game_list_facus = GameActivity.game_list_focus;
+//        game_list_facus = 1;
+        //        getOkhttp("2","0");
         GetJson(GameListGet.getGameList() ,GameListGet.getFocus());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,7 +138,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
             @Override
             public void onRefresh() {
 //                GetJson(refresh_json,-1);
-                getOkhttp("0","1");
+                getOkhttp("1","1");
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -154,6 +158,9 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
 //        enter_in_gameroom = true;
 //        Toast.makeText(getActivity(), "resume", Toast.LENGTH_SHORT).show();
     }
+
+
+
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -218,6 +225,9 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
                     public void onClick(DialogInterface dialog, int which) {
                         if (enter_in_gameroom == true) {
                             String room_name = room.getText().toString();
+                            if (room_name.equals("")){
+                                room_name = "재밌는 게임 해요!";
+                            }
                             String room_iden = null;
                             OkhttpGame okhttpGame = new OkhttpGame();
                             try {
@@ -255,8 +265,11 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     }
 
     void getOkhttp(String choice,String limit){
-
+        String type = choice;
         try {
+            if (choice.equals("1")){
+                choice = "0";
+            }
             refresh_json = new OkhttpGame().execute(choice,limit).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -265,8 +278,11 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         }
 
 //        Log.d("http_output",refresh_json);
-        if (choice.equals("0")){
-            GetJsonRefresh(refresh_json);
+        if (type.equals("0")){
+            GetJsonRefresh(refresh_json,Integer.parseInt(type));
+        }
+        else if (type.equals("1")){
+            GetJsonRefresh(refresh_json,Integer.parseInt(type));
         }
         else
             GetJson(refresh_json,-1);
@@ -287,13 +303,15 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
         progressBar.setVisibility(View.GONE);
 
     }
-    void GetJsonRefresh(String json_list){
+    void GetJsonRefresh(String json_list,int type){
         item.clear();
         gameListGet.resetGameList();
         gameListGet.resetFouce();
         if (json_list.equals("nothing")){
             Log.d("test","return");
-            Toast.makeText(getActivity(), "게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+            if (type == 1) {
+                Toast.makeText(getActivity(), "게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+            }
             gamelistadapter.notifyDataSetChanged();
             return;
         }
@@ -320,7 +338,7 @@ public class GamelistFragment extends Fragment implements View.OnClickListener ,
     void GetJson(ArrayList<String> json_array, int focus){
         if (json_array.get(0).equals("nothing")){
             Log.d("test","return");
-            Toast.makeText(getActivity(), "더이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "더이상 게임 방이 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
         try {

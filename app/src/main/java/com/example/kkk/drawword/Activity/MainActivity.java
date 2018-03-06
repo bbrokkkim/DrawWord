@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @BindView(R.id.back_btn) ImageButton back;
     @BindView(R.id.other_frag) Button join_btn;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     public static boolean where = true;
     boolean active = false;
     public static Database database;
@@ -65,7 +68,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         //fragment
 
         switchfragment(true);
-
+        toolbar.setVisibility(View.GONE);
         intentClass = new IntentClass(MainActivity.this);
 
         Toast.makeText(this, "asdf", Toast.LENGTH_SHORT).show();
@@ -131,6 +134,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 if (where == true){
                     switchfragment(true);
                     join_btn.setVisibility(View.VISIBLE);
+                    toolbar.setVisibility(View.GONE);
                     where = false;
                 }
                 else if (where == false && active == false){
@@ -145,6 +149,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 where = false;
                 switchfragment(false);
                 join_btn.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
                 active = false;
                 break;
         }

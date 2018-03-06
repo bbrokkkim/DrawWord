@@ -8,10 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp">
 
         <TextView
             android:text="TextView"
+            android:textColor="#3E3E3B"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:minHeight="25dp"
@@ -20,12 +23,13 @@
 
         <TextView
             android:text="TextView"
+            android:textColor="#EBECED"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:minHeight="30dp"
             android:layout_height="wrap_content"
 
-            android:background="@drawable/brawn_btn"
+            android:background="@drawable/blue_btn"
             android:id="@+id/chat_ment" />
 
 

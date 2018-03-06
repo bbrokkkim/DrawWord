@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,7 +37,9 @@ public class InvateActivity extends Activity {
     Button invate_btn;
     @BindView(R.id.invate_list)
     ListView listView;
-
+    @BindView(R.id.back_btn)
+    ImageButton back;
+    ArrayList<FriendData> item;
     FriendAdapter friend_adapter;
     String id,room_num,room_name;
     @Override
@@ -50,7 +53,7 @@ public class InvateActivity extends Activity {
         room_num = intent.getStringExtra("room_num");
 
 
-        final ArrayList<FriendData> item = FriendlistFragment.item_static;
+        item = FriendlistFragment.item_static;
         Log.d("item", String.valueOf(item.size()));
         friend_adapter = new FriendAdapter(android.R.layout.simple_list_item_multiple_choice,this,item);
         listView.setAdapter(friend_adapter);
@@ -90,6 +93,29 @@ public class InvateActivity extends Activity {
                 finish();
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < item.size(); i++) {
+                    if (item.get(i).getChoice() == true) {
+                        item.get(i).setChoice();
+                    }
+                }
+                onBackPressed();
 
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        for (int i = 0; i < item.size(); i++) {
+            if (item.get(i).getChoice() == true) {
+                item.get(i).setChoice();
+            }
+        }
+        super.onBackPressed();
     }
 }
