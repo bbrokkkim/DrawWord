@@ -14,7 +14,7 @@ public class App extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-//        System.gc();
+        System.gc();
         Log.d("TAG", "_----------------------p GC");
     }
 

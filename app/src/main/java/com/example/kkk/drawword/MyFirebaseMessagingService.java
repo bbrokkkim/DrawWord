@@ -30,33 +30,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String type = "";
     String getData = "";
     String noti_string = "";
+    String notification = "";
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d("testttttt","asdf----------------------");
-//        Log.d("output", remoteMessage.getNotification().getBody());
-//        fcm_ment = remoteMessage.getNotification().getBody();
         noti_string = String.valueOf(remoteMessage.getData());
-/*        if (noti_string.contains("《")) {
-            idx = noti_string.indexOf("《");
-            type = noti_string.substring(0,idx);
-            getData = noti_string.substring(idx + 1);
-            Log.d(TAG, "Message data choice: " + remoteMessage.getData());
-            if (type.equals("1")) {
-                GetJson("[" + noti_string + "]");
-                handler.sendEmptyMessage(0);
-            }
-            else if (type.equals("2")){
 
-            }
-        }*/
-        GetJson("[" + noti_string + "]");
-            handler.sendEmptyMessage(0);
+        Log.d("asdf111",noti_string);
+        notification = noti_string.replace("《","\"");
 
-        /*else if (type.equals("2")){
-            socket.sendEmptyMessage(0);
-        }*/
-// Check if message contains a data payload.
+        Log.d("a",notification);
+
+        GetJson("[" + notification+"]");
+        handler.sendEmptyMessage(0);
+
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
@@ -70,9 +58,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
     void GetJson(String fcm_list){
-        JSONArray json = null;
+        Log.d("fcm_json",fcm_list);
         try {
-            json = new JSONArray(fcm_list);
+            JSONArray json = new JSONArray(fcm_list);
 
             Log.d("json_length", String.valueOf(json.length()));
             JSONObject jsonObject = json.getJSONObject(0);
@@ -97,7 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                    Dialog as = new Dialog(MyFirebaseMessagingService.this);
 //                    as.Show(remoteMessage.getNotification().getBody());
             Log.d("aaa_________________","testestestestest");
-            ;
+
             GameActivity.modify(user_name, room_num, room_name);
 
             Log.d("aaa11111111","testestestestest");

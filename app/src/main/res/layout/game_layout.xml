@@ -44,8 +44,7 @@
                 android:layout_gravity="right"
                 android:background="#3E3E3B"
                 android:src="@drawable/ic_stat_invate"
-                android:id="@+id/invate_btn"
-                android:visibility="gone"/>
+                android:id="@+id/invate_btn"/>
 
             <Button
                 android:text="Log

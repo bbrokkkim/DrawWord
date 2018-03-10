@@ -75,6 +75,7 @@ public class Join_fragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.join_fragment,container,false);
 
         ButterKnife.bind(this,view);
+        photo.setImageResource(R.drawable.defoult);
         submit.setOnClickListener(this);
         photo_select.setOnClickListener(this);
         back_button.setOnClickListener(this);
@@ -119,7 +120,7 @@ public class Join_fragment extends Fragment implements View.OnClickListener{
             case R.id.back_photo :
                 Toast.makeText(getActivity(), "이미지가 초기화 되었습니다.", Toast.LENGTH_SHORT).show();
                 uri = null;
-                photo.setImageResource(0);
+                photo.setImageResource(R.drawable.defoult);
 //                photo.set
 
                 break;
@@ -140,7 +141,6 @@ public class Join_fragment extends Fragment implements View.OnClickListener{
             Log.d("urlurlurl",String.valueOf(uri));
             Log.d("real urlurlurl",real_uri);
             OkhttpUser okhttpUser = new OkhttpUser(getActivity(), MainActivity.database);
-
             okhttpUser.execute("1", id, pwd1, name, "01012341234", "12", sex, real_uri,String.valueOf(exifDegree),image_bitmap);
         }
     }

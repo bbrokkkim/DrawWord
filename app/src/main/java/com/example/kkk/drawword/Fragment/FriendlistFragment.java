@@ -51,12 +51,14 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
     @BindView(R.id.add_friend) ImageButton add_friend;
     FriendAdapter friend_adapter;
     ArrayList<FriendData> item = new ArrayList<>();
+    int json_length = 0;
+    int json_row = 1;
     public static ArrayList<FriendData> item_static = new ArrayList<>();
     //버튼 중복으로 누르는거 방지
     boolean enter_in_gameroom = true;
     public static int a  = 12;
     public static int b;
-    String iden,id,ment,photo_uri,token,friend_list_json,check_json;
+    String iden,id,ment,photo_uri,token,friend_list_json,check_json,tokeb;
     String friend_iden,friend_id,friend_photo_uri,friend_ment,rotate;
     int rotate_int;
     String default_photo_url;
@@ -70,10 +72,18 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
         iden = GameActivity.iden;
         id = GameActivity.id;
         photo_uri = GameActivity.uri;
+        token = GameActivity.token;
         friend_list_json = GameActivity.friend_list_json;
-        check_json = GameActivity.check_json;
         rotate_int = GameActivity.rotate;
         default_photo_url = MainActivity.server_url + "user_photo/";
+        try {
+            check_json = new OkhttpFriend().execute("4",iden).get();
+            GetJson_add(check_json,true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 /*        iden = "1";
         id = "2";
         photo_uri="1";*/
@@ -117,10 +127,82 @@ public class FriendlistFragment extends Fragment implements View.OnClickListener
 
         return view;
     }
+    void GetJson_add(String json_list, boolean type) {
+        Log.d("테스트", "not null");
+        if (!json_list.equals("nothing")) {
+            try {
+                JSONArray json = new JSONArray(json_list);
+                Log.d("json_length", String.valueOf(json.length()));
+                json_length = json.length();
+                for (int i = 0; i < json.length(); i++) {
+
+
+                    JSONObject jsonObject = json.getJSONObject(i);
+                    friend_id = jsonObject.getString("my_id");
+                    Log.d("ilength",String.valueOf(i));
+                    Dialog_view(friend_id);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    void Dialog_view(final String friend_id){
+        final AlertDialog.Builder dialog =
+                new AlertDialog.Builder(getActivity());
+        dialog.setTitle(friend_id+"씨가 친구를 추가 했습니다.");
+        dialog.setMessage("친구를 추가하시겠습니까?");
+        dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                OkhttpFriend okhttpFriend = new OkhttpFriend();
+                okhttpFriend.execute("5",iden,id,friend_id,"1");
+                Log.d("length",String.valueOf(json_length));
+                Log.d("row",String.valueOf(json_row));
+                if (json_length == json_row){
+                    try {
+                        friend_list_json = new OkhttpFriend().execute("1",iden,token).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+//                    switchfragment(1);
+//                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
+                    json_row = 1;
+                }
+                json_row = json_row + 1;
+                GetJson(friend_list_json,true);
+            }
+        });
+        dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                OkhttpFriend okhttpFriend = new OkhttpFriend();
+                okhttpFriend.execute("5",iden,id,friend_id,"2");
+                Log.d("length",String.valueOf(json_length));
+                if (json_length == json_row){
+                    try {
+                        friend_list_json = new OkhttpFriend().execute("1",iden,token).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+//                    Toast.makeText(GameActivity.this, "끝", Toast.LENGTH_SHORT).show();
+                    json_row = 1;
+                }
+                json_row = json_row + 1;
+            }
+        });
+        dialog.show();
+    }
 
     void GetJson(String json_list, boolean type){
         Log.d("테스트", "not null");
-
+        item.clear();
 
             try {
                 JSONArray json = new JSONArray(json_list);

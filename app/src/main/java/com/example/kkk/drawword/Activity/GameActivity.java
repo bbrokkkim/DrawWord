@@ -74,7 +74,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     static TextView invate_ment;
     static FrameLayout invate_pocket_group;
     ViewPager vp;
-    @BindView(R.id.my_info) Button my_info;
+    static Button my_info;
     @BindView(R.id.back_btn) ImageButton logout;
     public static String friend_list_json;
     public static String game_list_json = "";
@@ -90,7 +90,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public static String check_json;
     public static String iden;
     public static String id;
-    String token;
+    public static String token;
     public static String rotate_string;
     public static int rotate;
     boolean fcm_token;
@@ -108,9 +108,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static void modify(String user_name, String room_num, String room_name){
-        invate.bringToFront();
+
         invate_pocket_group.setVisibility(View.VISIBLE);
         invate_pocket_group.bringToFront();
+        invate.bringToFront();
+        my_info.setVisibility(View.GONE);
         invateList = new InvateList(user_name,room_num);
         invateArrayList.add(invateList);
         friend_name = user_name;
@@ -126,7 +128,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         size = frameLayout.getHeight();
-        Toast.makeText(this, String.valueOf(size), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, String.valueOf(size), Toast.LENGTH_SHORT).show();
         fragment_zone.setMinimumHeight(size);
 
     }
@@ -141,7 +143,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         invate_pocket = (ImageView) findViewById(R.id.invate_pocket);
         invate_ment = (TextView) findViewById(R.id.invate_ment);
         invate_pocket_group = (FrameLayout) findViewById(R.id.invate_pocket_group);
-
+        my_info = (Button) findViewById(R.id.my_info);
         ButterKnife.bind(this);
         vp = (ViewPager)findViewById(R.id.fragmentfriendorgame);
         tabLayout.setupWithViewPager(vp);
@@ -177,7 +179,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 gameListGet.addGameList(game_list_json);
                 check_json = new OkhttpFriend().execute("4",iden).get();
                 Log.d("friend_json","test");
-                GetJson(check_json,true);
+//                GetJson(check_json,true);
                 try {
                     friend_list_json = new OkhttpFriend().execute("1",iden,token).get();
                 } catch (InterruptedException e) {
@@ -333,7 +335,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.game_button:
                 switchfragment(2);
                 ment.setText("게임목록");
-
                 break;
             case R.id.back_btn:
                 super.onBackPressed();
@@ -346,6 +347,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //                Toast.makeText(this, "초대", Toast.LENGTH_SHORT).show();
                 Dialog_invate(friend_name,friend_room_num,friend_room_name);
                 my_info.bringToFront();
+                my_info.setVisibility(View.VISIBLE);
                 break;
         }
     }

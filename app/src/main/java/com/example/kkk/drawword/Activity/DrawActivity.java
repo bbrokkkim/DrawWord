@@ -16,12 +16,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,12 +55,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     @BindView(R.id.draw_listview) ListView listView;
     @BindView(R.id.game_submit) Button submit;
     @BindView(R.id.answer_content) EditText answer_ed;
-    @BindView(R.id.answer) TextView answer_view;/*
-    @BindView(R.id.textView2) TextView textView;
-    @BindView(R.id.textView1) TextView textView2;*/
+    @BindView(R.id.answer) TextView answer_view;
     @BindView(R.id.timer) TextView timer_view;
     @BindView(R.id.room_name) TextView room_name;
-//    @BindView(R.id.lin) LinearLayout linearLayout;
     @BindView(R.id.blind) Button blind;
     @BindView(R.id.faricView) FabricView fabricView;
     @BindView(R.id.choice_color) Spinner choice_color;
@@ -80,6 +79,10 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     String content, to;
     String id = null;
     int idx;
+    String start_draw = "";
+    String finish_mant = "";
+    String middle_draw = "";
+    String end_draw = "";
     String room_num = "";
     String user_name = "";
     String tcp_type = "";
@@ -130,7 +133,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         bufferedWriter = socketGet.getBufferedWriter();
         checkUpdate.start();
 //        checkConnectSocket.start();
-
+        setSpinner();
         if (status.equals("1")) {
             blind.setVisibility(View.GONE);
 //            Dialog("술래입니다.","준비되셧나요?",1);
@@ -165,20 +168,20 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onClick(View v) {
 //                Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 if (draw_or_erase_boolean == true){
+                    draw_erase = "2";
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher_write);
                     fabricView.setColor(Color.rgb(235,236,237));
                     draw_or_erase_boolean = false;
-                    draw_erase = "2";
+
 //                    socketGet.disconnectSocket(); //테스트를 위하여
 //                    Toast.makeText(DrawActivity.this, "지우기", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    draw_erase = "1";
                     draw_or_erase.setImageResource(R.mipmap.ic_launcher_erase);
                     FabricSetColor(color);
                     draw_or_erase_boolean = true;
-                    draw_erase = "1";
-//                    socketGet.disconnectSocket(); //테스트를 위하여
-//                    Toast.makeText(DrawActivity.this, color, Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -187,7 +190,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                color = (String) choice_color.getSelectedItem();
                 draw_color = (String) choice_color.getSelectedItem();
-                FabricSetColor(draw_color);
+                if (!draw_erase.equals("2")) {
+                    FabricSetColor(draw_color);
+                }
             }
 
             @Override
@@ -206,8 +211,30 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+/*        event = MotionEvent.obtain(7082122, 7082122, MotionEvent.ACTION_MOVE, x, y, 0);
+        fabricView.onTouchDrawMode(event);*/
+    }
+
+    private void setSpinner() {
+        SpinnerAdapter spinnerdapter;
+        spinnerdapter = ArrayAdapter.createFromResource(this, R.array.draw_color,R.layout.spinner_text);
+//        spinnerdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        choice_color.setAdapter(spinnerdapter);
+        choice_color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent,View view, int pos, long id) {
+                String spinnerName = parent.getItemAtPosition(pos).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+        SpinnerAdapter spinnerdapter2;
+        spinnerdapter2 = ArrayAdapter.createFromResource(this, R.array.draw_thick,R.layout.spinner_text);
+        choice_thick.setAdapter(spinnerdapter2);
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -271,26 +298,27 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             tcp_type = real_ment.substring(0, idx);
                             content = real_ment.substring(idx + 1);
                             Log.d("Chatting is content", content);
-                            Log.d("Chatting is tcp_type", tcp_type);
                             Log.d("idx_1___", String.valueOf(line));
                             //그리기
                             if (tcp_type.equals("3")) {
-
+                                start_draw = content;
                                 Log.d("Chatting is tcp_type", tcp_type);
                                 Log.d("bb", String.valueOf(draw_type));
                                 drawing.sendEmptyMessage(0);
                             }
                             //그리기
                             else if (tcp_type.equals("4")) {
-                                drawing.sendEmptyMessage(0);
+                                middle_draw = content;
                                 Log.d("Chatting is tcp_type", tcp_type);
                                 Log.d("bb", String.valueOf(draw_type));
+                                drawing.sendEmptyMessage(0);
                             }
                             //그리기
                             else if (tcp_type.equals("5")) {
-                                drawing.sendEmptyMessage(0);
+                                end_draw = content;
                                 Log.d("Chatting is tcp_type", tcp_type);
                                 Log.d("bb", String.valueOf(draw_type));
+                                drawing.sendEmptyMessage(0);
                             }
                             //술래
                             else if (tcp_type.equals("6")) {
@@ -318,6 +346,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                             }
                             //게임이 끝났을때
                             else if (tcp_type.equals("0")) {
+                                finish_mant = content;
                                 dialogend.sendEmptyMessage(0);
                                 Log.d("Chatting_tcp_type", tcp_type);
                             }
@@ -388,6 +417,9 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         reconnect.sendEmptyMessage(0);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.d("xxxxx", "xxx222");
+                        ment.sendEmptyMessage(0);
+
                     }
                     if (exit == true) {
                         Log.d("asd","tetetet");
@@ -399,12 +431,20 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        Log.d("asd","tetetetinterrupte");
                     }
                     Log.d("socket","disconnect");
                 }
             }
             Log.d("Chatting is running", "2111");
 
+        }
+    };
+    Handler ment = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Toast.makeText(DrawActivity.this, "끊김...", Toast.LENGTH_SHORT).show();
         }
     };
     Handler breakroom = new Handler(){
@@ -419,7 +459,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            item.add(new DrawData(content + "님이 그림을 그리다 말고 방을 나가셨습니다." , "aa"));
+            item.add(new DrawData(content + "님이 방을 나가셨습니다." , "aa"));
             fabricView.cleanPage();
             FabricSetColor("BLACK");
             FabricSetThick("1");
@@ -431,6 +471,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Toast.makeText(DrawActivity.this, "소켓 잠깐 끊김", Toast.LENGTH_SHORT).show();
             try {
                 String test = new Tcp_connect(DrawActivity.this).execute("8000",room_num + "《" + id + "《" + tagger_or_not).get();
 //                        run = true;
@@ -499,7 +540,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             if (content.contains("《")){
                 idx = content.indexOf("《");
             }*/
-            String result = content.replace("《", "\n");
+            String result = finish_mant.replace("《", "\n");
 //            Toast.makeText(DrawActivity.this, "게임오버", Toast.LENGTH_SHORT).show();
             Dialog("게임이 끝났습니다.",result + "감사합니다",3);
         }
@@ -554,15 +595,37 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
 //            FabricSetColor(draw_color);
 //            thick = (String) choice_thick.getSelectedItem();
 //            FabricSetThick(thick);
-            Log.d("idx_111",String.valueOf(content));
+            String con = "";
+            int data_length;
+            String rocking_tcp_type = tcp_type;
+            Log.d("idx_111",String.valueOf(content) + "  "+ tcp_type);
+            if (tcp_type.equals("3")){
 
-            int data_length = getStringNumber(content);
-            Log.d("data_length","aa");
+                con = start_draw;
+            }
+            else if (tcp_type.equals("4")){
+                con = middle_draw;
+            }
+            else if (tcp_type.equals("5")){
+                con = end_draw;
+            }
+
+            data_length = getStringNumber(con);
+            Log.d("data_length",content+ "  "+ tcp_type);
             Log.d("data_length",String.valueOf(data_length));
+
+            Log.d("content1",con+ "  "+ tcp_type);
             if (data_length >= 8){
-                idx = content.indexOf("《");
-                color = content.substring(idx + 1);
-                user_name = content.substring(0,idx);
+                Log.d("content1",con+ "  "+ tcp_type);
+                idx = con.indexOf("《");
+
+                Log.d("content1",con+ "  "+ tcp_type);
+                color = con.substring(idx + 1);
+
+                Log.d("content1",con+ "  "+ tcp_type);
+                user_name = con.substring(0,idx);
+
+                Log.d("content1",con+ "  "+ tcp_type);
                 //색깔
                 idx = color.indexOf("《");
                 Log.d("idx_1", String.valueOf(idx));
@@ -635,14 +698,19 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                         }
                         FabricSetThick(thick);
                         FabricsetDrawMode(draw_erase,color);
-                        if (tcp_type.equals("3")) {
+                        Log.d("tycp_type", tcp_type);
+                        Log.d("x,,,y", "" + x + "  "+ y +"  " + downTime +"   "+ eventTime);
+                        if (rocking_tcp_type.equals("3")) {
                             event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
-                        } else if (tcp_type.equals("4")) {
+                            fabricView.onTouchDrawMode(event);
+                        } else if (rocking_tcp_type.equals("4")) {
                             event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, 0);
-                        } else if (tcp_type.equals("5")) {
+                            fabricView.onTouchDrawMode(event);
+                        } else if (rocking_tcp_type.equals("5")) {
                             event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
+                            fabricView.onTouchDrawMode(event);
                         }
-                        fabricView.onTouchDrawMode(event);
+
                         Log.d("boolean", tcp_type);
                     } else
                         Log.d("info", "dksemfdjrksek");
@@ -706,6 +774,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
     int getStringNumber(String str){
         int count = 0;
         int idx = 0;
+        Log.d(";...stlqkf",str);
         while(true){
             Log.d("satrrr",String.valueOf(count));
 
@@ -738,7 +807,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
                     x = event.getX();
                     y = event.getY();
                     str = "Coordinate1 : ( " + (int) x + ", " + (int) y + " )";
-                    Log.d("bb", String.valueOf(draw_type));
+                    Log.d("bbbbb", String.valueOf(draw_type));
                     content = "3《" + room_num + "《" + id + "《" + draw_color + "《" + thick + "《" + draw_erase + "《" + a + "《" + b + "《" + x + "《" + y + "《";
                     new Tcp_chat().execute(id, content);
                     draw_type = true;
@@ -756,7 +825,7 @@ public class DrawActivity extends Activity implements View.OnTouchListener{
             }
         }
         else {
-            Toast.makeText(this, ",,,,", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, ",,,,", Toast.LENGTH_SHORT).show();
         }
         return false;
     }

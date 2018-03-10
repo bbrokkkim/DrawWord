@@ -87,6 +87,7 @@ public class InvateActivity extends Activity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(InvateActivity.this, id + room_num, Toast.LENGTH_SHORT).show();
                 new OkhttpInvate().execute("2",id,room_num,room_name,jsonObject.toString());
 //                new OkhttpInvate().execute("2","1","1aa");
                 Log.d("json array",jsonObject.toString());
